@@ -39,6 +39,7 @@ export const Register=async(req,res)=>{
             })
             console.log(user)
             const token =createToken(user._id,user.role)
+            console.log(token)
             res.json({success:true,token})
 
 
