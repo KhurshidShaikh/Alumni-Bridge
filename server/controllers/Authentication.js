@@ -19,61 +19,198 @@ config()
 const createToken=(id,role)=>{
     return jwt.sign({id,role},process.env.JWT_SECRATE)
 }
+
 //Register
-export const Register=async(req,res)=>{
-   try{
-        const{name,email,password,role,GrNo}=req.body
-        console.log(email)
-
-        if(email &&password && role && GrNo && name){
-            const userExist=await userModel.findOne({email:email})
-            if(userExist)return res.json({success:false,error:'user is already Exist'});
-            const salt=await bcrypt.genSalt(10)
-            const hash=await bcrypt.hash(password,salt)
-            const user=await userModel.create({
-                name,
-                email,
-                password:hash,
-                role,
-                GrNo
-            })
-            console.log(user)
-            const token =createToken(user._id,user.role)
-            console.log(token)
-            res.json({success:true,token})
-
-
-
-
-
+export const Register = async (req, res) => {
+    try {
+        const { name, email, password, role, GrNo } = req.body;
+        
+        // Input validation
+        if (!name || !email || !password || !role || !GrNo) {
+            return res.status(400).json({
+                success: false,
+                error: "All fields are required: name, email, password, role, and GR Number"
+            });
         }
-        else{
-            return res.json({success:false,error:"please enter the all yours details"})
+
+        // Validate name length
+        if (name.trim().length < 2) {
+            return res.status(400).json({
+                success: false,
+                error: "Name must be at least 2 characters long"
+            });
         }
-   }
-   catch(e){
-    res.json({success:false,error:e.message})
-   }
+
+        // Validate email format
+        const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                success: false,
+                error: "Please enter a valid email address"
+            });
+        }
+
+        // Validate password length
+        if (password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                error: "Password must be at least 6 characters long"
+            });
+        }
+
+        // Validate role
+        if (!['student', 'alumni'].includes(role)) {
+            return res.status(400).json({
+                success: false,
+                error: "Role must be either 'student' or 'alumni'"
+            });
+        }
+
+        // Validate GR Number
+        if (GrNo.trim().length === 0) {
+            return res.status(400).json({
+                success: false,
+                error: "GR Number is required"
+            });
+        }
+
+        // Check if user already exists
+        const userExist = await userModel.findOne({ email: email.toLowerCase() });
+        if (userExist) {
+            return res.status(409).json({
+                success: false,
+                error: 'User with this email already exists'
+            });
+        }
+
+        // Check if GR Number already exists
+        const grExists = await userModel.findOne({ GrNo: GrNo.trim() });
+        if (grExists) {
+            return res.status(409).json({
+                success: false,
+                error: 'User with this GR Number already exists'
+            });
+        }
+
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // Create new user with isVerified: false by default
+        const user = await userModel.create({
+            name: name.trim(),
+            email: email.toLowerCase().trim(),
+            password: hashedPassword,
+            role,
+            GrNo: GrNo.trim(),
+            isVerified: false, // Explicitly set to false for admin verification
+            isProfileComplete: false
+        });
 
 
+        // Don't create token immediately - user needs admin verification first
+        res.status(201).json({
+            success: true,
+            message: `Registration successful! Your account has been created and is pending admin verification. You will be able to login once an admin approves your account.`,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                isVerified: user.isVerified
+            }
+        });
+
+    } catch (e) {
+        console.error('Registration error:', e.message);
+        
+        // Handle mongoose validation errors
+        if (e.name === 'ValidationError') {
+            const errors = Object.values(e.errors).map(err => err.message);
+            return res.status(400).json({
+                success: false,
+                error: errors.join(', ')
+            });
+        }
+
+        // Handle duplicate key errors
+        if (e.code === 11000) {
+            const field = Object.keys(e.keyValue)[0];
+            return res.status(409).json({
+                success: false,
+                error: `${field} already exists`
+            });
+        }
+
+        res.status(500).json({
+            success: false,
+            error: "Internal server error. Please try again later."
+        });
+    }
 }
 
 //Login
-
-export const login =async(req,res)=>{
-    try{
-        const{email,password}=req.body
-        const user=await userModel.findOne({email}) 
-        if(!user)return res.json({success:false,error:'user not found'});
-        const isMatch=bcrypt.compare(password,user.password)
-        if(isMatch){
-            const token=createToken(user._id,user.role)
-            console.log(token)
-            res.json({success:true,token})
+export const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        
+        // Input validation
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                error: "Email and password are required"
+            });
         }
-    }
-    catch(e){
-        res.json({success:false,error:e.message})
+
+        // Find user by email
+        const user = await userModel.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                error: 'Invalid email or password'
+            });
+        }
+
+        // Compare password FIRST before checking verification status
+        const isMatch = await bcrypt.compare(password, user.password);
+        
+        if (!isMatch) {
+            return res.status(401).json({
+                success: false,
+                error: 'Invalid email or password'
+            });
+        }
+
+        // Only check verification status AFTER credentials are validated
+        if (!user.isVerified) {
+            return res.status(403).json({
+                success: false,
+                error: 'Your account is pending admin verification. Please wait for approval before logging in.'
+            });
+        }
+
+        // Create token and send response
+        const token = createToken(user._id, user.role);
+        
+        res.status(200).json({
+            success: true,
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                isVerified: user.isVerified,
+                isProfileComplete: user.isProfileComplete
+            }
+        });
+
+    } catch (e) {
+        console.error('Login error:', e.message);
+        res.status(500).json({
+            success: false,
+            error: "Internal server error. Please try again later."
+        });
     }
 }
 
@@ -85,7 +222,6 @@ export const Adminlogin =async(req,res)=>{
         if(email ===process.env.ADMIN_EMAIL && password ===process.env.ADMIN_PASSWORD){
             const user=await userModel.findOne({email:email})
             const token=createToken(user._id,user.role)
-            console.log(token)
             res.json({success:true,token})
         }
         else{
@@ -140,10 +276,7 @@ export const inviteCodeRegister=async(req,res)=>{
 export const inviteCodeLogin=async(req,res)=>{
     try{
         const {email,code}=req.body 
-        console.log(email)
-        console.log(code)
         const user=userData.filter(b=>b.email === email &&  b.code=== code)
-        console.log(user.length)
 
         if(user.length<=0)return res.json({success:false,error:'please use your correct email or invite code '})
         const salt=await bcrypt.genSalt(10)
@@ -199,7 +332,6 @@ export const verifyUser=async(req,res)=>{
         return res.json({success:true ,msg:"user verified successfully"})
     }
     catch(e){
-        console.log(e.message)
         res.json({success:false,error:e.message})
     }
 }

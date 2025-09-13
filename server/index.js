@@ -15,14 +15,18 @@ ConnectCloudinary()
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use(cors())
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}))
 
 
 app.use('/api/auth/',Auth)
 app.use('/api/profile',profileRoute)
 app.use('/api/event',eventRoute)
 ConnectDB()
-console.log(process.env.MONGO_URL)
 app.get('/',(req,res)=>{
     res.json('landing page is here ')
 })
