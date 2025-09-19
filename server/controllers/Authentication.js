@@ -10,14 +10,22 @@ import { trans } from "../config/email.js"
 //accessing user data 
 config()
 
-
-    const rowData=fs.readFileSync('user.json')
-    const userData=JSON.parse(rowData)
+// Safely load user data
+let userData = [];
+try {
+    if (fs.existsSync('user.json')) {
+        const rowData = fs.readFileSync('user.json');
+        userData = JSON.parse(rowData);
+    }
+} catch (error) {
+    console.warn('Warning: Could not load user.json file:', error.message);
+    userData = [];
+}
     
 
 //JWT TOKEN
 const createToken=(id,role)=>{
-    return jwt.sign({id,role},process.env.JWT_SECRATE)
+    return jwt.sign({id,role},process.env.JWT_SECRET)
 }
 
 //Register

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import LogoutButton from './LogoutButton';
 
 const sidebarItems = [
   { icon: Home, label: "Home", path: "/home" },
@@ -28,6 +29,7 @@ const Sidebar = ({ user = { name: "John Doe", role: "Student", avatar: "" } }) =
   const location = useLocation();
 
   const handleLogout = () => {
+    // This is now handled by LogoutButton component
     navigate('/');
   };
 
@@ -82,14 +84,10 @@ const Sidebar = ({ user = { name: "John Doe", role: "Student", avatar: "" } }) =
 
         {/* Logout */}
         <div className="p-4 border-t">
-          <Button
+          <LogoutButton 
             variant="ghost"
             className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
-            onClick={handleLogout}
-          >
-            <LogOut className="mr-3 h-4 w-4" />
-            <span className="poppins-medium">Logout</span>
-          </Button>
+          />
         </div>
       </div>
     </div>

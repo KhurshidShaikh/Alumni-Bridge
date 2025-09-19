@@ -33,7 +33,7 @@ const AlumniPage = () => {
   const mockAlumni = [
     {
       id: 1,
-      name: "Sarah Johnson",
+      name: "Raj Verma",
       batch: "2020",
       department: "Computer Science",
       company: "Google",
@@ -44,11 +44,11 @@ const AlumniPage = () => {
       phone: "+1 (555) 123-4567",
       linkedin: "linkedin.com/in/sarahjohnson",
       skills: ["React", "Python", "Machine Learning"],
-      isAvailableForMentorship: true
+      
     },
     {
       id: 2,
-      name: "Michael Chen",
+      name: "Sunita Singh",
       batch: "2019",
       department: "Electrical Engineering",
       company: "Tesla",
@@ -59,11 +59,10 @@ const AlumniPage = () => {
       phone: "+1 (555) 234-5678",
       linkedin: "linkedin.com/in/michaelchen",
       skills: ["Circuit Design", "Embedded Systems", "IoT"],
-      isAvailableForMentorship: true
     },
     {
       id: 3,
-      name: "Emily Rodriguez",
+      name: "Aditya Patil",
       batch: "2021",
       department: "Business Administration",
       company: "McKinsey & Company",

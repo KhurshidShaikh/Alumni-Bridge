@@ -1,0 +1,7 @@
+# Redux Dependencies to Install
+# Run these commands in the client directory:
+
+npm install @reduxjs/toolkit react-redux
+
+# Optional: For Redux DevTools Extension (recommended for development)
+# This is automatically supported by @reduxjs/toolkit

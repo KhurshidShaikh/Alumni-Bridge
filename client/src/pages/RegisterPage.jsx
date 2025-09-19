@@ -1,11 +1,16 @@
-import { useState } from "react"
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Separator } from "@/components/ui/separator"
+import { Eye, EyeOff, Mail, Lock, User, GraduationCap, ArrowRight, UserPlus, Users } from "lucide-react"
+import { Link, useNavigate } from 'react-router-dom'
 import { Toaster, toast } from "sonner"
-import { Eye, EyeOff, GraduationCap, Users, UserPlus } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import { loadUserFromStorage } from '../store/slices/userSlice'
+import { selectIsAuthenticated, selectCurrentUser } from '../store/selectors/userSelectors'
 
 function RegisterPage() {
   const [name, setName] = useState("")
@@ -15,7 +20,29 @@ function RegisterPage() {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch()
+  const isAuthenticated = useSelector(selectIsAuthenticated)
+  const currentUser = useSelector(selectCurrentUser)
   const navigate = useNavigate()
+
+  // Check if user is already authenticated and redirect accordingly
+  useEffect(() => {
+    // Load user from storage if not already loaded
+    if (!isAuthenticated && !currentUser) {
+      dispatch(loadUserFromStorage())
+    }
+  }, [dispatch, isAuthenticated, currentUser])
+
+  useEffect(() => {
+    // If user is authenticated, redirect based on profile completion
+    if (isAuthenticated && currentUser) {
+      if (!currentUser.isProfileComplete) {
+        navigate(`/profile/edit/${currentUser._id || currentUser.id}`)
+      } else {
+        navigate('/home')
+      }
+    }
+  }, [isAuthenticated, currentUser, navigate])
 
   const validateEmail = (email) => {
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/

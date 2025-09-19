@@ -27,6 +27,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import Sidebar from '../components/Sidebar';
 import BottomBar from '../components/BottomBar';
+import AuthTest from '../components/AuthTest';
 
 // Mock data
 const mockUser = {
@@ -158,7 +159,7 @@ const HomePage = () => {
                 </CardHeader>
                 <CardContent className="p-0">
                   {mockRecentAlumni.map((alumni, index) => (
-                    <div className="p-3 md:p-4 border-b last:border-b-0 hover:bg-gray-50 transition-colors">
+                    <div key={index} className="p-3 md:p-4 border-b last:border-b-0 hover:bg-gray-50 transition-colors">
                       <div className="flex items-center space-x-3 md:space-x-4">
                         <Avatar className="h-10 w-10 md:h-12 md:w-12">
                           <AvatarImage src={alumni.avatar} />
@@ -271,6 +272,9 @@ const HomePage = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Auth Test Component - Remove in production */}
+          <AuthTest />
         </div>
       </div>
     </div>

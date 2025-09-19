@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
+import ProfileEdit from './pages/ProfileEdit';
 import AlumniPage from './pages/AlumniPage';
 import JobsPage from './pages/JobsPage';
 import EventsPage from './pages/EventsPage';
@@ -14,6 +15,7 @@ import MentorshipPage from './pages/MentorshipPage';
 import SettingsPage from './pages/SettingsPage';
 import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -25,17 +27,56 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           
-          {/* Protected Routes - will add authentication later */}
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/alumni" element={<AlumniPage />} />
-          <Route path="/jobs" element={<JobsPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/mentorship" element={<MentorshipPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          {/* Profile Edit Route - Accessible to authenticated users */}
+          <Route path="/profile/edit/:id" element={
+            <ProtectedRoute>
+              <ProfileEdit />
+            </ProtectedRoute>
+          } />
           
-          {/* Admin Routes - will add admin authentication later */}
-          <Route path="/admin" element={<AdminPage />} />
+          {/* Protected Routes - Require complete profile */}
+          <Route path="/home" element={
+            <ProtectedRoute requireProfileComplete={true}>
+              <HomePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute requireProfileComplete={true}>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/alumni" element={
+            <ProtectedRoute requireProfileComplete={true}>
+              <AlumniPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/jobs" element={
+            <ProtectedRoute requireProfileComplete={true}>
+              <JobsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/events" element={
+            <ProtectedRoute requireProfileComplete={true}>
+              <EventsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/mentorship" element={
+            <ProtectedRoute requireProfileComplete={true}>
+              <MentorshipPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/settings" element={
+            <ProtectedRoute requireProfileComplete={true}>
+              <SettingsPage />
+            </ProtectedRoute>
+          } />
+          
+          {/* Admin Routes - Require authentication */}
+          <Route path="/admin" element={
+            <ProtectedRoute>
+              <AdminPage />
+            </ProtectedRoute>
+          } />
           
           {/* Catch all route - 404 Not Found */}
           <Route path="*" element={<NotFoundPage />} />

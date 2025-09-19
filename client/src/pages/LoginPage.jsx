@@ -1,18 +1,45 @@
-import { useState } from "react"
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { Eye, EyeOff, Mail, Lock, ArrowRight, GraduationCap } from "lucide-react"
+import { Link, useNavigate } from 'react-router-dom'
 import { Toaster, toast } from "sonner"
-import { Eye, EyeOff, GraduationCap, Users } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import { loginStart, loginSuccess, loginFailure, loadUserFromStorage } from '../store/slices/userSlice'
+import { selectIsAuthenticated, selectCurrentUser } from '../store/selectors/userSelectors'
+import { selectIsLoading } from "../store/selectors/userSelectors"
 
  function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch()
+  const isLoading = useSelector(selectIsLoading)
+  const isAuthenticated = useSelector(selectIsAuthenticated)
+  const currentUser = useSelector(selectCurrentUser)
   const navigate = useNavigate();
+
+  // Check if user is already authenticated and redirect accordingly
+  useEffect(() => {
+    // Load user from storage if not already loaded
+    if (!isAuthenticated && !currentUser) {
+      dispatch(loadUserFromStorage())
+    }
+  }, [dispatch, isAuthenticated, currentUser])
+
+  useEffect(() => {
+    // If user is authenticated, redirect based on profile completion
+    if (isAuthenticated && currentUser) {
+      if (!currentUser.isProfileComplete) {
+        navigate(`/profile/edit/${currentUser._id || currentUser.id}`)
+      } else {
+        navigate('/home')
+      }
+    }
+  }, [isAuthenticated, currentUser, navigate])
 
   const validateEmail = (email) => {
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
@@ -37,7 +64,7 @@ import { useNavigate } from "react-router-dom"
       return
     }
 
-    setIsLoading(true)
+    dispatch(loginStart())
 
     try {
       // Make API call to login endpoint
@@ -56,19 +83,26 @@ import { useNavigate } from "react-router-dom"
       const data = await response.json()
 
       if (data.success) {
-        // Store token in localStorage
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('user', JSON.stringify(data.user))
+        // Dispatch login success with user data and token
+        dispatch(loginSuccess({
+          user: data.user,
+          token: data.token
+        }))
         
         toast.success(`Welcome back to Alumni Bridge, ${data.user.name}!`)
         
-        // Navigate to home page after successful login
+        // Check if profile is complete and navigate accordingly
         setTimeout(() => {
-          navigate('/home')
+          if (!data.user.isProfileComplete) {
+            navigate(`/profile/edit/${data.user.id}`)
+          } else {
+            navigate('/home')
+          }
         }, 1500)
       } else {
         // Handle specific error cases
         if (response.status === 403) {
+          dispatch(loginFailure('Account pending verification'))
           toast.error(
             "🔒Account Not Verified\n\nYour account is pending admin verification. You will receive a notification once your account is approved",
             {
@@ -81,14 +115,14 @@ import { useNavigate } from "react-router-dom"
             }
           )
         } else {
+          dispatch(loginFailure(data.error || 'Invalid credentials'))
           toast.error("Invalid credentials. Please check your email and password and try again.")
         }
       }
     } catch (error) {
       console.error('Login error:', error)
+      dispatch(loginFailure('Network error'))
       toast.error('Network error. Please check your connection and try again.')
-    } finally {
-      setIsLoading(false)
     }
   }
 
