@@ -45,6 +45,7 @@ const userSchema = mongoose.Schema(
       type: Boolean, 
       default: false 
     },
+    batch: { type: Number, min: 1900, max: 2050 },
     profile: {
       bio: { type: String },
       phone: { type: String },
@@ -53,10 +54,8 @@ const userSchema = mongoose.Schema(
       website: { type: String },
       location: { type: String },
       branch: { type: String },
-      graduationYear: { type: String },
       currentCompany: { type: String },
       currentPosition: { type: String },
-      batch: { type: String },
       profileUrl: { type: String },
       avatarUrl: String,
       resumeUrl: String,

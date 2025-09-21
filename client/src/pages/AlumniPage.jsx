@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../store/selectors/userSelectors';
+import { toast } from 'sonner';
 import { 
   Users, 
   Search, 
@@ -27,113 +30,226 @@ const AlumniPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBatch, setSelectedBatch] = useState('All');
   const [selectedDepartment, setSelectedDepartment] = useState('All');
+  const [alumni, setAlumni] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({});
+  const [connectionStatuses, setConnectionStatuses] = useState({});
+  const [connectionLoading, setConnectionLoading] = useState({});
   const navigate = useNavigate();
+  const currentUser = useSelector(selectCurrentUser);
 
-  // Mock alumni data
-  const mockAlumni = [
-    {
-      id: 1,
-      name: "Raj Verma",
-      batch: "2020",
-      department: "Computer Science",
-      company: "Google",
-      position: "Senior Software Engineer",
-      location: "San Francisco, CA",
-      avatar: "/api/placeholder/40/40",
-      email: "sarah.johnson@gmail.com",
-      phone: "+1 (555) 123-4567",
-      linkedin: "linkedin.com/in/sarahjohnson",
-      skills: ["React", "Python", "Machine Learning"],
+  // Fetch alumni data from backend
+  const fetchAlumni = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
       
-    },
-    {
-      id: 2,
-      name: "Sunita Singh",
-      batch: "2019",
-      department: "Electrical Engineering",
-      company: "Tesla",
-      position: "Hardware Engineer",
-      location: "Austin, TX",
-      avatar: "/api/placeholder/40/40",
-      email: "michael.chen@tesla.com",
-      phone: "+1 (555) 234-5678",
-      linkedin: "linkedin.com/in/michaelchen",
-      skills: ["Circuit Design", "Embedded Systems", "IoT"],
-    },
-    {
-      id: 3,
-      name: "Aditya Patil",
-      batch: "2021",
-      department: "Business Administration",
-      company: "McKinsey & Company",
-      position: "Management Consultant",
-      location: "New York, NY",
-      avatar: "/api/placeholder/40/40",
-      email: "emily.rodriguez@mckinsey.com",
-      phone: "+1 (555) 345-6789",
-      linkedin: "linkedin.com/in/emilyrodriguez",
-      skills: ["Strategy", "Analytics", "Leadership"],
-      isAvailableForMentorship: false
-    },
-    {
-      id: 4,
-      name: "David Kim",
-      batch: "2018",
-      department: "Computer Science",
-      company: "Microsoft",
-      position: "Principal Engineer",
-      location: "Seattle, WA",
-      avatar: "/api/placeholder/40/40",
-      email: "david.kim@microsoft.com",
-      phone: "+1 (555) 456-7890",
-      linkedin: "linkedin.com/in/davidkim",
-      skills: ["Azure", "C#", "DevOps"],
-      isAvailableForMentorship: true
-    },
-    {
-      id: 5,
-      name: "Lisa Thompson",
-      batch: "2020",
-      department: "Mechanical Engineering",
-      company: "SpaceX",
-      position: "Propulsion Engineer",
-      location: "Hawthorne, CA",
-      avatar: "/api/placeholder/40/40",
-      email: "lisa.thompson@spacex.com",
-      phone: "+1 (555) 567-8901",
-      linkedin: "linkedin.com/in/lisathompson",
-      skills: ["Rocket Propulsion", "CAD", "Testing"],
-      isAvailableForMentorship: true
-    },
-    {
-      id: 6,
-      name: "James Wilson",
-      batch: "2019",
-      department: "Business Administration",
-      company: "Goldman Sachs",
-      position: "Investment Banker",
-      location: "New York, NY",
-      avatar: "/api/placeholder/40/40",
-      email: "james.wilson@gs.com",
-      phone: "+1 (555) 678-9012",
-      linkedin: "linkedin.com/in/jameswilson",
-      skills: ["Finance", "M&A", "Valuation"],
-      isAvailableForMentorship: false
+      if (!token) {
+        toast.error('Please login to view alumni directory');
+        navigate('/login');
+        return;
+      }
+
+      // Build query parameters
+      const params = new URLSearchParams();
+      if (selectedBatch !== 'All') params.append('batch', selectedBatch);
+      if (selectedDepartment !== 'All') params.append('branch', selectedDepartment);
+      if (searchTerm.trim()) params.append('search', searchTerm.trim());
+
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const response = await fetch(`${backendUrl}/api/profile/alumni?${params}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setAlumni(data.alumni);
+        setPagination(data.pagination);
+        // Fetch connection statuses for each alumni
+        fetchConnectionStatuses(data.alumni);
+      } else {
+        toast.error(data.error || 'Failed to fetch alumni data');
+      }
+    } catch (error) {
+      console.error('Fetch alumni error:', error);
+      toast.error('Failed to load alumni directory');
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  const batches = ["All", "2018", "2019", "2020", "2021", "2022"];
-  const departments = ["All", "Computer Science", "Electrical Engineering", "Mechanical Engineering", "Business Administration"];
-
-  const filteredAlumni = mockAlumni.filter(alumni => {
-    const matchesSearch = alumni.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         alumni.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         alumni.position.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesBatch = selectedBatch === 'All' || alumni.batch === selectedBatch;
-    const matchesDepartment = selectedDepartment === 'All' || alumni.department === selectedDepartment;
+  // Fetch connection statuses for alumni
+  const fetchConnectionStatuses = async (alumniList) => {
+    const token = localStorage.getItem('token');
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
     
-    return matchesSearch && matchesBatch && matchesDepartment;
-  });
+    const statuses = {};
+    
+    for (const alumniProfile of alumniList) {
+      try {
+        const response = await fetch(`${backendUrl}/api/connections/status/${alumniProfile._id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+          statuses[alumniProfile._id] = data.status;
+        }
+      } catch (error) {
+        console.error('Error fetching connection status:', error);
+      }
+    }
+    
+    setConnectionStatuses(statuses);
+  };
+
+  // Handle connection request
+  const handleConnectionRequest = async (alumniId) => {
+    try {
+      setConnectionLoading(prev => ({ ...prev, [alumniId]: true }));
+      const token = localStorage.getItem('token');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+
+      const response = await fetch(`${backendUrl}/api/connections/request`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          toUserId: alumniId,
+          message: 'Hi! I would like to connect with you.'
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        toast.success('Connection request sent successfully!');
+        setConnectionStatuses(prev => ({ ...prev, [alumniId]: 'request_sent' }));
+      } else {
+        toast.error(data.error || 'Failed to send connection request');
+      }
+    } catch (error) {
+      console.error('Connection request error:', error);
+      toast.error('Failed to send connection request');
+    } finally {
+      setConnectionLoading(prev => ({ ...prev, [alumniId]: false }));
+    }
+  };
+
+  // Handle accept connection request
+  const handleAcceptRequest = async (alumniId) => {
+    // This would need the request ID, which we'd get from a different endpoint
+    // For now, we'll implement this in the connections page
+    toast.info('Please visit the Connections page to manage requests');
+  };
+
+  // Fetch alumni on component mount and when filters change
+  useEffect(() => {
+    fetchAlumni();
+  }, [selectedBatch, selectedDepartment]);
+
+  // Debounced search
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchAlumni();
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
+
+  // Generate batch years dynamically
+  const currentYear = new Date().getFullYear();
+  const batches = ["All", ...Array.from({ length: 10 }, (_, i) => (currentYear - i).toString())];
+  const departments = ["All", "Computer Science", "Information Technology", "Electronics", "Mechanical", "Civil", "Electrical", "Chemical"];
+
+  // Handle alumni profile card click
+  const handleAlumniClick = (alumniId) => {
+    navigate(`/alumni/${alumniId}`);
+  };
+
+  // Render connection button based on status
+  const renderConnectionButton = (alumniId) => {
+    const status = connectionStatuses[alumniId];
+    const isLoading = connectionLoading[alumniId];
+
+    const handleClick = (e, action) => {
+      e.stopPropagation();
+      if (action === 'connect') {
+        handleConnectionRequest(alumniId);
+      } else if (action === 'accept') {
+        handleAcceptRequest(alumniId);
+      } else if (action === 'view') {
+        handleAlumniClick(alumniId);
+      }
+    };
+
+    if (isLoading) {
+      return (
+        <Button size="sm" disabled className="bg-gray-400">
+          <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+          Loading...
+        </Button>
+      );
+    }
+
+    switch (status) {
+      case 'connected':
+        return (
+          <Button 
+            size="sm" 
+            variant="outline"
+            className="border-green-500 text-green-600 hover:bg-green-50"
+            onClick={(e) => handleClick(e, 'view')}
+          >
+            Connected
+          </Button>
+        );
+      
+      case 'request_sent':
+        return (
+          <Button 
+            size="sm" 
+            variant="outline"
+            className="border-yellow-500 text-yellow-600 hover:bg-yellow-50"
+            onClick={(e) => handleClick(e, 'view')}
+          >
+            Request Sent
+          </Button>
+        );
+      
+      case 'request_received':
+        return (
+          <Button 
+            size="sm" 
+            className="bg-green-600 hover:bg-green-700"
+            onClick={(e) => handleClick(e, 'accept')}
+          >
+            Accept Request
+          </Button>
+        );
+      
+      case 'not_connected':
+      default:
+        return (
+          <Button 
+            size="sm" 
+            className="bg-blue-600 hover:bg-blue-700"
+            onClick={(e) => handleClick(e, 'connect')}
+          >
+            Connect
+          </Button>
+        );
+    }
+  };
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -202,87 +318,75 @@ const AlumniPage = () => {
           </div>
 
           {/* Alumni Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {filteredAlumni.map((alumni) => (
-              <Card key={alumni.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-3 md:space-x-4 mb-4">
-                      <Avatar className="h-12 w-12 md:h-16 md:w-16">
-                        <AvatarImage src={alumni.avatar} />
-                        <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold text-sm md:text-lg">
-                          {alumni.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <h3 className="text-base md:text-lg font-semibold text-gray-900 poppins-medium">{alumni.name}</h3>
-                        <p className="text-xs md:text-sm text-gray-600">{alumni.batch} Graduate</p>
-                        <Badge variant="outline" className="mt-1 text-xs">{alumni.department}</Badge>
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <span className="ml-2 text-gray-600">Loading alumni...</span>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {alumni.map((alumniProfile) => (
+                <Card 
+                  key={alumniProfile._id} 
+                  className="hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => handleAlumniClick(alumniProfile._id)}
+                >
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-3 md:space-x-4 mb-4">
+                        <Avatar className="h-12 w-12 md:h-16 md:w-16">
+                          <AvatarImage src={alumniProfile.profile?.profileUrl || alumniProfile.profile?.avatarUrl} />
+                          <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold text-sm md:text-lg">
+                            {alumniProfile.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <h3 className="text-base md:text-lg font-semibold text-gray-900 poppins-medium">{alumniProfile.name}</h3>
+                          <p className="text-xs md:text-sm text-gray-600">{alumniProfile.batch} Graduate</p>
+                          <Badge variant="outline" className="mt-1 text-xs">{alumniProfile.profile?.branch || 'Not specified'}</Badge>
+                        </div>
                       </div>
                     </div>
-                    {alumni.isAvailableForMentorship && (
-                      <Badge variant="secondary" className="bg-green-100 text-green-800">
-                        Available for Mentorship
-                      </Badge>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <GraduationCap className="h-4 w-4 mr-2" />
-                      {alumni.department}
-                    </div>
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center text-xs md:text-sm text-gray-600">
-                        <Building className="h-3 w-3 md:h-4 md:w-4 mr-2" />
-                        {alumni.company}
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <GraduationCap className="h-4 w-4 mr-2" />
+                        {alumniProfile.profile?.branch || 'Not specified'}
                       </div>
-                      <div className="flex items-center text-xs md:text-sm text-gray-600">
-                        <Briefcase className="h-3 w-3 md:h-4 md:w-4 mr-2" />
-                        {alumni.position}
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center text-xs md:text-sm text-gray-600">
+                          <Building className="h-3 w-3 md:h-4 md:w-4 mr-2" />
+                          {alumniProfile.profile?.currentCompany || 'Not specified'}
+                        </div>
+                        <div className="flex items-center text-xs md:text-sm text-gray-600">
+                          <Briefcase className="h-3 w-3 md:h-4 md:w-4 mr-2" />
+                          {alumniProfile.profile?.currentPosition || 'Not specified'}
+                        </div>
+                        <div className="flex items-center text-xs md:text-sm text-gray-600">
+                          <MapPin className="h-3 w-3 md:h-4 md:w-4 mr-2" />
+                          {alumniProfile.profile?.location || 'Not specified'}
+                        </div>
                       </div>
-                      <div className="flex items-center text-xs md:text-sm text-gray-600">
-                        <MapPin className="h-3 w-3 md:h-4 md:w-4 mr-2" />
-                        {alumni.location}
+                      <Separator className="my-3" />
+                      <div className="flex justify-between items-center">
+                        <div className="flex space-x-2">
+                          {alumniProfile.profile?.linkedin && (
+                            <Button size="sm" variant="outline" className="h-8 w-8 p-0">
+                              <Linkedin className="h-3 w-3" />
+                            </Button>
+                          )}
+                        </div>
+                        {renderConnectionButton(alumniProfile._id)}
                       </div>
                     </div>
-                    <div className="flex flex-wrap gap-1 mb-4">
-                      {alumni.skills.slice(0, 2).map((skill, skillIndex) => (
-                        <Badge key={skillIndex} variant="secondary" className="text-xs">
-                          {skill}
-                        </Badge>
-                      ))}
-                      {alumni.skills.length > 2 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{alumni.skills.length - 2} more
-                        </Badge>
-                      )}
-                    </div>
-                    <Separator className="my-3" />
-                    <div className="flex justify-between items-center">
-                      <div className="flex space-x-2">
-                        <Button size="sm" variant="outline" className="h-8 w-8 p-0">
-                          <Mail className="h-3 w-3" />
-                        </Button>
-                        <Button size="sm" variant="outline" className="h-8 w-8 p-0">
-                          <Phone className="h-3 w-3" />
-                        </Button>
-                        <Button size="sm" variant="outline" className="h-8 w-8 p-0">
-                          <Linkedin className="h-3 w-3" />
-                        </Button>
-                      </div>
-                      <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                        Connect
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
 
-          {filteredAlumni.length === 0 && (
+          {!loading && alumni.length === 0 && (
             <Card className="text-center py-12">
               <CardContent>
                 <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />

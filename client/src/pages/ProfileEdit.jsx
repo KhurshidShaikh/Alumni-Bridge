@@ -34,10 +34,8 @@ function ProfileEdit() {
     website: "",
     location: "",
     branch: "",
-    graduationYear: "",
     currentCompany: "",
     currentPosition: "",
-    batch: "",
     profileUrl: "",
     grNo: ""
   })
@@ -77,10 +75,8 @@ function ProfileEdit() {
             website: user.profile?.website || "",
             location: user.profile?.location || "",
             branch: user.profile?.branch || "",
-            graduationYear: user.profile?.graduationYear?.toString() || "",
             currentCompany: user.profile?.currentCompany || "",
             currentPosition: user.profile?.currentPosition || "",
-            batch: user.profile?.batch?.toString() || "",
             profileUrl: user.profile?.profileUrl || "",
             grNo: user.grNo || ""
           })
@@ -112,10 +108,8 @@ function ProfileEdit() {
         website: currentUser.profile?.website || "",
         location: currentUser.profile?.location || "",
         branch: currentUser.profile?.branch || "",
-        graduationYear: currentUser.profile?.graduationYear?.toString() || "",
         currentCompany: currentUser.profile?.currentCompany || "",
         currentPosition: currentUser.profile?.currentPosition || "",
-        batch: currentUser.profile?.batch?.toString() || "",
         profileUrl: currentUser.profile?.profileUrl || "",
         grNo: currentUser.grNo || ""
       })
@@ -203,10 +197,6 @@ function ProfileEdit() {
       errors.push("Branch is required")
     }
 
-    if (!formData.graduationYear) {
-      errors.push("Graduation year is required")
-    }
-
     // Alumni specific validations
     if (currentUser?.role === 'alumni') {
       if (!formData.currentCompany.trim()) {
@@ -217,12 +207,6 @@ function ProfileEdit() {
       }
     }
 
-    // Student specific validations
-    if (currentUser?.role === 'student') {
-      if (!formData.batch) {
-        errors.push("Batch is required for students")
-      }
-    }
 
     return errors
   }
@@ -420,56 +404,7 @@ function ProfileEdit() {
                   </Select>
                 </div>
 
-                {currentUser.role === 'student' && (
-                  <div className="space-y-2">
-                    <Label htmlFor="batch" className="text-sm font-semibold text-gray-700">
-                      Current Batch *
-                    </Label>
-                    <Select value={formData.batch} onValueChange={(value) => handleInputChange('batch', value)}>
-                      <SelectTrigger id="batch">
-                        <SelectValue placeholder="Select batch" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="2024">2024</SelectItem>
-                        <SelectItem value="2025">2025</SelectItem>
-                        <SelectItem value="2026">2026</SelectItem>
-                        <SelectItem value="2027">2027</SelectItem>
-                        <SelectItem value="2028">2028</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
 
-                <div className="space-y-2">
-                  <Label htmlFor="graduationYear" className="text-sm font-semibold text-gray-700">
-                    Graduation Year *
-                  </Label>
-                  <Select value={formData.graduationYear} onValueChange={(value) => handleInputChange('graduationYear', value)}>
-                    <SelectTrigger id="graduationYear">
-                      <SelectValue placeholder="Select year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Array.from({ length: 20 }, (_, i) => {
-                        const currentYear = new Date().getFullYear()
-                        let year
-                        
-                        if (currentUser?.role === 'alumni') {
-                          // Alumni: Show only past years (up to current year - 1)
-                          year = currentYear - 1 - i
-                        } else {
-                          // Students: Show past and future years
-                          year = currentYear - 10 + i
-                        }
-                        
-                        return (
-                          <SelectItem key={year} value={year.toString()}>
-                            {year}
-                          </SelectItem>
-                        )
-                      })}
-                    </SelectContent>
-                  </Select>
-                </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="grNo" className="text-sm font-semibold text-gray-700">

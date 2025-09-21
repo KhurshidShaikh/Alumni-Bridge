@@ -16,6 +16,7 @@ function RegisterPage() {
   const [name, setName] = useState("")
   const [userType, setUserType] = useState("")
   const [grNo, setGrNo] = useState("")
+  const [batch, setBatch] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -61,6 +62,12 @@ function RegisterPage() {
     return name.trim().length >= 2 && name.trim().length <= 100
   }
 
+  const validateBatch = (batch) => {
+    const year = parseInt(batch)
+    const currentYear = new Date().getFullYear()
+    return year >= 1900 && year <= currentYear + 10 // Allow future graduation years
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -82,6 +89,11 @@ function RegisterPage() {
 
     if (!grNo || !validateGrNo(grNo)) {
       toast.error("Please enter your GR Number.")
+      return
+    }
+
+    if (!batch || !validateBatch(batch)) {
+      toast.error("Please enter a valid batch year (graduation year).")
       return
     }
 
@@ -110,7 +122,8 @@ function RegisterPage() {
           email: email.toLowerCase().trim(),
           password,
           role: userType,
-          GrNo: grNo.trim()
+          GrNo: grNo.trim(),
+          batch: parseInt(batch)
         })
       })
 
@@ -124,6 +137,7 @@ function RegisterPage() {
         setPassword('')
         setUserType('')
         setGrNo('')
+        setBatch('')
         // Navigate to login after successful registration
         setTimeout(() => {
           navigate('/login')
@@ -236,6 +250,24 @@ function RegisterPage() {
                     value={grNo}
                     onChange={(e) => setGrNo(e.target.value.trim())}
                     className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-500"
+                    required
+                  />
+                </div>
+
+                {/* Batch Year Input */}
+                <div className="space-y-2">
+                  <Label htmlFor="batch" className="text-sm font-semibold text-gray-700">
+                    Batch Year (Graduation Year)
+                  </Label>
+                  <Input
+                    id="batch"
+                    type="number"
+                    placeholder="Enter your graduation year (e.g., 2024)"
+                    value={batch}
+                    onChange={(e) => setBatch(e.target.value)}
+                    className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-500"
+                    min="1900"
+                    max="2050"
                     required
                   />
                 </div>

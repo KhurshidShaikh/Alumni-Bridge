@@ -9,6 +9,10 @@ import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 import ProfileEdit from './pages/ProfileEdit';
 import AlumniPage from './pages/AlumniPage';
+import AlumniDetailPage from './pages/AlumniDetailPage';
+import ConnectionsPage from './pages/ConnectionsPage';
+import MessagesListPage from './pages/MessagesListPage';
+import ChatPage from './pages/ChatPage';
 import JobsPage from './pages/JobsPage';
 import EventsPage from './pages/EventsPage';
 import MentorshipPage from './pages/MentorshipPage';
@@ -48,6 +52,31 @@ function App() {
           <Route path="/alumni" element={
             <ProtectedRoute requireProfileComplete={true}>
               <AlumniPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/alumni/:alumniId" element={
+            <ProtectedRoute requireProfileComplete={true}>
+              <AlumniDetailPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/connections" element={
+            <ProtectedRoute requireProfileComplete={true}>
+              <ConnectionsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/messages" element={
+            <ProtectedRoute requireProfileComplete={true}>
+              <MessagesListPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/chat/:conversationId" element={
+            <ProtectedRoute requireProfileComplete={true}>
+              <ChatPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/chat/user/:userId" element={
+            <ProtectedRoute requireProfileComplete={true}>
+              <ChatPage />
             </ProtectedRoute>
           } />
           <Route path="/jobs" element={

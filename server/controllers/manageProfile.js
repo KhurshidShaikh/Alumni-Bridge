@@ -17,9 +17,7 @@ export const setProfile=async(req,res)=>{
             location,
             currentCompany,
             currentPosition,
-            branch,
-            batch,
-            graduationYear
+            branch
           } = req.body;
       
          
@@ -42,8 +40,6 @@ export const setProfile=async(req,res)=>{
                         currentCompany: currentCompany,
                         currentPosition: currentPosition,
                         branch: branch,
-                        batch: batch,
-                        graduationYear: graduationYear,
                         },
                         isProfileComplete:true
                 },
@@ -74,9 +70,7 @@ export const updateProfile = async (req, res) => {
       location,
       currentCompany,
       currentPosition,
-      branch,
-      batch,
-      graduationYear
+      branch
     } = req.body;
 
     const avatarUrl = req.body.avatarUrl || (req.file ? req.file.path : null);
@@ -139,15 +133,6 @@ export const updateProfile = async (req, res) => {
       updatedFields.push("branch");
     }
 
-    if (batch) {
-      user.profile.batch = batch;
-      updatedFields.push("batch");
-    }
-
-    if (graduationYear) {
-      user.profile.graduationYear = graduationYear;
-      updatedFields.push("graduationYear");
-    }
 
     if (updatedFields.length === 0) {
       return res.json({ success: false, msg: "No valid fields provided to update" });

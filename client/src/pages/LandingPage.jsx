@@ -7,6 +7,24 @@ const LandingPage = () => {
 
   const navigate=useNavigate();
 
+  // Check for existing token and redirect to home if authenticated
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Verify token is not expired or invalid by checking if it exists and is not empty
+      try {
+        // Basic token validation - check if it's not empty and looks like a JWT
+        if (token.trim() && token.split('.').length === 3) {
+          navigate('/home');
+          return;
+        }
+      } catch (error) {
+        // If token is invalid, remove it
+        localStorage.removeItem('token');
+      }
+    }
+  }, [navigate]);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);

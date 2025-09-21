@@ -31,13 +31,13 @@ const createToken=(id,role)=>{
 //Register
 export const Register = async (req, res) => {
     try {
-        const { name, email, password, role, GrNo } = req.body;
+        const { name, email, password, role, GrNo, batch } = req.body;
         
         // Input validation
-        if (!name || !email || !password || !role || !GrNo) {
+        if (!name || !email || !password || !role || !GrNo || !batch) {
             return res.status(400).json({
                 success: false,
-                error: "All fields are required: name, email, password, role, and GR Number"
+                error: "All fields are required: name, email, password, role, GR Number, and batch year"
             });
         }
 
@@ -82,6 +82,16 @@ export const Register = async (req, res) => {
             });
         }
 
+        // Validate batch year
+        const batchYear = parseInt(batch);
+        const currentYear = new Date().getFullYear();
+        if (isNaN(batchYear) || batchYear < 1900 || batchYear > currentYear + 10) {
+            return res.status(400).json({
+                success: false,
+                error: "Please enter a valid batch year between 1900 and " + (currentYear + 10)
+            });
+        }
+
         // Check if user already exists
         const userExist = await userModel.findOne({ email: email.toLowerCase() });
         if (userExist) {
@@ -111,6 +121,7 @@ export const Register = async (req, res) => {
             password: hashedPassword,
             role,
             GrNo: GrNo.trim(),
+            batch: batchYear,
             isVerified: false, // Explicitly set to false for admin verification
             isProfileComplete: false
         });
@@ -314,7 +325,6 @@ export const inviteCodeLogin=async(req,res)=>{
                     currentPosition: u.profile.currentPosition,
                     branch: u.profile.branch,
                     batch: u.profile.batch,
-                    graduationYear: u.profile.graduationYear,
                     }
                     
                    }

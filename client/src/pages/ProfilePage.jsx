@@ -155,7 +155,7 @@ const ProfilePage = () => {
                       <h2 className="text-lg md:text-xl font-semibold text-gray-900 poppins-medium">{userProfile.name}</h2>
                       <p className="text-sm md:text-base text-gray-600">{userProfile.profile?.currentPosition || userProfile.role}</p>
                       <p className="text-xs md:text-sm text-gray-500">
-                        {userProfile.role === 'alumni' ? `Class of ${userProfile.profile?.graduationYear}` : `Batch ${userProfile.profile?.batch}`}
+                        {userProfile.role === 'alumni' ? `Class of ${userProfile.batch}` : `Batch ${userProfile.batch}`}
                       </p>
                     </div>
                     <div className="mb-6 md:mb-8">
@@ -165,7 +165,7 @@ const ProfilePage = () => {
                     <Badge variant="secondary">{userProfile.role}</Badge>
                     <div className="flex items-center">
                       <GraduationCap className="h-4 w-4 mr-1" />
-                      {userProfile.role === 'alumni' ? `Class of ${userProfile.profile?.graduationYear}` : `Batch ${userProfile.profile?.batch}`}
+                      {userProfile.role === 'alumni' ? `Class of ${userProfile.batch}` : `Batch ${userProfile.batch}`}
                     </div>
                   </div>
                   <Button onClick={handleEditProfile} className="bg-blue-600 hover:bg-blue-700">
@@ -272,16 +272,12 @@ const ProfilePage = () => {
                         <span className="text-sm text-gray-700">{userProfile.profile.branch}</span>
                       </div>
                     )}
-                    {userProfile.profile?.graduationYear && (
+                    {userProfile.batch && (
                       <div className="flex items-center space-x-3">
                         <Award className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-700">Graduated: {userProfile.profile.graduationYear}</span>
-                      </div>
-                    )}
-                    {userProfile.profile?.batch && (
-                      <div className="flex items-center space-x-3">
-                        <Award className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-700">Batch: {userProfile.profile.batch}</span>
+                        <span className="text-sm text-gray-700">
+                          {userProfile.role === 'alumni' ? `Graduated: ${userProfile.batch}` : `Batch: ${userProfile.batch}`}
+                        </span>
                       </div>
                     )}
                     <div className="flex items-center space-x-3">

@@ -7,7 +7,8 @@ import {
   Calendar, 
   MessageCircle, 
   User, 
-  Settings 
+  Settings,
+  UserPlus
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -18,8 +19,8 @@ const BottomBar = () => {
   const navigationItems = [
     { icon: Home, label: 'Home', path: '/home' },
     { icon: Users, label: 'Alumni', path: '/alumni' },
+    { icon: MessageCircle, label: 'Messages', path: '/messages' },
     { icon: Briefcase, label: 'Jobs', path: '/jobs' },
-    { icon: Calendar, label: 'Events', path: '/events' },
     { icon: User, label: 'Profile', path: '/profile' }
   ];
 

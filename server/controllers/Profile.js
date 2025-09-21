@@ -1,4 +1,5 @@
 import { userModel } from "../models/userModel.js"
+import mongoose from "mongoose"
 
 // Update user profile
 export const updateProfile = async (req, res) => {
@@ -42,9 +43,6 @@ export const updateProfile = async (req, res) => {
             errors.push("Branch is required")
         }
 
-        if (!profile.graduationYear) {
-            errors.push("Graduation year is required")
-        }
 
         // Role-specific validations
         if (user.role === 'alumni') {
@@ -56,11 +54,7 @@ export const updateProfile = async (req, res) => {
             }
         }
 
-        if (user.role === 'student') {
-            if (!profile.batch) {
-                errors.push("Batch is required for students")
-            }
-        }
+       
 
         if (errors.length > 0) {
             return res.status(400).json({
@@ -76,10 +70,7 @@ export const updateProfile = async (req, res) => {
                 $set: {
                     profile: {
                         ...user.profile,
-                        ...profile,
-                        // Convert string numbers to actual numbers
-                        batch: profile.batch ? Number(profile.batch) : user.profile?.batch,
-                        graduationYear: profile.graduationYear ? Number(profile.graduationYear) : user.profile?.graduationYear
+                        ...profile
                     },
                     // Update grNo if provided
                     ...(profile.grNo !== undefined && { grNo: profile.grNo }),
@@ -115,11 +106,13 @@ export const updateProfile = async (req, res) => {
 }
 
 // Get user profile
-export const getProfile = async (req, res) => {
+// Get current user's profile (for /me endpoint)
+export const getCurrentUserProfile = async (req, res) => {
     try {
-        const userId = req.userId
+        const userId = req.userId // From auth middleware
         
         const user = await userModel.findById(userId).select('-password')
+        
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -129,14 +122,165 @@ export const getProfile = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            user: user
+            user
+        })
+
+    } catch (error) {
+        console.error('Get current user profile error:', error.message)
+        res.status(500).json({
+            success: false,
+            error: "Internal server error"
+        })
+    }
+}
+
+// Get user profile by ID
+export const getProfile = async (req, res) => {
+    try {
+        const { userId } = req.params
+        
+        const user = await userModel.findById(userId).select('-password')
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                error: "User not found"
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            user
         })
 
     } catch (error) {
         console.error('Get profile error:', error.message)
         res.status(500).json({
             success: false,
-            error: "Internal server error. Please try again later."
+            error: "Internal server error"
+        })
+    }
+}
+
+// Get all alumni profiles for directory
+export const getAllAlumni = async (req, res) => {
+    try {
+        const { batch, branch, search, limit = 50, page = 1 } = req.query
+        
+        // Build filter query
+        let filter = { 
+            role: 'alumni',
+            isVerified: true // Only show verified alumni
+        }
+        
+        // Add batch filter if provided
+        if (batch && batch !== 'All') {
+            filter.batch = parseInt(batch)
+        }
+        
+        // Add branch filter if provided
+        if (branch && branch !== 'All') {
+            filter['profile.branch'] = branch
+        }
+        
+        // Build search query
+        let searchQuery = {}
+        if (search) {
+            searchQuery = {
+                $or: [
+                    { name: { $regex: search, $options: 'i' } },
+                    { 'profile.currentCompany': { $regex: search, $options: 'i' } },
+                    { 'profile.currentPosition': { $regex: search, $options: 'i' } },
+                    { 'profile.location': { $regex: search, $options: 'i' } }
+                ]
+            }
+        }
+        
+        // Combine filters
+        const finalQuery = { ...filter, ...searchQuery }
+        
+        // Calculate pagination
+        const skip = (page - 1) * limit
+        
+        // Fetch alumni with pagination
+        const alumni = await userModel
+            .find(finalQuery)
+            .select('-password -isVerified -createdAt -updatedAt')
+            .skip(skip)
+            .limit(parseInt(limit))
+            .sort({ 'profile.currentCompany': 1, name: 1 })
+        
+        // Get total count for pagination
+        const totalCount = await userModel.countDocuments(finalQuery)
+        
+        res.status(200).json({
+            success: true,
+            alumni,
+            pagination: {
+                currentPage: parseInt(page),
+                totalPages: Math.ceil(totalCount / limit),
+                totalCount,
+                hasNextPage: page * limit < totalCount,
+                hasPrevPage: page > 1
+            }
+        })
+
+    } catch (error) {
+        console.error('Get alumni error:', error.message)
+        res.status(500).json({
+            success: false,
+            error: "Internal server error"
+        })
+    }
+}
+
+// Get single user profile by ID (alumni or student)
+export const getAlumniProfile = async (req, res) => {
+    try {
+        const { alumniId } = req.params
+        
+        console.log('Fetching user profile for ID:', alumniId)
+        
+        // Validate ObjectId format
+        if (!mongoose.Types.ObjectId.isValid(alumniId)) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid user ID format"
+            })
+        }
+        
+        // Find user (alumni or student)
+        const user = await userModel
+            .findOne({ 
+                _id: alumniId,
+                isVerified: true // Only show verified users
+            })
+            .select('-password')
+        
+        console.log('User found:', user ? 'Yes' : 'No')
+        if (user) {
+            console.log('User role:', user.role)
+            console.log('User verified:', user.isVerified)
+        }
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                error: "User profile not found or not verified"
+            })
+        }
+
+        // Return the user profile (works for both alumni and students)
+        res.status(200).json({
+            success: true,
+            alumni: user // Keep the same response structure for frontend compatibility
+        })
+
+    } catch (error) {
+        console.error('Get user profile error:', error.message)
+        res.status(500).json({
+            success: false,
+            error: "Internal server error"
         })
     }
 }

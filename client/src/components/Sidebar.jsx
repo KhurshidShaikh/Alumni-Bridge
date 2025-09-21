@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Home, 
@@ -8,7 +8,9 @@ import {
   UserCheck, 
   User, 
   Settings, 
-  LogOut
+  LogOut,
+  UserPlus,
+  MessageSquare
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,6 +19,8 @@ import LogoutButton from './LogoutButton';
 const sidebarItems = [
   { icon: Home, label: "Home", path: "/home" },
   { icon: Users, label: "Alumni Directory", path: "/alumni" },
+  { icon: UserPlus, label: "My Connections", path: "/connections" },
+  { icon: MessageSquare, label: "Messages", path: "/messages" },
   { icon: Briefcase, label: "Job Board", path: "/jobs" },
   { icon: Calendar, label: "Events", path: "/events" },
   { icon: UserCheck, label: "Mentorship", path: "/mentorship" },
@@ -24,9 +28,43 @@ const sidebarItems = [
   { icon: Settings, label: "Settings", path: "/settings" }
 ];
 
-const Sidebar = ({ user = { name: "John Doe", role: "Student", avatar: "" } }) => {
+const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch current user data
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setLoading(false);
+          return;
+        }
+
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+        const response = await fetch(`${backendUrl}/api/profile/me`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          setCurrentUser(data.user);
+        }
+      } catch (error) {
+        console.error('Error fetching current user:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   const handleLogout = () => {
     // This is now handled by LogoutButton component
@@ -46,18 +84,40 @@ const Sidebar = ({ user = { name: "John Doe", role: "Student", avatar: "" } }) =
 
         {/* User Profile */}
         <div className="px-6 py-4 border-b">
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user.avatar} />
-              <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
-                {user.name.split(' ').map(n => n[0]).join('')}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate poppins-medium">{user.name}</p>
-              <p className="text-xs text-gray-500 truncate">{user.role}</p>
+          {loading ? (
+            <div className="flex items-center space-x-3">
+              <div className="h-10 w-10 bg-gray-200 rounded-full animate-pulse"></div>
+              <div className="flex-1 min-w-0">
+                <div className="h-4 bg-gray-200 rounded animate-pulse mb-1"></div>
+                <div className="h-3 bg-gray-200 rounded animate-pulse w-2/3"></div>
+              </div>
             </div>
-          </div>
+          ) : currentUser ? (
+            <div className="flex items-center space-x-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={currentUser.profile?.profileUrl} />
+                <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
+                  {currentUser.name.split(' ').map(n => n[0]).join('')}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-900 truncate poppins-medium">{currentUser.name}</p>
+                <p className="text-xs text-gray-500 truncate capitalize">{currentUser.role}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-3">
+              <Avatar className="h-10 w-10">
+                <AvatarFallback className="bg-gray-100 text-gray-600 font-semibold">
+                  ?
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-900 truncate">Guest User</p>
+                <p className="text-xs text-gray-500 truncate">Not logged in</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Navigation */}
