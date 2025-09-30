@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../store/selectors/userSelectors';
 import { toast } from 'sonner';
@@ -36,7 +36,17 @@ const AlumniPage = () => {
   const [connectionStatuses, setConnectionStatuses] = useState({});
   const [connectionLoading, setConnectionLoading] = useState({});
   const navigate = useNavigate();
+  const location = useLocation();
   const currentUser = useSelector(selectCurrentUser);
+
+  // Get search term from URL parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchFromUrl = urlParams.get('search');
+    if (searchFromUrl) {
+      setSearchTerm(searchFromUrl);
+    }
+  }, [location.search]);
 
   // Fetch alumni data from backend
   const fetchAlumni = async () => {

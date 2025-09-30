@@ -1,5 +1,6 @@
 import express from 'express';
 import { AuthUser } from '../middlewere/userAuth.js';
+import { AuthAdmin } from '../middlewere/AdminAuth.js';
 import {
     getOrCreateConversation,
     getUserConversations,
@@ -7,7 +8,11 @@ import {
     sendMessage,
     editMessage,
     deleteMessage,
-    searchMessages
+    searchMessages,
+    adminGetOrCreateConversation,
+    adminSendBulkMessage,
+    getAdminConversations,
+    adminSendMessage
 } from '../controllers/Message.js';
 
 export const messageRoute = express.Router();
@@ -32,3 +37,16 @@ messageRoute.delete('/message/:messageId', AuthUser, deleteMessage);
 
 // Search messages
 messageRoute.get('/search', AuthUser, searchMessages);
+
+// Admin messaging routes
+// Admin: Get or create conversation with any user (bypasses connection requirement)
+messageRoute.get('/admin/conversation/:participantId', AuthAdmin, adminGetOrCreateConversation);
+
+// Admin: Get all admin conversations
+messageRoute.get('/admin/conversations', AuthAdmin, getAdminConversations);
+
+// Admin: Send bulk messages to multiple alumni
+messageRoute.post('/admin/send-bulk', AuthAdmin, adminSendBulkMessage);
+
+// Admin: Send individual message (bypasses connection requirement)
+messageRoute.post('/admin/conversation/:conversationId/send', AuthAdmin, adminSendMessage);

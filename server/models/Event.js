@@ -8,10 +8,16 @@ const EventSchema=mongoose.Schema(
         date: Date,
         location: String,
         imageUrl: String,
-        createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
         
         visibility: { type: String, enum: ['public', 'private'], default: 'public' },
-        createdAt: Date
+        registrations: [{
+            user: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
+            name: String,
+            email: String,
+            registeredAt: { type: Date, default: Date.now }
+        }],
+        createdAt: { type: Date, default: Date.now }
        }
 )
 export const EventModel=mongoose.model('Event',EventSchema)

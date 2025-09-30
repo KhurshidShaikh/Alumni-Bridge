@@ -7,10 +7,13 @@ import {
   Calendar, 
   UserCheck, 
   User, 
-  Settings, 
   LogOut,
   UserPlus,
-  MessageSquare
+  MessageSquare,
+  Plus,
+  FileText,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -23,9 +26,8 @@ const sidebarItems = [
   { icon: MessageSquare, label: "Messages", path: "/messages" },
   { icon: Briefcase, label: "Job Board", path: "/jobs" },
   { icon: Calendar, label: "Events", path: "/events" },
-  { icon: UserCheck, label: "Mentorship", path: "/mentorship" },
-  { icon: User, label: "Profile", path: "/profile" },
-  { icon: Settings, label: "Settings", path: "/settings" }
+  { icon: FileText, label: "News & Stories", path: "/news-stories" },
+  { icon: User, label: "Profile", path: "/profile" }
 ];
 
 const Sidebar = () => {
@@ -33,6 +35,7 @@ const Sidebar = () => {
   const location = useLocation();
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [jobsExpanded, setJobsExpanded] = useState(false);
 
   // Fetch current user data
   useEffect(() => {
@@ -123,6 +126,70 @@ const Sidebar = () => {
         {/* Navigation */}
         <nav className="flex-1 px-4 py-4 space-y-1">
           {sidebarItems.map((item, index) => {
+            // Handle Jobs section specially
+            if (item.path === "/jobs") {
+              const isJobsActive = location.pathname.startsWith('/jobs');
+              const jobSubItems = [
+                { label: "Browse Jobs", path: "/jobs" },
+                { label: "My Applications", path: "/jobs/my-applications" },
+                ...(currentUser?.role === 'alumni' ? [
+                  { label: "Post Job", path: "/jobs/post" },
+                  { label: "My Jobs", path: "/jobs/my-jobs" }
+                ] : [])
+              ];
+
+              return (
+                <div key={index}>
+                  <Button
+                    variant={isJobsActive ? "default" : "ghost"}
+                    className={`w-full justify-between h-10 px-3 ${
+                      isJobsActive 
+                        ? "bg-blue-600 text-white hover:bg-blue-700" 
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                    onClick={() => {
+                      setJobsExpanded(!jobsExpanded);
+                      if (!jobsExpanded) navigate(item.path);
+                    }}
+                  >
+                    <div className="flex items-center">
+                      <item.icon className="mr-3 h-4 w-4" />
+                      <span className="poppins-medium">{item.label}</span>
+                    </div>
+                    {jobsExpanded ? (
+                      <ChevronDown className="h-4 w-4" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4" />
+                    )}
+                  </Button>
+                  
+                  {jobsExpanded && (
+                    <div className="ml-4 mt-1 space-y-1">
+                      {jobSubItems.map((subItem, subIndex) => {
+                        const isSubActive = location.pathname === subItem.path;
+                        return (
+                          <Button
+                            key={subIndex}
+                            variant={isSubActive ? "default" : "ghost"}
+                            size="sm"
+                            className={`w-full justify-start h-8 px-3 text-xs ${
+                              isSubActive 
+                                ? "bg-blue-500 text-white hover:bg-blue-600" 
+                                : "text-gray-600 hover:bg-gray-50"
+                            }`}
+                            onClick={() => navigate(subItem.path)}
+                          >
+                            {subItem.label}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            // Regular navigation items
             const isActive = location.pathname === item.path;
             return (
               <Button

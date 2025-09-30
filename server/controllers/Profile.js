@@ -166,11 +166,13 @@ export const getProfile = async (req, res) => {
 export const getAllAlumni = async (req, res) => {
     try {
         const { batch, branch, search, limit = 50, page = 1 } = req.query
+        const currentUserId = req.userId // Get current user ID from auth middleware
         
         // Build filter query
         let filter = { 
             role: 'alumni',
-            isVerified: true // Only show verified alumni
+            isVerified: true, // Only show verified alumni
+            _id: { $ne: currentUserId } // Exclude current user
         }
         
         // Add batch filter if provided

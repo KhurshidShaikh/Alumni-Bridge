@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { 
+  GraduationCap, 
+  Users, 
+  Briefcase, 
+  MessageCircle, 
+  Award, 
+  Globe, 
+  ArrowRight,
+  Star,
+  Building,
+  MapPin,
+  Calendar,
+  CheckCircle
+} from 'lucide-react';
 
 const LandingPage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -58,7 +72,10 @@ const LandingPage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
               <div className="flex items-center space-x-3">
-                <span className="text-xl poppins-medium text-blue-600">Alumni Bridge</span>
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <GraduationCap className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-xl poppins-bold text-blue-600">AlumniBridge</span>
               </div>
 
               {/* Desktop Navigation */}
@@ -247,23 +264,28 @@ const LandingPage = () => {
             {/* Left Column - Text Content */}
             <div className="space-y-8">
               <div>
+                
                 <h1 className="text-5xl md:text-6xl poppins-bold text-gray-900 mb-6 leading-tight">
-                  Connect. <span className="text-blue-600">Grow.</span>
+                  Your College <span className="text-blue-600">Alumni Network</span>
                   <br />
-                  Succeed.
+                  <span className="text-gray-700">Starts Here</span>
                 </h1>
-                <p className="text-lg poppins-regular text-gray-600 mb-8 leading-relaxed max-w-lg">
-                  Join the premier networking platform for DMCE alumni. Connect with fellow graduates, find mentorship opportunities, and accelerate your career growth.
+                <p className="text-xl poppins-regular text-gray-600 mb-8 leading-relaxed max-w-2xl">
+                  Connect with fellow graduates, discover career opportunities, find mentors, and give back to your alma mater. Join the most comprehensive alumni platform designed for your college community.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 mb-12">
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg poppins-semibold transition-colors flex items-center justify-center">
+                  <button 
+                    onClick={() => navigate("/register")}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl poppins-semibold transition-all transform hover:scale-105 flex items-center justify-center shadow-lg"
+                  >
                     Join Alumni Network
-                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
+                    <ArrowRight className="w-5 h-5 ml-2" />
                   </button>
-                  <button className="border border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-lg poppins-semibold transition-colors">
-                    Explore Success Stories
+                  <button 
+                    onClick={() => navigate("/login")}
+                    className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-4 rounded-xl poppins-semibold transition-all"
+                  >
+                    Sign In
                   </button>
                 </div>
 
@@ -285,40 +307,53 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Right Column - Illustration */}
+            {/* Right Column - College Image */}
             <div className="relative flex items-center justify-center">
               <div className="relative w-full max-w-lg">
-                {/* Background Circle */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 rounded-full transform rotate-6"></div>
+                {/* Background Decorative Elements */}
+                <div className="absolute -top-4 -right-4 w-72 h-72 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full opacity-20 blur-3xl"></div>
+                <div className="absolute -bottom-4 -left-4 w-72 h-72 bg-gradient-to-tr from-purple-100 to-pink-100 rounded-full opacity-20 blur-3xl"></div>
                 
-                {/* Main Content */}
-                <div className="relative bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 shadow-xl">
-                  <div className="text-center mb-8">
-                    {/* Graduation Cap Icon */}
-                    <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <svg className="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                      </svg>
+                {/* Main Image Container */}
+                <div className="relative bg-white rounded-3xl p-2 shadow-2xl border border-gray-100">
+                  {/* College Image Placeholder */}
+                  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100">
+                    <img 
+                      src="https://dmce.ac.in/wp-content/uploads/2025/05/about-image.png" 
+                      alt="College Campus" 
+                      className="w-full h-80 object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    {/* Fallback when image fails to load */}
+                    <div className="w-full h-80 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center" style={{display: 'none'}}>
+                      <div className="text-center">
+                        <Building className="w-20 h-20 text-blue-400 mx-auto mb-4" />
+                        <h3 className="text-xl font-bold text-blue-600 mb-2">Your College</h3>
+                        <p className="text-sm text-gray-600">Campus Image Placeholder</p>
+                      </div>
                     </div>
                     
-                    <h3 className="text-xl poppins-bold text-blue-600 mb-2">DMCE Campus</h3>
-                    <p className="text-sm poppins-regular text-gray-600 mb-6">Graduation Ceremony</p>
-                  </div>
-
-                  {/* Network Icon */}
-                  <div className="absolute top-4 right-4">
-                    <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
+                    {/* Overlay Badge */}
+                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg">
+                      <div className="flex items-center space-x-2">
+                        <GraduationCap className="w-5 h-5 text-blue-600" />
+                        <span className="text-sm font-semibold text-gray-800">Alumni Network</span>
+                      </div>
                     </div>
                   </div>
-
-                  {/* Bottom Text */}
-                  <div className="text-center">
-                    <p className="text-xs poppins-regular text-gray-500">Made with</p>
-                    <p className="text-sm poppins-semibold text-gray-700">Emergent</p>
+                  
+                  {/* Bottom Stats Cards */}
+                  <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-4">
+                    <div className="bg-white rounded-xl px-4 py-3 shadow-lg border border-gray-100">
+                      <div className="flex items-center space-x-2">
+                        <Users className="w-4 h-4 text-blue-600" />
+                        <span className="text-sm font-semibold text-gray-800">5K+ Alumni</span>
+                      </div>
+                    </div>
+                   
                   </div>
                 </div>
               </div>
@@ -418,67 +453,109 @@ const LandingPage = () => {
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Join Your Alumni Network?</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Powerful Features for <span className="text-blue-600">Alumni Success</span>
+            </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Unlock exclusive opportunities and connections that only your college community can provide.
+              Everything you need to connect, grow, and succeed with your college alumni community.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Networking Card */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100">
+              <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                <Users className="w-7 h-7 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3">Alumni Directory</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Connect with thousands of alumni across different batches, departments, and industries worldwide.
+              </p>
+            </div>
+
+            {/* Job Board Card */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100">
+              <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                <Briefcase className="w-7 h-7 text-green-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3">Job Opportunities</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Access exclusive job postings, internships, and career opportunities shared by fellow alumni.
+              </p>
+            </div>
+
             {/* Mentorship Card */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
-              <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-                  />
-                </svg>
+            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100">
+              <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                <Award className="w-7 h-7 text-purple-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Expert Mentorship</h3>
-              <p className="text-gray-600 text-center leading-relaxed">
-                Connect with successful alumni from your college who can guide your career path and share valuable
-                industry insights.
+              <h3 className="text-lg font-bold text-gray-900 mb-3">News & Stories</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Find experienced mentors or become one yourself. Guide the next generation of graduates.
               </p>
             </div>
 
-            {/* Job Connections Card */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
-              <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6z"
-                  />
-                </svg>
+            {/* Events Card */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100">
+              <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
+                <Calendar className="w-7 h-7 text-orange-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Career Opportunities</h3>
-              <p className="text-gray-600 text-center leading-relaxed">
-                Access exclusive job openings and internships shared by alumni working at top companies in your field.
+              <h3 className="text-lg font-bold text-gray-900 mb-3">Events & Reunions</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Stay updated with college events, alumni meetups, and networking sessions in your area.
               </p>
             </div>
+          </div>
 
-            {/* Professional Network Card */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
-              <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
+          {/* Additional Features */}
+          <div className="mt-16 grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-6">Built for Your College Community</h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Verified Alumni Network</h4>
+                    <p className="text-gray-600 text-sm">Connect only with verified graduates from your college</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Real-time Messaging</h4>
+                    <p className="text-gray-600 text-sm">Instant communication with your professional network</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Success Stories</h4>
+                    <p className="text-gray-600 text-sm">Share achievements and inspire fellow alumni</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Global Reach</h4>
+                    <p className="text-gray-600 text-sm">Connect with alumni across 50+ countries worldwide</p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Lifelong Network</h3>
-              <p className="text-gray-600 text-center leading-relaxed">
-                Build meaningful professional relationships with fellow graduates who share your college experience and
-                values.
-              </p>
+            </div>
+            <div className="relative">
+              <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 border border-gray-100">
+                <div className="text-center">
+                  <MessageCircle className="w-16 h-16 text-blue-600 mx-auto mb-4" />
+                  <h4 className="text-xl font-bold text-gray-900 mb-2">Start Connecting Today</h4>
+                  <p className="text-gray-600 mb-6">Join thousands of alumni who are already building their careers through meaningful connections.</p>
+                  <button 
+                    onClick={() => navigate("/register")}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all"
+                  >
+                    Create Your Profile
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -592,19 +669,33 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold">AB</span>
+            <div className="md:col-span-2">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <GraduationCap className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-lg font-bold">Alumni Bridge</span>
+                <span className="text-2xl font-bold">AlumniBridge</span>
               </div>
-              <p className="text-gray-400">
-                Connecting college graduates for career success and lifelong relationships.
+              <p className="text-gray-400 mb-6 max-w-md">
+                The premier alumni networking platform connecting graduates worldwide. Build meaningful professional relationships and accelerate your career growth.
               </p>
+              <div className="flex space-x-4">
+                <div className="bg-gray-800 rounded-lg px-4 py-2">
+                  <div className="text-2xl font-bold text-white">10K+</div>
+                  <div className="text-xs text-gray-400">Alumni</div>
+                </div>
+                <div className="bg-gray-800 rounded-lg px-4 py-2">
+                  <div className="text-2xl font-bold text-white">50+</div>
+                  <div className="text-xs text-gray-400">Countries</div>
+                </div>
+                <div className="bg-gray-800 rounded-lg px-4 py-2">
+                  <div className="text-2xl font-bold text-white">1K+</div>
+                  <div className="text-xs text-gray-400">Jobs Posted</div>
+                </div>
+              </div>
             </div>
             <div>
               <h4 className="font-bold mb-4">Platform</h4>
