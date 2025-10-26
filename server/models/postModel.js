@@ -125,4 +125,4 @@ PostSchema.virtual('commentCount').get(function() {
 // Ensure virtual fields are serialized
 PostSchema.set('toJSON', { virtuals: true });
 
-export const Post = mongoose.model('Post', PostSchema);
+export  const Post = mongoose.model('Post', PostSchema);

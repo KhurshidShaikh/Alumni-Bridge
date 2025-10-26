@@ -102,21 +102,37 @@ import { selectIsLoading } from "../store/selectors/userSelectors"
       } else {
         // Handle specific error cases
         if (response.status === 403) {
-          dispatch(loginFailure('Account pending verification'))
-          toast.error(
-            "🔒Account Not Verified\n\nYour account is pending admin verification. You will receive a notification once your account is approved",
-            {
-              duration: 6000,
-              style: {
-                background: '#FEF3C7',
-                border: '1px solid #F59E0B',
-                color: '#92400E'
+          // Check if it's admin login block or verification pending
+          if (data.error && data.error.includes('admin portal')) {
+            dispatch(loginFailure('Admin users must use admin portal'))
+            toast.error(
+              "🔒 Admin Access Required\n\nAdmin users must login through the admin portal.",
+              {
+                duration: 5000,
+                style: {
+                  background: '#FEE2E2',
+                  border: '1px solid #EF4444',
+                  color: '#991B1B'
+                }
               }
-            }
-          )
+            )
+          } else {
+            dispatch(loginFailure('Account pending verification'))
+            toast.error(
+              "🔒 Account Not Verified\n\nYour account is pending admin verification. You will receive a notification once your account is approved",
+              {
+                duration: 6000,
+                style: {
+                  background: '#FEF3C7',
+                  border: '1px solid #F59E0B',
+                  color: '#92400E'
+                }
+              }
+            )
+          }
         } else {
           dispatch(loginFailure(data.error || 'Invalid credentials'))
-          toast.error("Invalid credentials. Please check your email and password and try again.")
+          toast.error(data.error || "Invalid credentials. Please check your email and password and try again.")
         }
       }
     } catch (error) {

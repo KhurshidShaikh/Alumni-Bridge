@@ -107,11 +107,7 @@ const LandingPage = () => {
                 >
                   Sign Up
                 </button>
-                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
+                
               </div>
 
               {/* Mobile Menu Button */}
@@ -234,31 +230,33 @@ const LandingPage = () => {
               <div className="space-y-3">
                 <button 
                   className="w-full text-gray-700 hover:text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-xl font-medium transition-all border border-gray-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    navigate('/login');
+                  }}
                 >
                   Login
                 </button>
                 <button 
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition-all shadow-lg"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    navigate('/register');
+                  }}
                 >
                   Sign Up
                 </button>
               </div>
 
               {/* Bottom Section */}
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <p className="text-xs text-gray-500 text-center">
-                  Connect with 5,000+ alumni worldwide
-                </p>
-              </div>
+             
             </div>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20">
+      <section className="relative min-h-screen flex items-center justify-center pt-20" id='about'>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="grid lg:grid-cols-2 gap-16 items-center min-h-screen">
             {/* Left Column - Text Content */}
@@ -362,7 +360,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50 to-white">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50 to-white" id='alumni'>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Alumni</h2>
@@ -378,7 +376,7 @@ const LandingPage = () => {
                 <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-white font-bold text-2xl">DR</span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Dr. Rachel Martinez</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Dr. Raj Sharma </h3>
                 <p className="text-blue-600 font-semibold mb-2">Class of 2010</p>
                 <p className="text-gray-600 text-sm mb-3">Chief Technology Officer</p>
                 <p className="text-gray-800 font-medium">Microsoft</p>
@@ -393,9 +391,9 @@ const LandingPage = () => {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
               <div className="text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-green-600 to-green-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-2xl">JT</span>
+                  <span className="text-white font-bold text-2xl">JK</span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">James Thompson</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Jayesh kulkarni</h3>
                 <p className="text-blue-600 font-semibold mb-2">Class of 2012</p>
                 <p className="text-gray-600 text-sm mb-3">Investment Director</p>
                 <p className="text-gray-800 font-medium">Goldman Sachs</p>
@@ -410,9 +408,9 @@ const LandingPage = () => {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
               <div className="text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-2xl">AL</span>
+                  <span className="text-white font-bold text-2xl">AK</span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Dr. Aisha Lee</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Dr. Aisha Khan</h3>
                 <p className="text-blue-600 font-semibold mb-2">Class of 2008</p>
                 <p className="text-gray-600 text-sm mb-3">Head of Research</p>
                 <p className="text-gray-800 font-medium">Johns Hopkins</p>
@@ -427,9 +425,9 @@ const LandingPage = () => {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
               <div className="text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-orange-600 to-orange-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-2xl">MK</span>
+                  <span className="text-white font-bold text-2xl">SK</span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Maria Kim</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Sakshi Patil</h3>
                 <p className="text-blue-600 font-semibold mb-2">Class of 2014</p>
                 <p className="text-gray-600 text-sm mb-3">Founder & CEO</p>
                 <p className="text-gray-800 font-medium">EcoTech Solutions</p>
@@ -442,7 +440,17 @@ const LandingPage = () => {
           </div>
 
           <div className="text-center mt-12">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all transform hover:scale-105">
+            <button 
+              onClick={() => {
+                const token = localStorage.getItem('token');
+                if (token) {
+                  navigate('/alumni');
+                } else {
+                  navigate('/login');
+                }
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all transform hover:scale-105"
+            >
               View All Alumni
             </button>
           </div>
@@ -451,7 +459,7 @@ const LandingPage = () => {
 
       {/* Value Propositions Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto" id="features">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               Powerful Features for <span className="text-blue-600">Alumni Success</span>
@@ -576,10 +584,10 @@ const LandingPage = () => {
             <div className="bg-white/20 backdrop-blur-md rounded-2xl p-8 border border-white/30 shadow-xl">
               <div className="flex items-center mb-6">
                 <div className="w-16 h-16 bg-white/30 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-gray-800 font-bold text-lg">SJ</span>
+                  <span className="text-gray-800 font-bold text-lg">PP</span>
                 </div>
                 <div>
-                  <h4 className="text-gray-900 font-bold text-lg">Sarah Johnson</h4>
+                  <h4 className="text-gray-900 font-bold text-lg">Priya Patel</h4>
                   <p className="text-gray-700">Class of 2018 • Software Engineer at Google</p>
                 </div>
               </div>
@@ -593,10 +601,10 @@ const LandingPage = () => {
             <div className="bg-white/20 backdrop-blur-md rounded-2xl p-8 border border-white/30 shadow-xl">
               <div className="flex items-center mb-6">
                 <div className="w-16 h-16 bg-white/30 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-gray-800 font-bold text-lg">MC</span>
+                  <span className="text-gray-800 font-bold text-lg">AM</span>
                 </div>
                 <div>
-                  <h4 className="text-gray-900 font-bold text-lg">Michael Chen</h4>
+                  <h4 className="text-gray-900 font-bold text-lg">Arjun Mehta</h4>
                   <p className="text-gray-700">Class of 2015 • Marketing Director at Tesla</p>
                 </div>
               </div>
@@ -610,10 +618,10 @@ const LandingPage = () => {
             <div className="bg-white/20 backdrop-blur-md rounded-2xl p-8 border border-white/30 shadow-xl">
               <div className="flex items-center mb-6">
                 <div className="w-16 h-16 bg-white/30 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-gray-800 font-bold text-lg">EP</span>
+                  <span className="text-gray-800 font-bold text-lg">ND</span>
                 </div>
                 <div>
-                  <h4 className="text-gray-900 font-bold text-lg">Emily Parker</h4>
+                  <h4 className="text-gray-900 font-bold text-lg">Neha Desai</h4>
                   <p className="text-gray-700">Class of 2020 • Startup Founder</p>
                 </div>
               </div>
@@ -657,11 +665,115 @@ const LandingPage = () => {
               Join thousands of graduates who are already building their careers through meaningful alumni connections.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg">
+              <button 
+                onClick={() => navigate('/register')}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg"
+              >
                 Create Your Profile
               </button>
-              <button className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all">
+              <button 
+                onClick={() => {
+                  const token = localStorage.getItem('token');
+                  if (token) {
+                    navigate('/alumni');
+                  } else {
+                    navigate('/login');
+                  }
+                }}
+                className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all"
+              >
                 Browse Alumni Directory
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Get in Touch</h2>
+            <p className="text-xl text-gray-600">
+              Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            </p>
+          </div>
+          
+          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <MapPin className="w-5 h-5 text-blue-600 mt-1" />
+                    <div>
+                      <p className="font-medium text-gray-900">Address</p>
+                      <p className="text-gray-600">Datta Meghe College of Engineering, Airoli</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <MessageCircle className="w-5 h-5 text-blue-600 mt-1" />
+                    <div>
+                      <p className="font-medium text-gray-900">Email</p>
+                      <p className="text-gray-600">contact@alumnibridge.com</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Globe className="w-5 h-5 text-blue-600 mt-1" />
+                    <div>
+                      <p className="font-medium text-gray-900">Website</p>
+                      <p className="text-gray-600">www.alumnibridge.com</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
+                <div className="space-y-3">
+                  <button 
+                    onClick={() => navigate('/register')}
+                    className="w-full text-left px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition-colors"
+                  >
+                    Join the Network
+                  </button>
+                  <button 
+                    onClick={() => {
+                      const token = localStorage.getItem('token');
+                      if (token) {
+                        navigate('/alumni');
+                      } else {
+                        navigate('/login');
+                      }
+                    }}
+                    className="w-full text-left px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition-colors"
+                  >
+                    Browse Alumni
+                  </button>
+                  <button 
+                    onClick={() => {
+                      const token = localStorage.getItem('token');
+                      if (token) {
+                        navigate('/jobs');
+                      } else {
+                        navigate('/login');
+                      }
+                    }}
+                    className="w-full text-left px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition-colors"
+                  >
+                    Explore Jobs
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div className="text-center pt-8 border-t border-gray-200">
+              <p className="text-gray-600 mb-4">Ready to join the network?</p>
+              <button 
+                onClick={() => navigate('/register')}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all transform hover:scale-105"
+              >
+                Get Started Now
               </button>
             </div>
           </div>
@@ -701,23 +813,53 @@ const LandingPage = () => {
               <h4 className="font-bold mb-4">Platform</h4>
               <ul className="space-y-2 text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <button 
+                    onClick={() => {
+                      const token = localStorage.getItem('token');
+                      if (token) {
+                        navigate('/alumni');
+                      } else {
+                        navigate('/login');
+                      }
+                    }}
+                    className="hover:text-white transition-colors text-left"
+                  >
                     Find Alumni
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Mentorship
-                  </a>
+                  <button 
+                    onClick={() => {
+                      const token = localStorage.getItem('token');
+                      if (token) {
+                        navigate('/news-stories');
+                      } else {
+                        navigate('/login');
+                      }
+                    }}
+                    className="hover:text-white transition-colors text-left"
+                  >
+                    News & Stories
+                  </button>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <button 
+                    onClick={() => {
+                      const token = localStorage.getItem('token');
+                      if (token) {
+                        navigate('/jobs');
+                      } else {
+                        navigate('/login');
+                      }
+                    }}
+                    className="hover:text-white transition-colors text-left"
+                  >
                     Job Board
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Events
+                  <a href="#contact" className="hover:text-white transition-colors">
+                    Contact
                   </a>
                 </li>
               </ul>

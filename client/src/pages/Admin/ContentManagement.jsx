@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../../components/AdminSidebar';
+import AdminBottomBar from '../../components/AdminBottomBar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -163,7 +164,7 @@ const ContentManagement = () => {
     return (
       <div className="flex h-screen bg-gray-50">
         <AdminSidebar />
-        <div className="flex-1 ml-64">
+        <div className="flex-1 md:ml-64">
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
               <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -179,9 +180,20 @@ const ContentManagement = () => {
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
       
-      <div className="flex-1 ml-64 overflow-auto">
-        {/* Header */}
-        <div className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+      <div className="flex-1 md:ml-64 flex flex-col">
+        {/* Mobile Header */}
+        <div className="md:hidden sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3">
+          <div className="flex items-center space-x-3">
+            <FileText className="w-5 h-5 text-blue-600" />
+            <div>
+              <h1 className="text-lg font-semibold text-gray-900">Content</h1>
+              <p className="text-xs text-gray-500">Moderation</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Header */}
+        <div className="hidden md:block bg-white shadow-sm border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 poppins-semibold">Content Management</h1>
@@ -189,6 +201,8 @@ const ContentManagement = () => {
             </div>
           </div>
         </div>
+
+        <div className="flex-1 overflow-y-auto pb-20 md:pb-6">
 
         <div className="p-6">
           <Tabs defaultValue="posts" className="space-y-6">
@@ -389,6 +403,10 @@ const ContentManagement = () => {
             </TabsContent>
           </Tabs>
         </div>
+
+        </div>
+
+        <AdminBottomBar />
       </div>
 
       {/* Item Details Dialog */}

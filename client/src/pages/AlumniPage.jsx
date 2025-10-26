@@ -179,7 +179,7 @@ const AlumniPage = () => {
   // Generate batch years dynamically
   const currentYear = new Date().getFullYear();
   const batches = ["All", ...Array.from({ length: 10 }, (_, i) => (currentYear - i).toString())];
-  const departments = ["All", "Computer Science", "Information Technology", "Electronics", "Mechanical", "Civil", "Electrical", "Chemical"];
+  const departments = ["All", "Computer Science", "Computer Engineering", "Information Technology", "Electronics", "Mechanical", "Civil", "Electrical", "Chemical"];
 
   // Handle alumni profile card click
   const handleAlumniClick = (alumniId) => {

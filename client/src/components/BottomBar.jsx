@@ -19,8 +19,11 @@ const BottomBar = () => {
   const navigationItems = [
     { icon: Home, label: 'Home', path: '/home' },
     { icon: Users, label: 'Alumni', path: '/alumni' },
-    { icon: FileText, label: 'Stories', path: '/news-stories' },
+    { icon: UserPlus, label: 'Connect', path: '/connections' },
+    { icon: MessageCircle, label: 'Messages', path: '/messages' },
     { icon: Briefcase, label: 'Jobs', path: '/jobs' },
+    { icon: Calendar, label: 'Events', path: '/events' },
+    { icon: FileText, label: 'Stories', path: '/news-stories' },
     { icon: User, label: 'Profile', path: '/profile' }
   ];
 
@@ -30,16 +33,16 @@ const BottomBar = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg md:hidden z-50 safe-area-inset-bottom">
-      <div className="flex justify-around items-center py-1 pb-safe">
+      <div className="flex overflow-x-auto scrollbar-hide py-1 pb-safe w-full">
         {navigationItems.map((item) => {
-          const isActive = location.pathname === item.path;
+          const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
           const Icon = item.icon;
           
           return (
             <button
               key={item.path}
               onClick={() => handleNavigation(item.path)}
-              className={`flex flex-col items-center justify-center p-2 min-w-0 flex-1 transition-colors duration-200 ${
+              className={`flex flex-col items-center justify-center p-2 min-w-[80px] flex-shrink-0 transition-colors duration-200 ${
                 isActive 
                   ? 'text-blue-600' 
                   : 'text-gray-500 active:text-gray-700'
@@ -53,7 +56,7 @@ const BottomBar = () => {
                   isActive ? 'h-6 w-6' : 'h-5 w-5'
                 }`} />
               </div>
-              <span className={`text-xs mt-1 font-medium transition-all duration-200 ${
+              <span className={`text-xs mt-1 font-medium transition-all duration-200 whitespace-nowrap ${
                 isActive ? 'text-blue-600' : 'text-gray-500'
               }`}>
                 {item.label}

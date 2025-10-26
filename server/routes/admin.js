@@ -69,8 +69,8 @@ router.delete('/announcements/:announcementId', AuthAdmin, deleteAnnouncement);
 
 // ============= BULK IMPORT ROUTES =============
 router.post('/bulk-import', AuthAdmin, upload.single('csvFile'), bulkImportUsers);
-router.get('/bulk-import/:importId/status', AuthAdmin, getBulkImportStatus);
 router.get('/bulk-import/history', AuthAdmin, getBulkImportHistory);
+router.get('/bulk-import/:importId/status', AuthAdmin, getBulkImportStatus);
 
 // ============= ADMIN LOGS ROUTES =============
 router.get('/logs', AuthAdmin, getAdminLogs);

@@ -190,6 +190,14 @@ export const login = async (req, res) => {
             });
         }
 
+        // Prevent admin users from logging in through regular login
+        if (user.role === 'admin') {
+            return res.status(403).json({
+                success: false,
+                error: 'Admin users must login through the admin portal'
+            });
+        }
+
         // Compare password FIRST before checking verification status
         const isMatch = await bcrypt.compare(password, user.password);
         
@@ -238,19 +246,37 @@ export const login = async (req, res) => {
 export const Adminlogin =async(req,res)=>{
     try{
         const{email,password}=req.body
+        
+        // Validate admin credentials
         if(email ===process.env.ADMIN_EMAIL && password ===process.env.ADMIN_PASSWORD){
             const user=await userModel.findOne({email:email})
+            
+            if(!user){
+                return res.status(404).json({
+                    success:false,
+                    error:"Admin user not found in database"
+                })
+            }
+            
+            // Ensure the user has admin role
+            if(user.role !== 'admin'){
+                return res.status(403).json({
+                    success:false,
+                    error:"This account is not an admin account"
+                })
+            }
+            
             const token=createToken(user._id,user.role)
             res.json({success:true,token})
         }
         else{
-            res.json({success:false,error:"wrong credential"})
+            res.status(401).json({success:false,error:"Invalid admin credentials"})
         }
         
        
     }
     catch(e){
-        res.json({success:false,error:e.message})
+        res.status(500).json({success:false,error:e.message})
     }
 }
 

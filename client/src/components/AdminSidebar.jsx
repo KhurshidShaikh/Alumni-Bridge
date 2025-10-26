@@ -59,7 +59,7 @@ const AdminSidebar = () => {
   };
 
   return (
-    <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg hidden md:block border-r border-gray-200">
+    <div className="hidden md:block fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg border-r border-gray-200">
       <div className="flex flex-col h-full">
         {/* Logo */}
         <div className="flex items-center px-6 py-4 border-b border-gray-200">

@@ -25,6 +25,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import AdminSidebar from '../../components/AdminSidebar';
+import AdminBottomBar from '../../components/AdminBottomBar';
 
 const AdminMessaging = () => {
   const [alumni, setAlumni] = useState([]);
@@ -323,20 +324,29 @@ Best regards,
   ];
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
       
-      <div className="flex-1 md:ml-64">
-        <div className="p-6">
-          {/* Header */}
-          <div className="mb-6">
-            <div className="flex items-center space-x-3 mb-2">
-              <MessageSquare className="h-8 w-8 text-blue-600" />
-              <h1 className="text-3xl font-bold text-gray-900 poppins-bold">Admin Messaging</h1>
+      <div className="flex-1 md:ml-64 flex flex-col">
+        {/* Mobile Header */}
+        <div className="md:hidden sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3">
+          <div className="flex items-center space-x-3">
+            <MessageSquare className="w-5 h-5 text-blue-600" />
+            <div>
+              <h1 className="text-lg font-semibold text-gray-900">Messages</h1>
+              <p className="text-xs text-gray-500">Send & View</p>
             </div>
-            <p className="text-gray-600">Send messages and invitations to alumni</p>
           </div>
+        </div>
 
+        {/* Desktop Header */}
+        <div className="hidden md:block bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+          <h1 className="text-3xl font-bold text-gray-900 poppins-bold">Admin Messaging</h1>
+          <p className="text-gray-600">Send messages and invitations to alumni</p>
+        </div>
+
+        <div className="flex-1 overflow-y-auto pb-20 md:pb-6">
+          <div className="p-4 md:p-6">
           {/* Alert */}
           {alert && (
             <Alert className={`mb-6 ${alert.type === 'error' ? 'border-red-200 bg-red-50' : 'border-green-200 bg-green-50'}`}>
@@ -723,7 +733,10 @@ Best regards,
               )}
             </TabsContent>
           </Tabs>
+          </div>
         </div>
+
+        <AdminBottomBar />
       </div>
     </div>
   );

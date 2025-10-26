@@ -19,8 +19,6 @@ import postRoutes from './routes/postRoutes.js'
 import adminRoutes from './routes/admin.js'
 import chatbotRoutes from './routes/chatbotRoutes.js'
 import { setupSocket } from './config/socket.js'
-
-// Import models to ensure they're registered with Mongoose
 import './models/Event.js'
 import './models/userModel.js'
 

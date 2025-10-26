@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../../components/AdminSidebar';
+import AdminBottomBar from '../../components/AdminBottomBar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -78,15 +79,45 @@ const BulkImport = () => {
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
     if (file) {
-      if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
-        toast.error('Please select a CSV file');
+      // Strict CSV validation
+      const isCSV = file.type === 'text/csv' || 
+                    file.type === 'application/vnd.ms-excel' || 
+                    file.name.toLowerCase().endsWith('.csv');
+      
+      const isExcel = file.name.toLowerCase().endsWith('.xlsx') || 
+                      file.name.toLowerCase().endsWith('.xls') ||
+                      file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                      file.type === 'application/vnd.ms-excel';
+      
+      if (isExcel) {
+        toast.error('Excel files are not supported. Please convert to CSV format first.', {
+          duration: 5000,
+          style: {
+            background: '#FEE2E2',
+            border: '1px solid #EF4444',
+            color: '#991B1B'
+          }
+        });
+        event.target.value = ''; // Clear the input
         return;
       }
+      
+      if (!isCSV) {
+        toast.error('Please select a valid CSV file only', {
+          duration: 4000
+        });
+        event.target.value = ''; // Clear the input
+        return;
+      }
+      
       if (file.size > 10 * 1024 * 1024) { // 10MB limit
         toast.error('File size must be less than 10MB');
+        event.target.value = ''; // Clear the input
         return;
       }
+      
       setSelectedFile(file);
+      toast.success(`File selected: ${file.name}`);
     }
   };
 
@@ -193,9 +224,20 @@ David Brown,david.brown@example.com,GR005,alumni,2018,Civil Engineering`;
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
       
-      <div className="flex-1 ml-64 overflow-auto">
-        {/* Header */}
-        <div className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+      <div className="flex-1 md:ml-64 flex flex-col">
+        {/* Mobile Header */}
+        <div className="md:hidden sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3">
+          <div className="flex items-center space-x-3">
+            <Upload className="w-5 h-5 text-blue-600" />
+            <div>
+              <h1 className="text-lg font-semibold text-gray-900">Import</h1>
+              <p className="text-xs text-gray-500">Bulk Upload</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Header */}
+        <div className="hidden md:block bg-white shadow-sm border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 poppins-semibold">Bulk Import</h1>
@@ -213,7 +255,8 @@ David Brown,david.brown@example.com,GR005,alumni,2018,Civil Engineering`;
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="flex-1 overflow-y-auto pb-20 md:pb-6">
+          <div className="p-4 md:p-6">
           {/* Upload Section */}
           <Card className="mb-6">
             <CardHeader>
@@ -223,6 +266,8 @@ David Brown,david.brown@example.com,GR005,alumni,2018,Civil Engineering`;
               </CardTitle>
               <CardDescription>
                 Upload a CSV file to import multiple users at once. Maximum file size: 10MB
+                <br />
+                <span className="text-amber-600 font-medium">⚠️ Only CSV files are supported. Excel files (.xlsx, .xls) must be converted to CSV first.</span>
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -421,7 +466,10 @@ David Brown,david.brown@example.com,GR005,alumni,2018,Civil Engineering`;
               )}
             </CardContent>
           </Card>
+          </div>
         </div>
+
+        <AdminBottomBar />
       </div>
 
       <Toaster position="top-right" />

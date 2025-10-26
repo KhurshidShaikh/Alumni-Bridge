@@ -20,7 +20,8 @@ import {
   GraduationCap,
   Camera,
   Building,
-  Loader2
+  Loader2,
+  LogOut
 } from 'lucide-react';
 import { toast } from "sonner";
 import Sidebar from '../components/Sidebar';
@@ -85,6 +86,14 @@ const ProfilePage = () => {
   };
 
   const handleLogout = () => {
+    // Clear all auth data
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    // Show success message
+    toast.success('Logged out successfully');
+    
+    // Redirect to landing page
     navigate('/');
   };
 
@@ -142,35 +151,35 @@ const ProfilePage = () => {
           
           {/* Profile Header Card */}
           <Card className="mb-6 md:mb-8 shadow-sm border-0 bg-white">
-            <CardContent className="p-6 md:p-8">
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <CardContent className="p-4 md:p-8">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6">
                 
                 {/* Profile Info Section */}
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 flex-1">
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 md:gap-6 flex-1 w-full">
                   {/* Avatar */}
-                  <div className="relative">
-                    <Avatar className="h-24 w-24 md:h-28 md:w-28 border-4 border-white shadow-lg">
+                  <div className="relative flex-shrink-0">
+                    <Avatar className="h-20 w-20 md:h-28 md:w-28 border-4 border-white shadow-lg">
                       <AvatarImage src={userProfile.profile?.profileUrl} />
-                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-2xl md:text-3xl font-bold">
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-xl md:text-3xl font-bold">
                         {userProfile.name?.charAt(0)?.toUpperCase() || 'U'}
                       </AvatarFallback>
                     </Avatar>
                     {userProfile.isVerified && (
                       <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1">
-                        <Award className="h-4 w-4 text-white" />
+                        <Award className="h-3 w-3 md:h-4 md:w-4 text-white" />
                       </div>
                     )}
                   </div>
 
                   {/* Name and Details */}
-                  <div className="text-center sm:text-left flex-1">
+                  <div className="text-center sm:text-left flex-1 w-full">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-                      <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                      <h1 className="text-xl md:text-3xl font-bold text-gray-900">
                         {userProfile.name}
                       </h1>
                       <Badge 
                         variant="secondary" 
-                        className={`px-3 py-1 text-xs font-medium ${
+                        className={`px-2 md:px-3 py-1 text-xs font-medium self-center sm:self-auto ${
                           userProfile.role === 'alumni' 
                             ? 'bg-blue-100 text-blue-700' 
                             : 'bg-green-100 text-green-700'
@@ -182,21 +191,21 @@ const ProfilePage = () => {
                     
                     {/* Position/Role */}
                     {userProfile.profile?.currentPosition && (
-                      <p className="text-lg text-gray-700 font-medium mb-1">
+                      <p className="text-base md:text-lg text-gray-700 font-medium mb-1">
                         {userProfile.profile.currentPosition}
                       </p>
                     )}
                     
                     {/* Company */}
                     {userProfile.profile?.currentCompany && (
-                      <p className="text-gray-600 mb-2">
+                      <p className="text-sm md:text-base text-gray-600 mb-2">
                         at {userProfile.profile.currentCompany}
                       </p>
                     )}
                     
                     {/* Batch/Year */}
-                    <div className="flex items-center justify-center sm:justify-start gap-2 text-sm text-gray-500 mb-3">
-                      <GraduationCap className="h-4 w-4" />
+                    <div className="flex items-center justify-center sm:justify-start gap-2 text-xs md:text-sm text-gray-500 mb-3 flex-wrap">
+                      <GraduationCap className="h-3 w-3 md:h-4 md:w-4" />
                       <span>
                         {userProfile.role === 'alumni' 
                           ? `Class of ${userProfile.batch}` 
@@ -206,28 +215,38 @@ const ProfilePage = () => {
                       {userProfile.profile?.branch && (
                         <>
                           <span>•</span>
-                          <span>{userProfile.profile.branch}</span>
+                          <span className="text-center">{userProfile.profile.branch}</span>
                         </>
                       )}
                     </div>
 
                     {/* Bio */}
                     {userProfile.profile?.bio && (
-                      <p className="text-gray-700 text-sm md:text-base leading-relaxed max-w-2xl">
+                      <p className="text-gray-700 text-xs md:text-base leading-relaxed max-w-2xl">
                         {userProfile.profile.bio}
                       </p>
                     )}
                   </div>
                 </div>
 
-                {/* Edit Button */}
-                <Button 
-                  onClick={handleEditProfile} 
-                  className="bg-blue-600 hover:bg-blue-700 shadow-sm w-full sm:w-auto"
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Profile
-                </Button>
+                {/* Action Buttons */}
+                <div className="flex flex-col gap-2 w-full sm:w-auto">
+                  <Button 
+                    onClick={handleEditProfile} 
+                    className="bg-blue-600 hover:bg-blue-700 shadow-sm w-full sm:w-auto"
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Profile
+                  </Button>
+                  <Button 
+                    onClick={handleLogout} 
+                    variant="outline"
+                    className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 shadow-sm w-full sm:w-auto"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
