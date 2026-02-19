@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -15,10 +15,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { 
-  FileText, 
-  Briefcase, 
-  Trash2, 
+import {
+  FileText,
+  Briefcase,
+  Trash2,
   Eye,
   AlertTriangle,
   Users,
@@ -52,8 +52,8 @@ const ContentManagement = () => {
   const fetchPosts = async () => {
     try {
       const adminToken = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const response = await fetch(`${backendUrl}/api/admin/posts`, {
         headers: {
           'Authorization': `Bearer ${adminToken}`,
@@ -62,7 +62,7 @@ const ContentManagement = () => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         setPosts(data.data);
       } else {
@@ -79,8 +79,8 @@ const ContentManagement = () => {
   const fetchJobs = async () => {
     try {
       const adminToken = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const response = await fetch(`${backendUrl}/api/admin/jobs`, {
         headers: {
           'Authorization': `Bearer ${adminToken}`,
@@ -89,7 +89,7 @@ const ContentManagement = () => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         setJobs(data.data);
       } else {
@@ -106,9 +106,9 @@ const ContentManagement = () => {
   const handleDeleteContent = async () => {
     try {
       const adminToken = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
-      const endpoint = deleteDialog.type === 'post' 
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
+      const endpoint = deleteDialog.type === 'post'
         ? `${backendUrl}/api/admin/posts/${deleteDialog.item._id}`
         : `${backendUrl}/api/admin/jobs/${deleteDialog.item._id}`;
 
@@ -121,11 +121,11 @@ const ContentManagement = () => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         toast.success(`${deleteDialog.type === 'post' ? 'Post' : 'Job'} deleted successfully`);
         setDeleteDialog({ open: false, type: '', item: null });
-        
+
         // Refresh the appropriate list
         if (deleteDialog.type === 'post') {
           fetchPosts();
@@ -179,7 +179,7 @@ const ContentManagement = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 md:ml-64 flex flex-col">
         {/* Mobile Header */}
         <div className="md:hidden sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3">
@@ -204,205 +204,205 @@ const ContentManagement = () => {
 
         <div className="flex-1 overflow-y-auto pb-20 md:pb-6">
 
-        <div className="p-6">
-          <Tabs defaultValue="posts" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="posts" className="flex items-center space-x-2">
-                <FileText className="w-4 h-4" />
-                <span>Posts ({posts.length})</span>
-              </TabsTrigger>
-              <TabsTrigger value="jobs" className="flex items-center space-x-2">
-                <Briefcase className="w-4 h-4" />
-                <span>Jobs ({jobs.length})</span>
-              </TabsTrigger>
-            </TabsList>
+          <div className="p-6">
+            <Tabs defaultValue="posts" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="posts" className="flex items-center space-x-2">
+                  <FileText className="w-4 h-4" />
+                  <span>Posts ({posts.length})</span>
+                </TabsTrigger>
+                <TabsTrigger value="jobs" className="flex items-center space-x-2">
+                  <Briefcase className="w-4 h-4" />
+                  <span>Jobs ({jobs.length})</span>
+                </TabsTrigger>
+              </TabsList>
 
-            {/* Posts Tab */}
-            <TabsContent value="posts">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <FileText className="w-5 h-5" />
-                    <span>User Posts</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Review and moderate posts shared by users
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {posts.length > 0 ? (
-                    <div className="space-y-4">
-                      {posts.map((post) => (
-                        <div key={post._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-3 mb-2">
-                                <Avatar className="h-8 w-8">
-                                  <AvatarImage src={post.author?.profile?.profileUrl} />
-                                  <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
-                                    {post.author?.name?.split(' ').map(n => n[0]).join('') || 'U'}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <p className="font-semibold text-gray-900">{post.author?.name || 'Unknown User'}</p>
-                                  <p className="text-xs text-gray-500">{formatDate(post.createdAt)}</p>
-                                </div>
-                                <Badge variant="outline">
-                                  {post.postType || 'general'}
-                                </Badge>
-                              </div>
-                              
-                              <div className="mb-3">
-                                <p className="text-gray-900 mb-2">{post.content}</p>
-                                {post.images && post.images.length > 0 && (
-                                  <div className="flex items-center space-x-1 text-sm text-gray-500">
-                                    <Eye className="w-4 h-4" />
-                                    <span>{post.images.length} image(s) attached</span>
-                                  </div>
-                                )}
-                              </div>
-                              
-                              <div className="flex items-center space-x-4 text-sm text-gray-500">
-                                <div className="flex items-center space-x-1">
-                                  <Users className="w-4 h-4" />
-                                  <span>{post.likes?.length || 0} likes</span>
-                                </div>
-                                <div className="flex items-center space-x-1">
-                                  <FileText className="w-4 h-4" />
-                                  <span>{post.comments?.length || 0} comments</span>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <div className="flex items-center space-x-2 ml-4">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => setSelectedItem({ type: 'post', data: post })}
-                              >
-                                <Eye className="w-4 h-4" />
-                              </Button>
-                              
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="text-red-600 border-red-600 hover:bg-red-50"
-                                onClick={() => openDeleteDialog('post', post)}
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-12">
-                      <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500">No posts found</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* Jobs Tab */}
-            <TabsContent value="jobs">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Briefcase className="w-5 h-5" />
-                    <span>Job Listings</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Review and moderate job postings by alumni
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {jobs.length > 0 ? (
-                    <div className="space-y-4">
-                      {jobs.map((job) => (
-                        <div key={job._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-3 mb-2">
-                                <h3 className="font-semibold text-gray-900 text-lg">{job.title}</h3>
-                                <Badge variant="outline">
-                                  {job.jobType || 'Full-time'}
-                                </Badge>
-                                <Badge variant="outline" className="text-green-600 border-green-600">
-                                  {job.status || 'Active'}
-                                </Badge>
-                              </div>
-                              
-                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
-                                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                                  <Building className="w-4 h-4" />
-                                  <span>{job.company}</span>
-                                </div>
-                                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                                  <MapPin className="w-4 h-4" />
-                                  <span>{job.location}</span>
-                                </div>
-                                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                                  <DollarSign className="w-4 h-4" />
-                                  <span>{formatSalary(job.salary)}</span>
-                                </div>
-                                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                                  <Clock className="w-4 h-4" />
-                                  <span>{formatDate(job.createdAt)}</span>
-                                </div>
-                              </div>
-                              
-                              <p className="text-gray-700 mb-3 line-clamp-2">{job.description}</p>
-                              
-                              <div className="flex items-center space-x-4 text-sm text-gray-500">
-                                <div className="flex items-center space-x-2">
-                                  <Avatar className="h-5 w-5">
+              {/* Posts Tab */}
+              <TabsContent value="posts">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <FileText className="w-5 h-5" />
+                      <span>User Posts</span>
+                    </CardTitle>
+                    <CardDescription>
+                      Review and moderate posts shared by users
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {posts.length > 0 ? (
+                      <div className="space-y-4">
+                        {posts.map((post) => (
+                          <div key={post._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-3 mb-2">
+                                  <Avatar className="h-8 w-8">
+                                    <AvatarImage src={post.author?.profile?.profileUrl} />
                                     <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
-                                      {job.postedBy?.name?.split(' ').map(n => n[0]).join('') || 'A'}
+                                      {post.author?.name?.split(' ').map(n => n[0]).join('') || 'U'}
                                     </AvatarFallback>
                                   </Avatar>
-                                  <span>Posted by {job.postedBy?.name || 'Unknown'}</span>
+                                  <div>
+                                    <p className="font-semibold text-gray-900">{post.author?.name || 'Unknown User'}</p>
+                                    <p className="text-xs text-gray-500">{formatDate(post.createdAt)}</p>
+                                  </div>
+                                  <Badge variant="outline">
+                                    {post.postType || 'general'}
+                                  </Badge>
                                 </div>
-                                <span>•</span>
-                                <span>{job.applicants?.length || 0} applicants</span>
+
+                                <div className="mb-3">
+                                  <p className="text-gray-900 mb-2">{post.content}</p>
+                                  {post.images && post.images.length > 0 && (
+                                    <div className="flex items-center space-x-1 text-sm text-gray-500">
+                                      <Eye className="w-4 h-4" />
+                                      <span>{post.images.length} image(s) attached</span>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div className="flex items-center space-x-4 text-sm text-gray-500">
+                                  <div className="flex items-center space-x-1">
+                                    <Users className="w-4 h-4" />
+                                    <span>{post.likes?.length || 0} likes</span>
+                                  </div>
+                                  <div className="flex items-center space-x-1">
+                                    <FileText className="w-4 h-4" />
+                                    <span>{post.comments?.length || 0} comments</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center space-x-2 ml-4">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => setSelectedItem({ type: 'post', data: post })}
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="text-red-600 border-red-600 hover:bg-red-50"
+                                  onClick={() => openDeleteDialog('post', post)}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
                               </div>
                             </div>
-                            
-                            <div className="flex items-center space-x-2 ml-4">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => setSelectedItem({ type: 'job', data: job })}
-                              >
-                                <Eye className="w-4 h-4" />
-                              </Button>
-                              
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="text-red-600 border-red-600 hover:bg-red-50"
-                                onClick={() => openDeleteDialog('job', job)}
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-12">
+                        <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500">No posts found</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Jobs Tab */}
+              <TabsContent value="jobs">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Briefcase className="w-5 h-5" />
+                      <span>Job Listings</span>
+                    </CardTitle>
+                    <CardDescription>
+                      Review and moderate job postings by alumni
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {jobs.length > 0 ? (
+                      <div className="space-y-4">
+                        {jobs.map((job) => (
+                          <div key={job._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-3 mb-2">
+                                  <h3 className="font-semibold text-gray-900 text-lg">{job.title}</h3>
+                                  <Badge variant="outline">
+                                    {job.jobType || 'Full-time'}
+                                  </Badge>
+                                  <Badge variant="outline" className="text-green-600 border-green-600">
+                                    {job.status || 'Active'}
+                                  </Badge>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
+                                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                                    <Building className="w-4 h-4" />
+                                    <span>{job.company}</span>
+                                  </div>
+                                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                                    <MapPin className="w-4 h-4" />
+                                    <span>{job.location}</span>
+                                  </div>
+                                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                                    <DollarSign className="w-4 h-4" />
+                                    <span>{formatSalary(job.salary)}</span>
+                                  </div>
+                                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                                    <Clock className="w-4 h-4" />
+                                    <span>{formatDate(job.createdAt)}</span>
+                                  </div>
+                                </div>
+
+                                <p className="text-gray-700 mb-3 line-clamp-2">{job.description}</p>
+
+                                <div className="flex items-center space-x-4 text-sm text-gray-500">
+                                  <div className="flex items-center space-x-2">
+                                    <Avatar className="h-5 w-5">
+                                      <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
+                                        {job.postedBy?.name?.split(' ').map(n => n[0]).join('') || 'A'}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    <span>Posted by {job.postedBy?.name || 'Unknown'}</span>
+                                  </div>
+                                  <span>•</span>
+                                  <span>{job.applicants?.length || 0} applicants</span>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center space-x-2 ml-4">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => setSelectedItem({ type: 'job', data: job })}
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="text-red-600 border-red-600 hover:bg-red-50"
+                                  onClick={() => openDeleteDialog('job', job)}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-12">
-                      <Briefcase className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500">No job listings found</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-12">
+                        <Briefcase className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500">No job listings found</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
 
         </div>
 
@@ -418,7 +418,7 @@ const ContentManagement = () => {
                 {selectedItem.type === 'post' ? 'Post Details' : 'Job Details'}
               </DialogTitle>
             </DialogHeader>
-            
+
             <div className="py-4">
               {selectedItem.type === 'post' ? (
                 <div className="space-y-4">
@@ -484,7 +484,7 @@ const ContentManagement = () => {
               Are you sure you want to delete this {deleteDialog.type}? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialog({ open: false, type: '', item: null })}>
               Cancel

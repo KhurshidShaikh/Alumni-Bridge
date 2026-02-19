@@ -111,7 +111,7 @@ function RegisterPage() {
 
     try {
       // Make API call to register endpoint
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? ''
       const response = await fetch(`${backendUrl}/api/auth/register`, {
         method: 'POST',
         headers: {
@@ -212,11 +212,10 @@ function RegisterPage() {
                     <Button
                       type="button"
                       variant={userType === "alumni" ? "default" : "outline"}
-                      className={`h-12 flex items-center justify-center space-x-2 transition-all ${
-                        userType === "alumni" 
-                          ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg" 
+                      className={`h-12 flex items-center justify-center space-x-2 transition-all ${userType === "alumni"
+                          ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg"
                           : "bg-white/50 border-white/30 text-gray-700 hover:bg-blue-50 hover:border-blue-300"
-                      }`}
+                        }`}
                       onClick={() => setUserType("alumni")}
                     >
                       <Users className="w-4 h-4" />
@@ -225,11 +224,10 @@ function RegisterPage() {
                     <Button
                       type="button"
                       variant={userType === "student" ? "default" : "outline"}
-                      className={`h-12 flex items-center justify-center space-x-2 transition-all ${
-                        userType === "student" 
-                          ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg" 
+                      className={`h-12 flex items-center justify-center space-x-2 transition-all ${userType === "student"
+                          ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg"
                           : "bg-white/50 border-white/30 text-gray-700 hover:bg-blue-50 hover:border-blue-300"
-                      }`}
+                        }`}
                       onClick={() => setUserType("student")}
                     >
                       <GraduationCap className="w-4 h-4" />
@@ -356,7 +354,7 @@ function RegisterPage() {
 
           {/* Bottom Text */}
           <div className="text-center mt-8">
-          
+
           </div>
         </div>
       </div>

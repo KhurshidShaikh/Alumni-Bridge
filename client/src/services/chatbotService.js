@@ -1,10 +1,10 @@
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+import { API_BASE_URL } from '../config/api.js';
 
 class ChatbotService {
     async sendMessage(message, sessionId = null) {
         try {
             const token = localStorage.getItem('token');
-            
+
             if (!token) {
                 throw new Error('Authentication required');
             }
@@ -47,7 +47,7 @@ class ChatbotService {
     async clearHistory(sessionId = null) {
         try {
             const token = localStorage.getItem('token');
-            
+
             if (!token) {
                 throw new Error('Authentication required');
             }
@@ -84,7 +84,7 @@ class ChatbotService {
     async getSuggestedQuestions() {
         try {
             const token = localStorage.getItem('token');
-            
+
             if (!token) {
                 throw new Error('Authentication required');
             }

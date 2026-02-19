@@ -46,7 +46,8 @@ function ProfileEdit() {
       try {
         setIsLoadingProfile(true)
 
-        const response = await fetch('http://localhost:3000/api/profile/me', {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+        const response = await fetch(`${backendUrl}/api/profile/me`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -62,10 +63,10 @@ function ProfileEdit() {
 
         if (data.success && data.user) {
           const user = data.user
-          
+
           // Determine if this is edit mode
           setIsEditMode(user._id === id || user.id === id)
-          
+
           // Populate form with fetched data
           setFormData({
             bio: user.profile?.bio || "",
@@ -147,7 +148,8 @@ function ProfileEdit() {
       const formData = new FormData()
       formData.append('profileImage', file)
 
-      const response = await fetch('http://localhost:3000/api/upload/profile', {
+      const backendUrl2 = import.meta.env.VITE_BACKEND_URL ?? '';
+      const response = await fetch(`${backendUrl2}/api/upload/profile`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -223,7 +225,7 @@ function ProfileEdit() {
     setIsLoading(true)
 
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? ''
       const response = await fetch(`${backendUrl}/api/profile/update`, {
         method: 'PUT',
         headers: {
@@ -241,9 +243,9 @@ function ProfileEdit() {
       if (data.success) {
         // Update Redux state with the updated user data
         dispatch(updateUser(data.user))
-        
+
         toast.success(isEditMode ? 'Profile updated successfully!' : 'Profile completed successfully!')
-        
+
         // Redirect to home page after successful profile completion
         setTimeout(() => {
           navigate('/home')
@@ -279,7 +281,7 @@ function ProfileEdit() {
             {isEditMode ? 'Edit Your Profile' : 'Complete Your Profile'}
           </h1>
           <p className="text-gray-600">
-            {isEditMode 
+            {isEditMode
               ? 'Update your profile information to keep it current'
               : 'Help others connect with you by completing your profile information'
             }
@@ -295,7 +297,7 @@ function ProfileEdit() {
             <CardDescription>
               Fill in your details to complete your Alumni Bridge profile
             </CardDescription>
-            
+
             {/* Profile Image Upload Section */}
             <div className="flex flex-col items-center space-y-4 mt-6">
               <div className="relative">

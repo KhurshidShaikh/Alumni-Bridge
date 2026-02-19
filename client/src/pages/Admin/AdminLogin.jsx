@@ -37,7 +37,7 @@ function AdminLogin() {
 
     try {
       // Make API call to admin login endpoint
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
       const response = await fetch(`${backendUrl}/api/admin/login`, {
         method: 'POST',
         headers: {
@@ -55,9 +55,9 @@ function AdminLogin() {
         // Store admin token and data
         localStorage.setItem('adminToken', data.token)
         localStorage.setItem('adminData', JSON.stringify(data.admin))
-        
+
         toast.success(`Welcome to Admin Panel, ${data.admin.name}!`)
-        
+
         // Navigate to admin dashboard
         setTimeout(() => {
           navigate('/admin/dashboard')
@@ -87,8 +87,8 @@ function AdminLogin() {
             </div>
             <span className="text-xl font-semibold text-blue-600">Alumni Bridge</span>
           </div>
-          <Link 
-            to="/login" 
+          <Link
+            to="/login"
             className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
           >
             User Login
@@ -182,7 +182,7 @@ function AdminLogin() {
                   <div>
                     <p className="text-sm font-semibold text-yellow-800">Secure Admin Access</p>
                     <p className="text-xs text-yellow-700 mt-1">
-                      This portal is restricted to authorized administrators only. 
+                      This portal is restricted to authorized administrators only.
                       All login attempts are monitored and logged.
                     </p>
                   </div>
@@ -191,8 +191,8 @@ function AdminLogin() {
 
               {/* Back to Main Site */}
               <div className="text-center">
-                <Link 
-                  to="/" 
+                <Link
+                  to="/"
                   className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors inline-flex items-center space-x-1"
                 >
                   <GraduationCap className="w-4 h-4" />

@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+import { API_BASE_URL as BASE_URL } from '../config/api.js';
+const API_BASE_URL = `${BASE_URL}/api`;
 
 // Get authentication token from localStorage
 const getAuthToken = () => {
@@ -8,16 +9,16 @@ const getAuthToken = () => {
 // Create headers with authentication
 const createHeaders = (isFormData = false) => {
     const headers = {};
-    
+
     if (!isFormData) {
         headers['Content-Type'] = 'application/json';
     }
-    
+
     const token = getAuthToken();
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
-    
+
     return headers;
 };
 
@@ -34,18 +35,18 @@ export const jobService = {
     // Get all jobs with filters
     getAllJobs: async (filters = {}) => {
         const queryParams = new URLSearchParams();
-        
+
         Object.keys(filters).forEach(key => {
             if (filters[key] && filters[key] !== 'All' && filters[key] !== '') {
                 queryParams.append(key, filters[key]);
             }
         });
-        
+
         const response = await fetch(`${API_BASE_URL}/jobs?${queryParams}`, {
             method: 'GET',
             headers: createHeaders()
         });
-        
+
         return handleResponse(response);
     },
 
@@ -55,7 +56,7 @@ export const jobService = {
             method: 'GET',
             headers: createHeaders()
         });
-        
+
         return handleResponse(response);
     },
 
@@ -66,7 +67,7 @@ export const jobService = {
             headers: createHeaders(),
             body: JSON.stringify(jobData)
         });
-        
+
         return handleResponse(response);
     },
 
@@ -77,7 +78,7 @@ export const jobService = {
             headers: createHeaders(),
             body: JSON.stringify(jobData)
         });
-        
+
         return handleResponse(response);
     },
 
@@ -87,7 +88,7 @@ export const jobService = {
             method: 'DELETE',
             headers: createHeaders()
         });
-        
+
         return handleResponse(response);
     },
 
@@ -98,61 +99,61 @@ export const jobService = {
             headers: createHeaders(true), // FormData, so no Content-Type header
             body: formData
         });
-        
+
         return handleResponse(response);
     },
 
     // Get job applications (Job poster only)
     getJobApplications: async (jobId, filters = {}) => {
         const queryParams = new URLSearchParams();
-        
+
         Object.keys(filters).forEach(key => {
             if (filters[key] && filters[key] !== 'all') {
                 queryParams.append(key, filters[key]);
             }
         });
-        
+
         const response = await fetch(`${API_BASE_URL}/jobs/${jobId}/applications?${queryParams}`, {
             method: 'GET',
             headers: createHeaders()
         });
-        
+
         return handleResponse(response);
     },
 
     // Get user's job applications
     getMyApplications: async (filters = {}) => {
         const queryParams = new URLSearchParams();
-        
+
         Object.keys(filters).forEach(key => {
             if (filters[key] && filters[key] !== 'all') {
                 queryParams.append(key, filters[key]);
             }
         });
-        
+
         const response = await fetch(`${API_BASE_URL}/jobs/my/applications?${queryParams}`, {
             method: 'GET',
             headers: createHeaders()
         });
-        
+
         return handleResponse(response);
     },
 
     // Get jobs posted by current user (Alumni only)
     getMyJobs: async (filters = {}) => {
         const queryParams = new URLSearchParams();
-        
+
         Object.keys(filters).forEach(key => {
             if (filters[key] && filters[key] !== 'all') {
                 queryParams.append(key, filters[key]);
             }
         });
-        
+
         const response = await fetch(`${API_BASE_URL}/jobs/my/jobs?${queryParams}`, {
             method: 'GET',
             headers: createHeaders()
         });
-        
+
         return handleResponse(response);
     },
 
@@ -163,7 +164,7 @@ export const jobService = {
             headers: createHeaders(),
             body: JSON.stringify({ status, notes })
         });
-        
+
         return handleResponse(response);
     }
 };

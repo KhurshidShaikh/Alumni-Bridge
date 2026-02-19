@@ -12,7 +12,7 @@ import { loginStart, loginSuccess, loginFailure, loadUserFromStorage } from '../
 import { selectIsAuthenticated, selectCurrentUser } from '../store/selectors/userSelectors'
 import { selectIsLoading } from "../store/selectors/userSelectors"
 
- function LoginPage() {
+function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -68,7 +68,7 @@ import { selectIsLoading } from "../store/selectors/userSelectors"
 
     try {
       // Make API call to login endpoint
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? ''
       const response = await fetch(`${backendUrl}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -88,9 +88,9 @@ import { selectIsLoading } from "../store/selectors/userSelectors"
           user: data.user,
           token: data.token
         }))
-        
+
         toast.success(`Welcome back to Alumni Bridge, ${data.user.name}!`)
-        
+
         // Check if profile is complete and navigate accordingly
         setTimeout(() => {
           if (!data.user.isProfileComplete) {
@@ -266,7 +266,7 @@ import { selectIsLoading } from "../store/selectors/userSelectors"
 
           {/* Bottom Text */}
           <div className="text-center mt-8">
-            
+
           </div>
         </div>
       </div>

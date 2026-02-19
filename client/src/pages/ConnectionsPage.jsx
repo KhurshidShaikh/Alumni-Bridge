@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../store/selectors/userSelectors';
 import { toast } from 'sonner';
-import { 
-  Users, 
-  Search, 
+import {
+  Users,
+  Search,
   UserMinus,
   Building,
   MapPin,
@@ -45,7 +45,7 @@ const ConnectionsPage = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      
+
       if (!token) {
         toast.error('Please login to view connections');
         navigate('/login');
@@ -55,7 +55,7 @@ const ConnectionsPage = () => {
       const params = new URLSearchParams();
       if (searchTerm.trim()) params.append('search', searchTerm.trim());
 
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
       const response = await fetch(`${backendUrl}/api/connections/my-connections?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -87,7 +87,7 @@ const ConnectionsPage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
 
       const response = await fetch(`${backendUrl}/api/connections/${connectionId}`, {
         method: 'DELETE',
@@ -116,14 +116,14 @@ const ConnectionsPage = () => {
     try {
       setRequestsLoading(true);
       const token = localStorage.getItem('token');
-      
+
       if (!token) {
         toast.error('Please login to view requests');
         navigate('/login');
         return;
       }
 
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
       const response = await fetch(`${backendUrl}/api/connections/requests`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -151,7 +151,7 @@ const ConnectionsPage = () => {
     try {
       setActionLoading(prev => ({ ...prev, [requestId]: 'accepting' }));
       const token = localStorage.getItem('token');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
 
       const response = await fetch(`${backendUrl}/api/connections/request/${requestId}/accept`, {
         method: 'PUT',
@@ -188,7 +188,7 @@ const ConnectionsPage = () => {
     try {
       setActionLoading(prev => ({ ...prev, [requestId]: 'declining' }));
       const token = localStorage.getItem('token');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
 
       const response = await fetch(`${backendUrl}/api/connections/request/${requestId}/decline`, {
         method: 'PUT',
@@ -223,7 +223,7 @@ const ConnectionsPage = () => {
     try {
       setActionLoading(prev => ({ ...prev, [requestId]: 'withdrawing' }));
       const token = localStorage.getItem('token');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
 
       const response = await fetch(`${backendUrl}/api/connections/request/${requestId}/withdraw`, {
         method: 'DELETE',
@@ -262,7 +262,7 @@ const ConnectionsPage = () => {
   const handleMessageClick = async (userId) => {
     try {
       const token = localStorage.getItem('token');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
 
       // Get or create conversation
       const response = await fetch(`${backendUrl}/api/messages/conversation/${userId}`, {
@@ -317,7 +317,7 @@ const ConnectionsPage = () => {
                 {otherUser.name.split(' ').map(n => n[0]).join('')}
               </AvatarFallback>
             </Avatar>
-            
+
             <div className="flex-1">
               <div className="flex items-start justify-between">
                 <div>
@@ -325,7 +325,7 @@ const ConnectionsPage = () => {
                     {otherUser.name}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    {otherUser.profile?.currentPosition || otherUser.role} 
+                    {otherUser.profile?.currentPosition || otherUser.role}
                     {otherUser.profile?.currentCompany && ` at ${otherUser.profile.currentCompany}`}
                   </p>
                   <div className="flex items-center space-x-2 mt-1">
@@ -337,7 +337,7 @@ const ConnectionsPage = () => {
                     </Badge>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-2">
                   {isReceived ? (
                     <>
@@ -384,13 +384,13 @@ const ConnectionsPage = () => {
                   )}
                 </div>
               </div>
-              
+
               {request.message && (
                 <div className="mt-3 p-3 bg-gray-50 rounded-lg">
                   <p className="text-sm text-gray-700">"{request.message}"</p>
                 </div>
               )}
-              
+
               <div className="mt-3 flex items-center justify-between">
                 <span className="text-xs text-gray-500">
                   {new Date(request.createdAt).toLocaleDateString()}
@@ -485,7 +485,7 @@ const ConnectionsPage = () => {
                           </div>
                         </div>
                       </CardHeader>
-                      
+
                       <CardContent>
                         <div className="space-y-3">
                           <div className="space-y-2">
@@ -495,14 +495,14 @@ const ConnectionsPage = () => {
                                 {connection.connectedUser.profile.currentCompany}
                               </div>
                             )}
-                            
+
                             {connection.connectedUser.profile?.currentPosition && (
                               <div className="flex items-center text-xs md:text-sm text-gray-600">
                                 <GraduationCap className="h-3 w-3 md:h-4 md:w-4 mr-2" />
                                 {connection.connectedUser.profile.currentPosition}
                               </div>
                             )}
-                            
+
                             {connection.connectedUser.profile?.location && (
                               <div className="flex items-center text-xs md:text-sm text-gray-600">
                                 <MapPin className="h-3 w-3 md:h-4 md:w-4 mr-2" />
@@ -516,30 +516,30 @@ const ConnectionsPage = () => {
                           </div>
 
                           <Separator className="my-3" />
-                          
+
                           <div className="flex justify-between items-center">
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               variant="outline"
                               onClick={() => handleProfileClick(connection.connectedUser._id)}
                             >
                               View Profile
                             </Button>
-                            
+
                             <div className="flex space-x-2">
-                              <Button 
-                                size="sm" 
-                                variant="outline" 
+                              <Button
+                                size="sm"
+                                variant="outline"
                                 className="h-8 w-8 p-0"
                                 onClick={() => handleMessageClick(connection.connectedUser._id)}
                                 title="Send Message"
                               >
                                 <MessageCircle className="h-3 w-3" />
                               </Button>
-                              
-                              <Button 
-                                size="sm" 
-                                variant="outline" 
+
+                              <Button
+                                size="sm"
+                                variant="outline"
                                 className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
                                 onClick={() => handleRemoveConnection(connection._id, connection.connectedUser.name)}
                               >
@@ -562,7 +562,7 @@ const ConnectionsPage = () => {
                     <p className="text-gray-500 mb-4">
                       Start building your network by connecting with alumni in the directory.
                     </p>
-                    <Button 
+                    <Button
                       onClick={() => navigate('/alumni')}
                       className="bg-blue-600 hover:bg-blue-700"
                     >
@@ -612,7 +612,7 @@ const ConnectionsPage = () => {
                     <p className="text-gray-500 mb-4">
                       You haven't sent any connection requests yet.
                     </p>
-                    <Button 
+                    <Button
                       onClick={() => navigate('/alumni')}
                       className="bg-blue-600 hover:bg-blue-700"
                     >

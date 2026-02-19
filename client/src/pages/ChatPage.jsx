@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../store/selectors/userSelectors';
 import { toast } from 'sonner';
 import io from 'socket.io-client';
-import { 
+import {
   ArrowLeft,
   Send,
   Check,
@@ -23,12 +23,12 @@ const ChatPage = () => {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [socket, setSocket] = useState(null);
-  
+
   // Use refs to maintain current values in socket handlers
   const conversationRef = useRef(null);
   const messagesRef = useRef([]);
   const currentUserRef = useRef(null);
-  
+
   const navigate = useNavigate();
   const { conversationId, userId } = useParams();
   const currentUser = useSelector(selectCurrentUser);
@@ -65,7 +65,7 @@ const ChatPage = () => {
     }
 
     console.log('🔌 Initializing Socket.IO for chat...');
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+    const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
     const newSocket = io(backendUrl, {
       auth: { token },
       transports: ['websocket', 'polling']
@@ -74,7 +74,7 @@ const ChatPage = () => {
     newSocket.on('connect', () => {
       console.log('✅ Socket connected:', newSocket.id);
       setSocket(newSocket);
-      
+
       // Join conversation room
       if (conversationId) {
         console.log('🏠 Joining room:', conversationId);
@@ -92,7 +92,7 @@ const ChatPage = () => {
       console.log('📨 Message conversation:', data.conversationId);
       console.log('📨 Message sender:', data.message.sender._id);
       console.log('📨 Current user:', currentUser?._id);
-      
+
       // Small delay to ensure local state updates happen first
       setTimeout(() => {
         // Check if message belongs to current conversation
@@ -105,7 +105,7 @@ const ChatPage = () => {
             console.log('⚠️ Current user ref:', currentUserRef.current?._id);
             return;
           }
-          
+
           console.log('✅ Message belongs to current conversation, adding...');
           setMessages(prev => {
             // Check if message already exists (more robust check)
@@ -114,7 +114,7 @@ const ChatPage = () => {
               console.log('⚠️ Message already exists in state, skipping');
               return prev;
             }
-            
+
             console.log('✅ Adding new message to state');
             setTimeout(() => scrollToBottom(), 100);
             return [...prev, data.message];
@@ -132,9 +132,9 @@ const ChatPage = () => {
       if (conversationId === currentConvId) {
         setMessages(prev => prev.map(msg => {
           if (msg.sender._id === currentUser?._id && !msg.readBy.some(r => r.user === readBy)) {
-            return { 
-              ...msg, 
-              readBy: [...msg.readBy, { user: readBy, readAt: new Date() }] 
+            return {
+              ...msg,
+              readBy: [...msg.readBy, { user: readBy, readAt: new Date() }]
             };
           }
           return msg;
@@ -155,10 +155,10 @@ const ChatPage = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-        
+        const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
         let actualConversationId = conversationId;
-        
+
         // If we have userId instead of conversationId, create/get conversation
         if (userId && !conversationId) {
           console.log('🔍 Getting conversation for user:', userId);
@@ -168,7 +168,7 @@ const ChatPage = () => {
               'Content-Type': 'application/json'
             }
           });
-          
+
           const createConvData = await createConvResponse.json();
           if (createConvData.success) {
             actualConversationId = createConvData.conversation._id;
@@ -227,12 +227,12 @@ const ChatPage = () => {
     if (socket && conversation?._id) {
       console.log('🏠 Joining conversation room:', conversation._id);
       socket.emit('joinConversation', conversation._id);
-      
+
       // Also emit markAsRead to mark messages as read
       if (currentUser?._id) {
-        socket.emit('markAsRead', { 
-          conversationId: conversation._id, 
-          userId: currentUser._id 
+        socket.emit('markAsRead', {
+          conversationId: conversation._id,
+          userId: currentUser._id
         });
       }
     }
@@ -243,12 +243,12 @@ const ChatPage = () => {
     if (!newMessage.trim() || sending || !conversation) return;
 
     console.log('📤 Sending message:', newMessage.trim());
-    
+
     try {
       setSending(true);
       const token = localStorage.getItem('token');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const response = await fetch(`${backendUrl}/api/messages/conversation/${conversation._id}/send`, {
         method: 'POST',
         headers: {
@@ -261,13 +261,13 @@ const ChatPage = () => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         // Add message to local state immediately
         console.log('📤 Adding sent message to local state:', data.message._id);
         console.log('📤 Sent message sender ID:', data.message.sender._id);
         console.log('📤 Current user ID:', currentUser?._id);
-        
+
         setMessages(prev => {
           // Check if message already exists to prevent duplicates
           const exists = prev.some(msg => msg._id === data.message._id);
@@ -278,7 +278,7 @@ const ChatPage = () => {
           console.log('✅ Adding new message to local state');
           return [...prev, data.message];
         });
-        
+
         setNewMessage('');
         setTimeout(scrollToBottom, 100);
         console.log('✅ Message sent successfully');
@@ -309,9 +309,9 @@ const ChatPage = () => {
 
   // Format message time
   const formatMessageTime = (date) => {
-    return new Date(date).toLocaleTimeString([], { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return new Date(date).toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
 
@@ -346,7 +346,7 @@ const ChatPage = () => {
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          
+
           {conversation && (
             <>
               <Avatar className="h-10 w-10">
@@ -355,15 +355,15 @@ const ChatPage = () => {
                   {conversation.otherParticipant?.name.split(' ').map(n => n[0]).join('')}
                 </AvatarFallback>
               </Avatar>
-              
+
               <div>
                 <h2 className="font-semibold text-gray-900">
                   {conversation.otherParticipant?.name}
                 </h2>
                 <p className="text-sm text-gray-500">
-                  {conversation.otherParticipant?.role === 'student' ? 'Student' : 
-                   conversation.otherParticipant?.role === 'alumni' ? 'Alumni' : 
-                   conversation.otherParticipant?.profile?.currentCompany || 'User'}
+                  {conversation.otherParticipant?.role === 'student' ? 'Student' :
+                    conversation.otherParticipant?.role === 'alumni' ? 'Alumni' :
+                      conversation.otherParticipant?.profile?.currentCompany || 'User'}
                 </p>
               </div>
             </>
@@ -383,7 +383,7 @@ const ChatPage = () => {
               console.log('🔍 DEBUG - Current user:', currentUser);
               console.log('🔍 DEBUG - Sender ID:', message.sender._id);
               console.log('🔍 DEBUG - Current User ID:', currentUser?._id);
-              
+
               // Get current user ID from localStorage as fallback
               const token = localStorage.getItem('token');
               let fallbackUserId = null;
@@ -395,16 +395,16 @@ const ChatPage = () => {
                   console.error('Error parsing token:', e);
                 }
               }
-              
+
               const actualCurrentUserId = currentUser?._id || fallbackUserId;
               console.log('🔧 Actual current user ID:', actualCurrentUserId);
-              
+
               // Fix the isOwn calculation - ensure proper string comparison
               const isOwn = message.sender._id?.toString() === actualCurrentUserId?.toString();
-              
+
               // NOW USE REAL LOGIC: Each user sees their own messages on right
               const testIsOwn = isOwn;
-              
+
               console.log('🔧 FIXED isOwn calculation:', {
                 senderIdString: message.sender._id?.toString(),
                 currentUserIdString: currentUser?._id?.toString(),
@@ -416,14 +416,14 @@ const ChatPage = () => {
                 const readUserId = read.user?._id || read.user;
                 return readUserId && readUserId.toString() !== message.sender._id.toString();
               }) || false;
-              
+
               console.log('📖 Read receipt check:', {
                 messageId: message._id,
                 readBy: message.readBy,
                 isRead: isRead,
                 senderId: message.sender._id
               });
-              
+
               console.log('🎨 Rendering message:', {
                 messageId: message._id,
                 senderId: message.sender._id,
@@ -433,7 +433,7 @@ const ChatPage = () => {
                 senderName: message.sender.name,
                 alignment: testIsOwn ? 'RIGHT (flex-end)' : 'LEFT (flex-start)'
               });
-              
+
               return (
                 <div
                   key={`${message._id}-${index}`}
@@ -444,7 +444,7 @@ const ChatPage = () => {
                     <div className="flex justify-end">
                       <div
                         className="px-4 py-2 rounded-2xl shadow-sm bg-blue-500 text-white"
-                        style={{ 
+                        style={{
                           wordBreak: 'break-word',
                           maxWidth: '70%'
                         }}
@@ -469,7 +469,7 @@ const ChatPage = () => {
                     <div className="flex justify-start">
                       <div
                         className="px-4 py-2 rounded-2xl shadow-sm bg-gray-200 text-gray-900"
-                        style={{ 
+                        style={{
                           wordBreak: 'break-word',
                           maxWidth: '70%'
                         }}
@@ -501,8 +501,8 @@ const ChatPage = () => {
                 disabled={sending}
               />
             </div>
-            
-            <Button 
+
+            <Button
               onClick={sendMessage}
               disabled={!newMessage.trim() || sending}
               className="bg-blue-600 hover:bg-blue-700 rounded-full h-10 w-10 p-0"

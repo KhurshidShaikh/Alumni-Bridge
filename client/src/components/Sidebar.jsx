@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  Home, 
-  Users, 
-  Briefcase, 
-  Calendar, 
-  UserCheck, 
-  User, 
+import {
+  Home,
+  Users,
+  Briefcase,
+  Calendar,
+  UserCheck,
+  User,
   LogOut,
   UserPlus,
   MessageSquare,
@@ -47,7 +47,7 @@ const Sidebar = () => {
           return;
         }
 
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+        const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
         const response = await fetch(`${backendUrl}/api/profile/me`, {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -142,11 +142,10 @@ const Sidebar = () => {
                 <div key={index}>
                   <Button
                     variant={isJobsActive ? "default" : "ghost"}
-                    className={`w-full justify-between h-10 px-3 ${
-                      isJobsActive 
-                        ? "bg-blue-600 text-white hover:bg-blue-700" 
+                    className={`w-full justify-between h-10 px-3 ${isJobsActive
+                        ? "bg-blue-600 text-white hover:bg-blue-700"
                         : "text-gray-700 hover:bg-gray-100"
-                    }`}
+                      }`}
                     onClick={() => {
                       setJobsExpanded(!jobsExpanded);
                       if (!jobsExpanded) navigate(item.path);
@@ -162,7 +161,7 @@ const Sidebar = () => {
                       <ChevronRight className="h-4 w-4" />
                     )}
                   </Button>
-                  
+
                   {jobsExpanded && (
                     <div className="ml-4 mt-1 space-y-1">
                       {jobSubItems.map((subItem, subIndex) => {
@@ -172,11 +171,10 @@ const Sidebar = () => {
                             key={subIndex}
                             variant={isSubActive ? "default" : "ghost"}
                             size="sm"
-                            className={`w-full justify-start h-8 px-3 text-xs ${
-                              isSubActive 
-                                ? "bg-blue-500 text-white hover:bg-blue-600" 
+                            className={`w-full justify-start h-8 px-3 text-xs ${isSubActive
+                                ? "bg-blue-500 text-white hover:bg-blue-600"
                                 : "text-gray-600 hover:bg-gray-50"
-                            }`}
+                              }`}
                             onClick={() => navigate(subItem.path)}
                           >
                             {subItem.label}
@@ -195,11 +193,10 @@ const Sidebar = () => {
               <Button
                 key={index}
                 variant={isActive ? "default" : "ghost"}
-                className={`w-full justify-start h-10 px-3 ${
-                  isActive 
-                    ? "bg-blue-600 text-white hover:bg-blue-700" 
+                className={`w-full justify-start h-10 px-3 ${isActive
+                    ? "bg-blue-600 text-white hover:bg-blue-700"
                     : "text-gray-700 hover:bg-gray-100"
-                }`}
+                  }`}
                 onClick={() => navigate(item.path)}
               >
                 <item.icon className="mr-3 h-4 w-4" />
@@ -211,7 +208,7 @@ const Sidebar = () => {
 
         {/* Logout */}
         <div className="p-4 border-t">
-          <LogoutButton 
+          <LogoutButton
             variant="ghost"
             className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
           />

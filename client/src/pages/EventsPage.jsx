@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Calendar, 
+import {
+  Calendar,
   CalendarDays,
-  Search, 
-  Filter, 
-  MapPin, 
-  Clock, 
-  Users, 
-  Tag, 
+  Search,
+  Filter,
+  MapPin,
+  Clock,
+  Users,
+  Tag,
   ExternalLink,
   BookmarkPlus,
   UserPlus,
@@ -35,30 +35,30 @@ const EventsPage = () => {
   const [error, setError] = useState(null);
   const [registeringEvents, setRegisteringEvents] = useState(new Set());
   const navigate = useNavigate();
-  
+
   const token = localStorage.getItem('token');
 
   // Fetch events from API and set up real-time updates
   useEffect(() => {
     fetchEvents();
-    
+
     // Set up polling for real-time updates every 30 seconds
     const interval = setInterval(() => {
       fetchEvents();
     }, 30000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const headers = {
         'Content-Type': 'application/json'
       };
-      
+
       // Use authenticated endpoint if token exists
       let endpoint = '/api/event/get';
       if (token) {
@@ -76,7 +76,7 @@ const EventsPage = () => {
         const eventsData = data.data || [];
         setEvents(eventsData);
         setError(null);
-        
+
         // Set registered events based on backend response
         if (token) {
           const userRegistrations = new Set();
@@ -105,10 +105,10 @@ const EventsPage = () => {
 
   const filteredEvents = events.filter(event => {
     const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (event.createdBy?.name || '').toLowerCase().includes(searchTerm.toLowerCase());
+      event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (event.createdBy?.name || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = selectedEventType === 'All' || event.visibility === selectedEventType;
-    
+
     // Timeframe filtering
     let matchesTimeframe = true;
     if (selectedTimeframe !== 'All') {
@@ -116,7 +116,7 @@ const EventsPage = () => {
       const now = new Date();
       const oneWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
       const oneMonth = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
-      
+
       switch (selectedTimeframe) {
         case 'This Week':
           matchesTimeframe = eventDate <= oneWeek && eventDate >= now;
@@ -132,7 +132,7 @@ const EventsPage = () => {
           break;
       }
     }
-    
+
     return matchesSearch && matchesType && matchesTimeframe;
   });
 
@@ -155,8 +155,8 @@ const EventsPage = () => {
 
     try {
       setRegisteringEvents(prev => new Set([...prev, eventId]));
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const isRegistered = registeredEvents.has(eventId);
       const endpoint = isRegistered ? 'unregister' : 'register';
       const method = isRegistered ? 'DELETE' : 'POST';
@@ -170,7 +170,7 @@ const EventsPage = () => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         if (isRegistered) {
           setRegisteredEvents(prev => {
@@ -181,20 +181,20 @@ const EventsPage = () => {
         } else {
           setRegisteredEvents(prev => new Set([...prev, eventId]));
         }
-        
+
         // Update the event's registration count and status in the events array
-        setEvents(prevEvents => 
-          prevEvents.map(event => 
-            event._id === eventId 
-              ? { 
-                  ...event, 
-                  registrationCount: data.registrationCount || 0,
-                  isRegistered: !isRegistered
-                }
+        setEvents(prevEvents =>
+          prevEvents.map(event =>
+            event._id === eventId
+              ? {
+                ...event,
+                registrationCount: data.registrationCount || 0,
+                isRegistered: !isRegistered
+              }
               : event
           )
         );
-        
+
         alert(data.message);
       } else {
         alert(data.error || 'Failed to register for event');
@@ -214,20 +214,20 @@ const EventsPage = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
 
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
       minute: '2-digit',
-      hour12: true 
+      hour12: true
     });
   };
 
@@ -235,7 +235,7 @@ const EventsPage = () => {
     <div className="min-h-screen bg-gray-50 poppins-regular">
       {/* Sidebar */}
       <Sidebar />
-      
+
       {/* Bottom Bar for Mobile */}
       <BottomBar />
 
@@ -332,8 +332,8 @@ const EventsPage = () => {
                     {/* Event Image */}
                     <div className="aspect-video relative overflow-hidden">
                       {event.imageUrl ? (
-                        <img 
-                          src={event.imageUrl} 
+                        <img
+                          src={event.imageUrl}
                           alt={event.title}
                           className="w-full h-full object-cover"
                           onError={(e) => {
@@ -342,7 +342,7 @@ const EventsPage = () => {
                           }}
                         />
                       ) : null}
-                      <div 
+                      <div
                         className={`w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center ${event.imageUrl ? 'hidden' : 'flex'}`}
                       >
                         <Calendar className="w-12 h-12 text-white opacity-50" />
@@ -353,7 +353,7 @@ const EventsPage = () => {
                         </Badge>
                       </div>
                     </div>
-                    
+
                     {/* Event Content */}
                     <div className="p-4 md:p-6">
                       <div className="space-y-4">
@@ -364,7 +364,7 @@ const EventsPage = () => {
                           </h3>
                           <p className="text-gray-600 text-sm line-clamp-3">{event.description}</p>
                         </div>
-                        
+
                         {/* Event Details */}
                         <div className="space-y-2 text-sm text-gray-600">
                           {event.date && (
@@ -386,7 +386,7 @@ const EventsPage = () => {
                             </div>
                           )}
                         </div>
-                        
+
                         {/* Organizer Info */}
                         <div className="flex items-center space-x-2 text-sm">
                           <Avatar className="h-6 w-6">
@@ -399,14 +399,14 @@ const EventsPage = () => {
                             Organized by {event.createdBy?.name || 'Admin'}
                           </span>
                         </div>
-                        
+
                         <Separator />
-                        
+
                         {/* Action Buttons */}
                         <div className="flex space-x-2">
-                          <Button 
-                            size="sm" 
-                            className="flex-1 text-xs md:text-sm" 
+                          <Button
+                            size="sm"
+                            className="flex-1 text-xs md:text-sm"
                             onClick={() => handleEventRegistration(event._id)}
                             disabled={registeringEvents.has(event._id)}
                             variant={registeredEvents.has(event._id) ? "outline" : "default"}
@@ -432,7 +432,7 @@ const EventsPage = () => {
                             <Share2 className="h-3 w-3 md:h-4 md:w-4" />
                           </Button>
                         </div>
-                        
+
                         {/* Registration Count */}
                         {event.registrationCount > 0 && (
                           <div className="text-xs text-gray-500 mt-2">

@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
+import {
   Plus,
   Search,
   Heart,
@@ -49,6 +49,7 @@ const NewsStoriesPage = () => {
 
   const { user } = useSelector(state => state.user);
   const token = localStorage.getItem('token');
+  const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
 
   // Fetch current user data
   useEffect(() => {
@@ -59,7 +60,7 @@ const NewsStoriesPage = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:3000/api/profile/me', {
+        const response = await fetch(`${backendUrl}/api/profile/me`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -101,7 +102,7 @@ const NewsStoriesPage = () => {
       if (search) params.append('query', search);
 
       const endpoint = search ? '/api/posts/search' : '/api/posts';
-      const response = await fetch(`http://localhost:3000${endpoint}?${params}`, {
+      const response = await fetch(`${backendUrl}${endpoint}?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -124,7 +125,7 @@ const NewsStoriesPage = () => {
     try {
       if (!newPost.content.trim()) return;
 
-      const response = await fetch('http://localhost:3000/api/posts', {
+      const response = await fetch(`${backendUrl}/api/posts`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -150,9 +151,9 @@ const NewsStoriesPage = () => {
       console.error('User not found');
       return;
     }
-    
+
     try {
-      const response = await fetch(`http://localhost:3000/api/posts/${postId}/like`, {
+      const response = await fetch(`${backendUrl}/api/posts/${postId}/like`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -162,15 +163,15 @@ const NewsStoriesPage = () => {
 
       const data = await response.json();
       if (data.success) {
-        setPosts(posts.map(post => 
-          post._id === postId 
-            ? { 
-                ...post, 
-                likes: data.isLiked 
-                  ? [...(post.likes || []), currentUser._id]
-                  : (post.likes || []).filter(id => id !== currentUser._id),
-                likeCount: data.likeCount
-              }
+        setPosts(posts.map(post =>
+          post._id === postId
+            ? {
+              ...post,
+              likes: data.isLiked
+                ? [...(post.likes || []), currentUser._id]
+                : (post.likes || []).filter(id => id !== currentUser._id),
+              likeCount: data.likeCount
+            }
             : post
         ));
       }
@@ -182,7 +183,7 @@ const NewsStoriesPage = () => {
   // Add comment
   const handleAddComment = async (postId, content) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/posts/${postId}/comment`, {
+      const response = await fetch(`${backendUrl}/api/posts/${postId}/comment`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -193,8 +194,8 @@ const NewsStoriesPage = () => {
 
       const data = await response.json();
       if (data.success) {
-        setPosts(posts.map(post => 
-          post._id === postId 
+        setPosts(posts.map(post =>
+          post._id === postId
             ? { ...post, comments: [...post.comments, data.comment] }
             : post
         ));
@@ -229,7 +230,7 @@ const NewsStoriesPage = () => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = (now - date) / (1000 * 60 * 60);
-    
+
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${Math.floor(diffInHours)}h ago`;
     if (diffInHours < 48) return 'Yesterday';
@@ -305,7 +306,7 @@ const NewsStoriesPage = () => {
                           ))}
                         </SelectContent>
                       </Select>
-                      <Button 
+                      <Button
                         onClick={() => fetchPosts(selectedPostType, searchTerm)}
                         variant="outline"
                       >
@@ -333,9 +334,9 @@ const NewsStoriesPage = () => {
                   </Card>
                 ) : (
                   posts.map((post) => (
-                    <PostCard 
-                      key={post._id} 
-                      post={post} 
+                    <PostCard
+                      key={post._id}
+                      post={post}
                       currentUser={currentUser}
                       onLike={handleLikePost}
                       onComment={handleAddComment}
@@ -349,7 +350,7 @@ const NewsStoriesPage = () => {
 
             {/* Create Post Tab */}
             <TabsContent value="create">
-              <CreatePostForm 
+              <CreatePostForm
                 newPost={newPost}
                 setNewPost={setNewPost}
                 onSubmit={handleCreatePost}
@@ -375,7 +376,7 @@ const PostCard = ({ post, currentUser, onLike, onComment, getPostTypeBadge, form
   const [commentText, setCommentText] = useState('');
   const [showAllComments, setShowAllComments] = useState(false);
 
-  const isLiked = currentUser?._id && post.likes?.some(likeId => 
+  const isLiked = currentUser?._id && post.likes?.some(likeId =>
     likeId === currentUser._id || likeId.toString() === currentUser._id
   );
   const displayComments = showAllComments ? post.comments : post.comments?.slice(0, 2);
@@ -427,13 +428,13 @@ const PostCard = ({ post, currentUser, onLike, onComment, getPostTypeBadge, form
       <CardContent>
         <div className="space-y-4">
           <p className="text-gray-900 whitespace-pre-wrap">{post.content}</p>
-          
+
           {post.images && post.images.length > 0 && (
             <div className="grid grid-cols-2 gap-2">
               {post.images.map((image, index) => (
-                <img 
+                <img
                   key={index}
-                  src={image} 
+                  src={image}
                   alt="Post attachment"
                   className="rounded-lg object-cover w-full h-48"
                 />
@@ -536,20 +537,21 @@ const PostCard = ({ post, currentUser, onLike, onComment, getPostTypeBadge, form
 const CreatePostForm = ({ newPost, setNewPost, onSubmit, postTypes }) => {
   const [uploadingImages, setUploadingImages] = useState(false);
   const token = localStorage.getItem('token');
+  const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
 
   const handleImageUpload = async (event) => {
     const files = Array.from(event.target.files);
     if (files.length === 0) return;
 
     setUploadingImages(true);
-    
+
     try {
       const formData = new FormData();
       files.forEach(file => {
         formData.append('images', file);
       });
 
-      const response = await fetch('http://localhost:3000/api/upload/post-images', {
+      const response = await fetch(`${backendUrl}/api/upload/post-images`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -558,7 +560,7 @@ const CreatePostForm = ({ newPost, setNewPost, onSubmit, postTypes }) => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         setNewPost({
           ...newPost,
@@ -590,9 +592,9 @@ const CreatePostForm = ({ newPost, setNewPost, onSubmit, postTypes }) => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center space-x-4">
-          <Select 
-            value={newPost.postType} 
-            onValueChange={(value) => setNewPost({...newPost, postType: value})}
+          <Select
+            value={newPost.postType}
+            onValueChange={(value) => setNewPost({ ...newPost, postType: value })}
           >
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Post type" />
@@ -605,10 +607,10 @@ const CreatePostForm = ({ newPost, setNewPost, onSubmit, postTypes }) => {
               ))}
             </SelectContent>
           </Select>
-          
-          <Select 
-            value={newPost.visibility} 
-            onValueChange={(value) => setNewPost({...newPost, visibility: value})}
+
+          <Select
+            value={newPost.visibility}
+            onValueChange={(value) => setNewPost({ ...newPost, visibility: value })}
           >
             <SelectTrigger className="w-40">
               <SelectValue placeholder="Visibility" />
@@ -639,7 +641,7 @@ const CreatePostForm = ({ newPost, setNewPost, onSubmit, postTypes }) => {
         <Textarea
           placeholder="What's on your mind? Share your story, achievement, or news with the community..."
           value={newPost.content}
-          onChange={(e) => setNewPost({...newPost, content: e.target.value})}
+          onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
           rows={6}
           className="resize-none"
         />
@@ -649,8 +651,8 @@ const CreatePostForm = ({ newPost, setNewPost, onSubmit, postTypes }) => {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {newPost.images.map((image, index) => (
               <div key={index} className="relative group">
-                <img 
-                  src={image} 
+                <img
+                  src={image}
                   alt={`Upload ${index + 1}`}
                   className="w-full h-24 object-cover rounded-lg"
                 />
@@ -677,8 +679,8 @@ const CreatePostForm = ({ newPost, setNewPost, onSubmit, postTypes }) => {
               disabled={uploadingImages}
             />
             <label htmlFor="image-upload">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="flex items-center cursor-pointer"
                 disabled={uploadingImages}
                 asChild
@@ -699,10 +701,10 @@ const CreatePostForm = ({ newPost, setNewPost, onSubmit, postTypes }) => {
               </Button>
             </label>
           </div>
-          
+
           <div className="flex space-x-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => setNewPost({ content: '', postType: 'community', visibility: 'public', images: [] })}
             >
               Cancel
@@ -722,6 +724,7 @@ const CreatePostForm = ({ newPost, setNewPost, onSubmit, postTypes }) => {
 const MyPostsTab = ({ userId, token }) => {
   const [myPosts, setMyPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
   const [editingPost, setEditingPost] = useState(null);
   const [editForm, setEditForm] = useState({
     content: '',
@@ -733,7 +736,7 @@ const MyPostsTab = ({ userId, token }) => {
   const fetchMyPosts = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/posts/user/${userId}`, {
+      const response = await fetch(`${backendUrl}/api/posts/user/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -769,7 +772,7 @@ const MyPostsTab = ({ userId, token }) => {
 
   const handleUpdatePost = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/posts/${editingPost}`, {
+      const response = await fetch(`${backendUrl}/api/posts/${editingPost}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -780,7 +783,7 @@ const MyPostsTab = ({ userId, token }) => {
 
       const data = await response.json();
       if (data.success) {
-        setMyPosts(myPosts.map(post => 
+        setMyPosts(myPosts.map(post =>
           post._id === editingPost ? data.post : post
         ));
         setEditingPost(null);
@@ -798,7 +801,7 @@ const MyPostsTab = ({ userId, token }) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/posts/${postId}`, {
+      const response = await fetch(`${backendUrl}/api/posts/${postId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -855,9 +858,9 @@ const MyPostsTab = ({ userId, token }) => {
                       // Edit Mode
                       <div className="space-y-4">
                         <div className="flex items-center space-x-4">
-                          <Select 
-                            value={editForm.postType} 
-                            onValueChange={(value) => setEditForm({...editForm, postType: value})}
+                          <Select
+                            value={editForm.postType}
+                            onValueChange={(value) => setEditForm({ ...editForm, postType: value })}
                           >
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Post type" />
@@ -873,19 +876,19 @@ const MyPostsTab = ({ userId, token }) => {
                         </div>
                         <Textarea
                           value={editForm.content}
-                          onChange={(e) => setEditForm({...editForm, content: e.target.value})}
+                          onChange={(e) => setEditForm({ ...editForm, content: e.target.value })}
                           rows={4}
                           className="resize-none"
                         />
                         <div className="flex justify-end space-x-2">
-                          <Button 
-                            variant="outline" 
+                          <Button
+                            variant="outline"
                             size="sm"
                             onClick={() => setEditingPost(null)}
                           >
                             Cancel
                           </Button>
-                          <Button 
+                          <Button
                             size="sm"
                             onClick={handleUpdatePost}
                             disabled={!editForm.content.trim()}
@@ -902,16 +905,16 @@ const MyPostsTab = ({ userId, token }) => {
                             {post.postType.charAt(0).toUpperCase() + post.postType.slice(1)}
                           </Badge>
                           <div className="flex space-x-1">
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               size="sm"
                               onClick={() => handleEditPost(post)}
                               className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                             >
                               <Edit3 className="h-3.5 w-3.5" />
                             </Button>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               size="sm"
                               onClick={() => handleDeletePost(post._id)}
                               className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
@@ -920,17 +923,17 @@ const MyPostsTab = ({ userId, token }) => {
                             </Button>
                           </div>
                         </div>
-                        
+
                         <p className="text-sm text-gray-700 line-clamp-3 mb-3">{post.content}</p>
-                        
+
                         {/* Display Images */}
                         {post.images && post.images.length > 0 && (
                           <div className="mb-3">
                             {post.images.length === 1 ? (
                               // Single image - larger display
                               <div className="relative">
-                                <img 
-                                  src={post.images[0]} 
+                                <img
+                                  src={post.images[0]}
                                   alt="Post image"
                                   className="w-full h-32 object-cover rounded-lg border border-gray-200"
                                   onError={(e) => {
@@ -943,8 +946,8 @@ const MyPostsTab = ({ userId, token }) => {
                               <div className="grid grid-cols-2 gap-2">
                                 {post.images.slice(0, 2).map((image, index) => (
                                   <div key={index} className="relative">
-                                    <img 
-                                      src={image} 
+                                    <img
+                                      src={image}
                                       alt={`Post image ${index + 1}`}
                                       className="w-full h-24 object-cover rounded-lg border border-gray-200"
                                       onError={(e) => {
@@ -959,8 +962,8 @@ const MyPostsTab = ({ userId, token }) => {
                               <div className="grid grid-cols-2 gap-2">
                                 {post.images.slice(0, 4).map((image, index) => (
                                   <div key={index} className="relative">
-                                    <img 
-                                      src={image} 
+                                    <img
+                                      src={image}
                                       alt={`Post image ${index + 1}`}
                                       className="w-full h-20 object-cover rounded-lg border border-gray-200"
                                       onError={(e) => {
@@ -980,7 +983,7 @@ const MyPostsTab = ({ userId, token }) => {
                             )}
                           </div>
                         )}
-                        
+
                         <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-100">
                           <span>{post.likes?.length || 0} likes</span>
                           <span>{post.comments?.length || 0} comments</span>

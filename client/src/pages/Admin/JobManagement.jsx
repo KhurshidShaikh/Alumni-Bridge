@@ -8,13 +8,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { 
-  Briefcase, 
-  Search, 
-  Filter, 
-  Eye, 
-  CheckCircle, 
-  XCircle, 
+import {
+  Briefcase,
+  Search,
+  Filter,
+  Eye,
+  CheckCircle,
+  XCircle,
   Trash2,
   MapPin,
   Building,
@@ -58,7 +58,7 @@ const JobManagement = () => {
         type: typeFilter !== 'all' ? typeFilter : ''
       });
 
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
       const response = await fetch(`${backendUrl}/api/admin/jobs?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -84,11 +84,11 @@ const JobManagement = () => {
   const handleJobAction = async (action, jobId) => {
     try {
       const token = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       let endpoint = '';
       let method = 'PUT';
-      
+
       switch (action) {
         case 'approve':
           endpoint = `/api/admin/jobs/${jobId}/approve`;
@@ -180,7 +180,7 @@ const JobManagement = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 ml-64 overflow-auto">
         <div className="p-8">
           {/* Header */}
@@ -202,7 +202,7 @@ const JobManagement = () => {
                     className="pl-10"
                   />
                 </div>
-                
+
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger>
                     <SelectValue placeholder="Filter by status" />
@@ -229,8 +229,8 @@ const JobManagement = () => {
                   </SelectContent>
                 </Select>
 
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => {
                     setSearchTerm('');
                     setStatusFilter('all');
@@ -271,7 +271,7 @@ const JobManagement = () => {
                               {job.type}
                             </Badge>
                           </div>
-                          
+
                           <div className="space-y-2 mb-3">
                             <div className="flex items-center space-x-4 text-sm text-gray-600">
                               <div className="flex items-center space-x-1">
@@ -289,7 +289,7 @@ const JobManagement = () => {
                                 </div>
                               )}
                             </div>
-                            
+
                             <div className="flex items-center space-x-4 text-sm text-gray-600">
                               <div className="flex items-center space-x-1">
                                 <Users className="w-4 h-4 flex-shrink-0" />
@@ -301,10 +301,10 @@ const JobManagement = () => {
                               </div>
                             </div>
                           </div>
-                          
+
                           <p className="text-sm text-gray-700 line-clamp-2">{job.description}</p>
                         </div>
-                        
+
                         <div className="flex items-center space-x-2 flex-shrink-0 ml-4">
                           <Button
                             size="sm"
@@ -314,7 +314,7 @@ const JobManagement = () => {
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
-                          
+
                           {job.status === 'pending' && (
                             <>
                               <Button
@@ -336,7 +336,7 @@ const JobManagement = () => {
                               </Button>
                             </>
                           )}
-                          
+
                           <Button
                             size="sm"
                             variant="outline"
@@ -411,7 +411,7 @@ const JobManagement = () => {
                   {selectedJob.type}
                 </Badge>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <p className="font-medium text-gray-700">Company</p>
@@ -430,12 +430,12 @@ const JobManagement = () => {
                   <p className="text-gray-900">{selectedJob.postedBy?.name}</p>
                 </div>
               </div>
-              
+
               <div>
                 <p className="font-medium text-gray-700 mb-2">Description</p>
                 <p className="text-gray-900 whitespace-pre-wrap">{selectedJob.description}</p>
               </div>
-              
+
               {selectedJob.requirements && (
                 <div>
                   <p className="font-medium text-gray-700 mb-2">Requirements</p>
@@ -463,8 +463,8 @@ const JobManagement = () => {
             <Button variant="outline" onClick={() => setDeleteDialog({ open: false, job: null })}>
               Cancel
             </Button>
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               onClick={() => handleJobAction('delete', deleteDialog.job?._id)}
             >
               Delete Job

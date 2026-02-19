@@ -10,13 +10,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { 
-  Calendar, 
-  Plus, 
-  Search, 
-  Filter, 
-  Eye, 
-  Edit, 
+import {
+  Calendar,
+  Plus,
+  Search,
+  Filter,
+  Eye,
+  Edit,
   Trash2,
   MapPin,
   Clock,
@@ -71,7 +71,7 @@ const EventManagement = () => {
         visibility: visibilityFilter !== 'all' ? visibilityFilter : ''
       });
 
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
       const response = await fetch(`${backendUrl}/api/admin/events?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -109,8 +109,8 @@ const EventManagement = () => {
     try {
       setLoadingUsers(true);
       const token = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const response = await fetch(`${backendUrl}/api/admin/events/${eventId}/registrations`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -137,11 +137,11 @@ const EventManagement = () => {
     try {
       setImageUploading(true);
       const token = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const formData = new FormData();
       formData.append('image', file);
-      
+
       const response = await fetch(`${backendUrl}/api/upload/image`, {
         method: 'POST',
         headers: {
@@ -169,7 +169,7 @@ const EventManagement = () => {
     e.preventDefault();
     try {
       let eventData = { ...formData };
-      
+
       // Upload image if file is selected
       if (imageFile) {
         const imageUrl = await uploadImage(imageFile);
@@ -177,8 +177,8 @@ const EventManagement = () => {
       }
 
       const token = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const response = await fetch(`${backendUrl}/api/admin/events`, {
         method: 'POST',
         headers: {
@@ -215,7 +215,7 @@ const EventManagement = () => {
     e.preventDefault();
     try {
       let eventData = { ...formData };
-      
+
       // Upload image if file is selected
       if (imageFile) {
         const imageUrl = await uploadImage(imageFile);
@@ -223,8 +223,8 @@ const EventManagement = () => {
       }
 
       const token = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const response = await fetch(`${backendUrl}/api/admin/events/${editDialog.event._id}`, {
         method: 'PUT',
         headers: {
@@ -260,8 +260,8 @@ const EventManagement = () => {
   const handleDeleteEvent = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const response = await fetch(`${backendUrl}/api/admin/events/${deleteDialog.event._id}`, {
         method: 'DELETE',
         headers: {
@@ -334,7 +334,7 @@ const EventManagement = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 md:ml-64 flex flex-col">
         {/* Mobile Header */}
         <div className="md:hidden sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3">
@@ -349,197 +349,197 @@ const EventManagement = () => {
 
         <div className="flex-1 overflow-y-auto pb-20 md:pb-6">
           <div className="p-4 md:p-8">
-          {/* Header */}
-          <div className="hidden md:flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Event Management</h1>
-              <p className="text-gray-600">Create and manage college events and announcements</p>
-            </div>
-            <Button onClick={() => {
-              setCreateDialog(true);
-              setImageFile(null);
-            }} className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="w-4 h-4 mr-2" />
-              Create Event
-            </Button>
-          </div>
-
-          {/* Filters */}
-          <Card className="mb-6">
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <Input
-                    placeholder="Search events..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                
-                <Select value={visibilityFilter} onValueChange={setVisibilityFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Filter by visibility" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Events</SelectItem>
-                    <SelectItem value="public">Public</SelectItem>
-                    <SelectItem value="private">Private</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    setSearchTerm('');
-                    setVisibilityFilter('all');
-                  }}
-                >
-                  <Filter className="w-4 h-4 mr-2" />
-                  Clear Filters
-                </Button>
+            {/* Header */}
+            <div className="hidden md:flex items-center justify-between mb-8">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Event Management</h1>
+                <p className="text-gray-600">Create and manage college events and announcements</p>
               </div>
-            </CardContent>
-          </Card>
+              <Button onClick={() => {
+                setCreateDialog(true);
+                setImageFile(null);
+              }} className="bg-blue-600 hover:bg-blue-700">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Event
+              </Button>
+            </div>
 
-          {/* Events List */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Calendar className="w-5 h-5" />
-                  <span>Events ({pagination.totalEvents || 0})</span>
+            {/* Filters */}
+            <Card className="mb-6">
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search events..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+
+                  <Select value={visibilityFilter} onValueChange={setVisibilityFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Filter by visibility" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Events</SelectItem>
+                      <SelectItem value="public">Public</SelectItem>
+                      <SelectItem value="private">Private</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSearchTerm('');
+                      setVisibilityFilter('all');
+                    }}
+                  >
+                    <Filter className="w-4 h-4 mr-2" />
+                    Clear Filters
+                  </Button>
                 </div>
-                {loading && <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {events.length > 0 ? (
-                <div className="space-y-4">
-                  {events.map((event) => (
-                    <div key={event._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-start justify-between">
-                        <div className="flex space-x-4 flex-1">
-                          {event.imageUrl && (
-                            <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
-                              <img 
-                                src={event.imageUrl} 
-                                alt={event.title}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  e.target.style.display = 'none';
-                                  e.target.nextSibling.style.display = 'flex';
-                                }}
-                              />
-                              <div className="w-full h-full flex items-center justify-center" style={{ display: 'none' }}>
-                                <ImageIcon className="w-8 h-8 text-gray-400" />
-                              </div>
-                            </div>
-                          )}
-                          
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center flex-wrap gap-2 mb-2">
-                              <h3 className="font-semibold text-gray-900 text-lg">{event.title}</h3>
-                              <Badge className={getVisibilityColor(event.visibility)}>
-                                {event.visibility}
-                              </Badge>
-                            </div>
-                            
-                            <div className="space-y-1 mb-3">
-                              <div className="flex items-center space-x-4 text-sm text-gray-600">
-                                <div className="flex items-center space-x-1">
-                                  <Calendar className="w-4 h-4 flex-shrink-0" />
-                                  <span>{formatDate(event.date)}</span>
-                                </div>
-                                <div className="flex items-center space-x-1">
-                                  <MapPin className="w-4 h-4 flex-shrink-0" />
-                                  <span>{event.location}</span>
-                                </div>
-                                <div className="flex items-center space-x-1">
-                                  <Users className="w-4 h-4 flex-shrink-0" />
-                                  <span>{event.registeredCount || 0} registered</span>
+              </CardContent>
+            </Card>
+
+            {/* Events List */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Calendar className="w-5 h-5" />
+                    <span>Events ({pagination.totalEvents || 0})</span>
+                  </div>
+                  {loading && <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {events.length > 0 ? (
+                  <div className="space-y-4">
+                    {events.map((event) => (
+                      <div key={event._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                        <div className="flex items-start justify-between">
+                          <div className="flex space-x-4 flex-1">
+                            {event.imageUrl && (
+                              <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
+                                <img
+                                  src={event.imageUrl}
+                                  alt={event.title}
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    e.target.nextSibling.style.display = 'flex';
+                                  }}
+                                />
+                                <div className="w-full h-full flex items-center justify-center" style={{ display: 'none' }}>
+                                  <ImageIcon className="w-8 h-8 text-gray-400" />
                                 </div>
                               </div>
+                            )}
+
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center flex-wrap gap-2 mb-2">
+                                <h3 className="font-semibold text-gray-900 text-lg">{event.title}</h3>
+                                <Badge className={getVisibilityColor(event.visibility)}>
+                                  {event.visibility}
+                                </Badge>
+                              </div>
+
+                              <div className="space-y-1 mb-3">
+                                <div className="flex items-center space-x-4 text-sm text-gray-600">
+                                  <div className="flex items-center space-x-1">
+                                    <Calendar className="w-4 h-4 flex-shrink-0" />
+                                    <span>{formatDate(event.date)}</span>
+                                  </div>
+                                  <div className="flex items-center space-x-1">
+                                    <MapPin className="w-4 h-4 flex-shrink-0" />
+                                    <span>{event.location}</span>
+                                  </div>
+                                  <div className="flex items-center space-x-1">
+                                    <Users className="w-4 h-4 flex-shrink-0" />
+                                    <span>{event.registeredCount || 0} registered</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <p className="text-sm text-gray-700 line-clamp-2">{event.description}</p>
                             </div>
-                            
-                            <p className="text-sm text-gray-700 line-clamp-2">{event.description}</p>
+                          </div>
+
+                          <div className="flex items-center space-x-2 flex-shrink-0 ml-4">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedEvent(event);
+                                fetchRegisteredUsers(event._id);
+                              }}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => openEditDialog(event)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-red-600 border-red-600 hover:bg-red-50 h-8 w-8 p-0"
+                              onClick={() => setDeleteDialog({ open: true, event })}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
                           </div>
                         </div>
-                        
-                        <div className="flex items-center space-x-2 flex-shrink-0 ml-4">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedEvent(event);
-                              fetchRegisteredUsers(event._id);
-                            }}
-                            className="h-8 w-8 p-0"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                          
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => openEditDialog(event)}
-                            className="h-8 w-8 p-0"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="text-red-600 border-red-600 hover:bg-red-50 h-8 w-8 p-0"
-                            onClick={() => setDeleteDialog({ open: true, event })}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-500">No events found matching your criteria</p>
-                </div>
-              )}
-
-              {/* Pagination */}
-              {pagination.totalPages > 1 && (
-                <div className="flex items-center justify-between mt-6 pt-6 border-t">
-                  <p className="text-sm text-gray-600">
-                    Showing {((pagination.currentPage - 1) * 20) + 1} to {Math.min(pagination.currentPage * 20, pagination.totalEvents)} of {pagination.totalEvents} events
-                  </p>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={!pagination.hasPrev}
-                      onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage - 1 }))}
-                    >
-                      Previous
-                    </Button>
-                    <span className="text-sm text-gray-600">
-                      Page {pagination.currentPage} of {pagination.totalPages}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={!pagination.hasNext}
-                      onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage + 1 }))}
-                    >
-                      Next
-                    </Button>
+                    ))}
                   </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                ) : (
+                  <div className="text-center py-12">
+                    <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500">No events found matching your criteria</p>
+                  </div>
+                )}
+
+                {/* Pagination */}
+                {pagination.totalPages > 1 && (
+                  <div className="flex items-center justify-between mt-6 pt-6 border-t">
+                    <p className="text-sm text-gray-600">
+                      Showing {((pagination.currentPage - 1) * 20) + 1} to {Math.min(pagination.currentPage * 20, pagination.totalEvents)} of {pagination.totalEvents} events
+                    </p>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={!pagination.hasPrev}
+                        onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage - 1 }))}
+                      >
+                        Previous
+                      </Button>
+                      <span className="text-sm text-gray-600">
+                        Page {pagination.currentPage} of {pagination.totalPages}
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={!pagination.hasNext}
+                        onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage + 1 }))}
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
 
@@ -562,21 +562,21 @@ const EventManagement = () => {
             <div className="space-y-6">
               {selectedEvent.imageUrl && (
                 <div className="w-full h-48 bg-gray-200 rounded-lg overflow-hidden">
-                  <img 
-                    src={selectedEvent.imageUrl} 
+                  <img
+                    src={selectedEvent.imageUrl}
                     alt={selectedEvent.title}
                     className="w-full h-full object-cover"
                   />
                 </div>
               )}
-              
+
               <div className="flex items-center space-x-3">
                 <h2 className="text-xl font-semibold">{selectedEvent.title}</h2>
                 <Badge className={getVisibilityColor(selectedEvent.visibility)}>
                   {selectedEvent.visibility}
                 </Badge>
               </div>
-              
+
               <div className="grid grid-cols-3 gap-4 text-sm">
                 <div>
                   <p className="font-medium text-gray-700">Date & Time</p>
@@ -594,7 +594,7 @@ const EventManagement = () => {
                   </p>
                 </div>
               </div>
-              
+
               <div>
                 <p className="font-medium text-gray-700 mb-2">Description</p>
                 <p className="text-gray-900 whitespace-pre-wrap">{selectedEvent.description}</p>
@@ -611,7 +611,7 @@ const EventManagement = () => {
                     <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
                   )}
                 </div>
-                
+
                 {loadingUsers ? (
                   <div className="text-center py-8">
                     <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -640,8 +640,8 @@ const EventManagement = () => {
                           )}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {registration.registeredAt ? 
-                            new Date(registration.registeredAt).toLocaleDateString() : 
+                          {registration.registeredAt ?
+                            new Date(registration.registeredAt).toLocaleDateString() :
                             'Unknown date'
                           }
                         </div>
@@ -693,7 +693,7 @@ const EventManagement = () => {
                 </Select>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="date">Date & Time</Label>
@@ -715,7 +715,7 @@ const EventManagement = () => {
                 />
               </div>
             </div>
-            
+
             <div>
               <Label htmlFor="imageFile">Event Image (Optional)</Label>
               <Input
@@ -735,7 +735,7 @@ const EventManagement = () => {
                 className="mt-2"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="description">Description</Label>
               <Textarea
@@ -746,7 +746,7 @@ const EventManagement = () => {
                 required
               />
             </div>
-            
+
             <div className="flex justify-end space-x-2">
               <Button type="button" variant="outline" onClick={() => setCreateDialog(false)}>
                 Cancel
@@ -792,7 +792,7 @@ const EventManagement = () => {
                 </Select>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="edit-date">Date & Time</Label>
@@ -814,7 +814,7 @@ const EventManagement = () => {
                 />
               </div>
             </div>
-            
+
             <div>
               <Label htmlFor="edit-imageFile">Event Image (Optional)</Label>
               <Input
@@ -834,7 +834,7 @@ const EventManagement = () => {
                 className="mt-2"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="edit-description">Description</Label>
               <Textarea
@@ -845,7 +845,7 @@ const EventManagement = () => {
                 required
               />
             </div>
-            
+
             <div className="flex justify-end space-x-2">
               <Button type="button" variant="outline" onClick={() => setEditDialog({ open: false, event: null })}>
                 Cancel

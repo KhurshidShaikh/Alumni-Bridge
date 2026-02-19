@@ -1,7 +1,4 @@
-// Get backend URL from environment or use default
-const getBackendUrl = () => {
-  return import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-};
+import { getBackendUrl } from '../config/api.js';
 
 // Get auth headers
 const getAuthHeaders = () => {

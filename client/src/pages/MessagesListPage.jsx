@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../store/selectors/userSelectors';
 import { toast } from 'sonner';
-import { 
-  MessageCircle, 
-  Search, 
+import {
+  MessageCircle,
+  Search,
   MoreVertical
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,7 +19,7 @@ const MessagesListPage = () => {
   const [conversations, setConversations] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
-  
+
   const navigate = useNavigate();
   const currentUser = useSelector(selectCurrentUser);
 
@@ -27,8 +27,8 @@ const MessagesListPage = () => {
   const fetchConversations = async () => {
     try {
       const token = localStorage.getItem('token');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const response = await fetch(`${backendUrl}/api/messages/conversations`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -60,9 +60,9 @@ const MessagesListPage = () => {
 
   // Format message time
   const formatMessageTime = (date) => {
-    return new Date(date).toLocaleTimeString([], { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return new Date(date).toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
 
@@ -81,7 +81,7 @@ const MessagesListPage = () => {
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </div>
-            
+
             {/* Search */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -122,7 +122,7 @@ const MessagesListPage = () => {
                           {conversation.otherParticipant?.name.split(' ').map(n => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
-                      
+
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
                           <h3 className="text-sm font-semibold text-gray-900 truncate">
@@ -134,14 +134,14 @@ const MessagesListPage = () => {
                             </span>
                           )}
                         </div>
-                        
+
                         {conversation.lastMessage && (
                           <p className="text-sm text-gray-600 truncate">
                             {conversation.lastMessage.sender === currentUser?._id ? 'You: ' : ''}
                             {conversation.lastMessage.content}
                           </p>
                         )}
-                        
+
                         <div className="flex items-center justify-between mt-2">
                           <div className="text-xs text-gray-500">
                             {conversation.otherParticipant?.profile?.currentCompany || 'Alumni'}

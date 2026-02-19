@@ -3,14 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../store/selectors/userSelectors';
 import { toast } from 'sonner';
-import { 
+import {
   ArrowLeft,
-  MapPin, 
-  Building, 
-  GraduationCap, 
-  Mail, 
-  Phone, 
-  Linkedin, 
+  MapPin,
+  Building,
+  GraduationCap,
+  Mail,
+  Phone,
+  Linkedin,
   Github,
   Globe,
   Calendar,
@@ -38,14 +38,14 @@ const AlumniDetailPage = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      
+
       if (!token) {
         toast.error('Please login to view alumni profiles');
         navigate('/login');
         return;
       }
 
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
       const response = await fetch(`${backendUrl}/api/profile/alumni/${alumniId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -88,7 +88,7 @@ const AlumniDetailPage = () => {
   const handleMessage = async () => {
     try {
       const token = localStorage.getItem('token');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
 
       // Get or create conversation
       const response = await fetch(`${backendUrl}/api/messages/conversation/${alumni._id}`, {
@@ -152,8 +152,8 @@ const AlumniDetailPage = () => {
       <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
         <div className="p-3 md:p-8 max-w-6xl mx-auto">
           {/* Back Button */}
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             onClick={() => navigate('/alumni')}
             className="mb-6"
           >
@@ -171,22 +171,22 @@ const AlumniDetailPage = () => {
                     {alumni.name.split(' ').map(n => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
-                
+
                 <div className="flex-1">
                   <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{alumni.name}</h1>
                   <p className="text-lg text-gray-600 mb-2">
-                    {alumni.role === 'alumni' 
-                      ? (alumni.profile?.currentPosition || 'Alumni') 
+                    {alumni.role === 'alumni'
+                      ? (alumni.profile?.currentPosition || 'Alumni')
                       : (alumni.profile?.currentPosition || 'Student')
                     }
                   </p>
                   <p className="text-base text-gray-500 mb-4">
-                    {alumni.role === 'alumni' 
+                    {alumni.role === 'alumni'
                       ? (alumni.profile?.currentCompany || 'Company not specified')
                       : (alumni.profile?.currentCompany || 'Institution not specified')
                     }
                   </p>
-                  
+
                   <div className="flex flex-wrap gap-2 mb-4">
                     <Badge variant="secondary" className="bg-blue-100 text-blue-800">
                       Class of {alumni.batch}
@@ -242,7 +242,7 @@ const AlumniDetailPage = () => {
                         </div>
                       </div>
                     )}
-                    
+
                     {alumni.profile?.currentPosition && (
                       <div className="flex items-center space-x-3">
                         <Award className="h-5 w-5 text-gray-500" />
@@ -302,7 +302,7 @@ const AlumniDetailPage = () => {
                     {alumni.email && (
                       <div className="flex items-center space-x-3">
                         <Mail className="h-4 w-4 text-gray-500" />
-                        <a 
+                        <a
                           href={`mailto:${alumni.email}`}
                           className="text-sm text-blue-600 hover:text-blue-800"
                         >
@@ -310,11 +310,11 @@ const AlumniDetailPage = () => {
                         </a>
                       </div>
                     )}
-                    
+
                     {alumni.profile?.phone && (
                       <div className="flex items-center space-x-3">
                         <Phone className="h-4 w-4 text-gray-500" />
-                        <a 
+                        <a
                           href={`tel:${alumni.profile.phone}`}
                           className="text-sm text-blue-600 hover:text-blue-800"
                         >
@@ -326,7 +326,7 @@ const AlumniDetailPage = () => {
                     {alumni.profile?.linkedin && (
                       <div className="flex items-center space-x-3">
                         <Linkedin className="h-4 w-4 text-gray-500" />
-                        <a 
+                        <a
                           href={alumni.profile.linkedin.startsWith('http') ? alumni.profile.linkedin : `https://${alumni.profile.linkedin}`}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -340,7 +340,7 @@ const AlumniDetailPage = () => {
                     {alumni.profile?.github && (
                       <div className="flex items-center space-x-3">
                         <Github className="h-4 w-4 text-gray-500" />
-                        <a 
+                        <a
                           href={alumni.profile.github.startsWith('http') ? alumni.profile.github : `https://${alumni.profile.github}`}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -354,7 +354,7 @@ const AlumniDetailPage = () => {
                     {alumni.profile?.website && (
                       <div className="flex items-center space-x-3">
                         <Globe className="h-4 w-4 text-gray-500" />
-                        <a 
+                        <a
                           href={alumni.profile.website.startsWith('http') ? alumni.profile.website : `https://${alumni.profile.website}`}
                           target="_blank"
                           rel="noopener noreferrer"

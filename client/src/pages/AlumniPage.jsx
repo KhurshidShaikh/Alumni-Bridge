@@ -3,16 +3,16 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../store/selectors/userSelectors';
 import { toast } from 'sonner';
-import { 
-  Users, 
-  Search, 
-  Filter, 
-  MapPin, 
-  Building, 
-  GraduationCap, 
-  Mail, 
-  Phone, 
-  Linkedin, 
+import {
+  Users,
+  Search,
+  Filter,
+  MapPin,
+  Building,
+  GraduationCap,
+  Mail,
+  Phone,
+  Linkedin,
   MessageCircle,
   Briefcase
 } from 'lucide-react';
@@ -53,7 +53,7 @@ const AlumniPage = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      
+
       if (!token) {
         toast.error('Please login to view alumni directory');
         navigate('/login');
@@ -66,7 +66,7 @@ const AlumniPage = () => {
       if (selectedDepartment !== 'All') params.append('branch', selectedDepartment);
       if (searchTerm.trim()) params.append('search', searchTerm.trim());
 
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
       const response = await fetch(`${backendUrl}/api/profile/alumni?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -95,10 +95,10 @@ const AlumniPage = () => {
   // Fetch connection statuses for alumni
   const fetchConnectionStatuses = async (alumniList) => {
     const token = localStorage.getItem('token');
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-    
+    const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
     const statuses = {};
-    
+
     for (const alumniProfile of alumniList) {
       try {
         const response = await fetch(`${backendUrl}/api/connections/status/${alumniProfile._id}`, {
@@ -107,7 +107,7 @@ const AlumniPage = () => {
             'Content-Type': 'application/json'
           }
         });
-        
+
         const data = await response.json();
         if (data.success) {
           statuses[alumniProfile._id] = data.status;
@@ -116,7 +116,7 @@ const AlumniPage = () => {
         console.error('Error fetching connection status:', error);
       }
     }
-    
+
     setConnectionStatuses(statuses);
   };
 
@@ -125,7 +125,7 @@ const AlumniPage = () => {
     try {
       setConnectionLoading(prev => ({ ...prev, [alumniId]: true }));
       const token = localStorage.getItem('token');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
 
       const response = await fetch(`${backendUrl}/api/connections/request`, {
         method: 'POST',
@@ -140,7 +140,7 @@ const AlumniPage = () => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         toast.success('Connection request sent successfully!');
         setConnectionStatuses(prev => ({ ...prev, [alumniId]: 'request_sent' }));
@@ -214,8 +214,8 @@ const AlumniPage = () => {
     switch (status) {
       case 'connected':
         return (
-          <Button 
-            size="sm" 
+          <Button
+            size="sm"
             variant="outline"
             className="border-green-500 text-green-600 hover:bg-green-50"
             onClick={(e) => handleClick(e, 'view')}
@@ -223,11 +223,11 @@ const AlumniPage = () => {
             Connected
           </Button>
         );
-      
+
       case 'request_sent':
         return (
-          <Button 
-            size="sm" 
+          <Button
+            size="sm"
             variant="outline"
             className="border-yellow-500 text-yellow-600 hover:bg-yellow-50"
             onClick={(e) => handleClick(e, 'view')}
@@ -235,23 +235,23 @@ const AlumniPage = () => {
             Request Sent
           </Button>
         );
-      
+
       case 'request_received':
         return (
-          <Button 
-            size="sm" 
+          <Button
+            size="sm"
             className="bg-green-600 hover:bg-green-700"
             onClick={(e) => handleClick(e, 'accept')}
           >
             Accept Request
           </Button>
         );
-      
+
       case 'not_connected':
       default:
         return (
-          <Button 
-            size="sm" 
+          <Button
+            size="sm"
             className="bg-blue-600 hover:bg-blue-700"
             onClick={(e) => handleClick(e, 'connect')}
           >
@@ -273,7 +273,7 @@ const AlumniPage = () => {
     <div className="min-h-screen bg-gray-50 poppins-regular">
       {/* Sidebar */}
       <Sidebar />
-      
+
       {/* Bottom Bar for Mobile */}
       <BottomBar />
 
@@ -336,8 +336,8 @@ const AlumniPage = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {alumni.map((alumniProfile) => (
-                <Card 
-                  key={alumniProfile._id} 
+                <Card
+                  key={alumniProfile._id}
                   className="hover:shadow-lg transition-shadow cursor-pointer"
                   onClick={() => handleAlumniClick(alumniProfile._id)}
                 >

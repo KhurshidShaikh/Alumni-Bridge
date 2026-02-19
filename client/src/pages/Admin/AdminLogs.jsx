@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -15,11 +15,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { 
-  Activity, 
-  Filter, 
-  Search, 
-  CheckCircle, 
+import {
+  Activity,
+  Filter,
+  Search,
+  CheckCircle,
   XCircle,
   FileText,
   Users,
@@ -63,8 +63,8 @@ const AdminLogs = () => {
     try {
       setLoading(true);
       const adminToken = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const params = new URLSearchParams({
         page: currentPage,
         limit: 50,
@@ -83,7 +83,7 @@ const AdminLogs = () => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         setLogs(data.data.logs);
         setPagination(data.data.pagination);
@@ -101,8 +101,8 @@ const AdminLogs = () => {
   const exportLogs = async () => {
     try {
       const adminToken = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const params = new URLSearchParams({
         ...(filters.action !== 'all' && { action: filters.action }),
         ...(filters.targetType !== 'all' && { targetType: filters.targetType }),
@@ -198,7 +198,7 @@ const AdminLogs = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 md:ml-64 flex flex-col">
         {/* Mobile Header */}
         <div className="md:hidden sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3">
@@ -219,7 +219,7 @@ const AdminLogs = () => {
               <p className="text-gray-600">Monitor all administrative actions and system activities</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button 
+              <Button
                 onClick={exportLogs}
                 variant="outline"
               >
@@ -232,196 +232,196 @@ const AdminLogs = () => {
 
         <div className="flex-1 overflow-y-auto pb-20 md:pb-6">
           <div className="p-4 md:p-6">
-          {/* Filters */}
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Filter className="w-5 h-5" />
-                <span>Filters</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                <div>
-                  <Label>Action</Label>
-                  <Select value={filters.action} onValueChange={(value) => setFilters({...filters, action: value})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="All Actions" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Actions</SelectItem>
-                      <SelectItem value="login">Login</SelectItem>
-                      <SelectItem value="logout">Logout</SelectItem>
-                      <SelectItem value="user_verified">User Verified</SelectItem>
-                      <SelectItem value="user_suspended">User Suspended</SelectItem>
-                      <SelectItem value="user_deleted">User Deleted</SelectItem>
-                      <SelectItem value="announcement_created">Announcement Created</SelectItem>
-                      <SelectItem value="event_created">Event Created</SelectItem>
-                      <SelectItem value="bulk_import">Bulk Import</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+            {/* Filters */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Filter className="w-5 h-5" />
+                  <span>Filters</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                  <div>
+                    <Label>Action</Label>
+                    <Select value={filters.action} onValueChange={(value) => setFilters({ ...filters, action: value })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All Actions" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Actions</SelectItem>
+                        <SelectItem value="login">Login</SelectItem>
+                        <SelectItem value="logout">Logout</SelectItem>
+                        <SelectItem value="user_verified">User Verified</SelectItem>
+                        <SelectItem value="user_suspended">User Suspended</SelectItem>
+                        <SelectItem value="user_deleted">User Deleted</SelectItem>
+                        <SelectItem value="announcement_created">Announcement Created</SelectItem>
+                        <SelectItem value="event_created">Event Created</SelectItem>
+                        <SelectItem value="bulk_import">Bulk Import</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                <div>
-                  <Label>Target Type</Label>
-                  <Select value={filters.targetType} onValueChange={(value) => setFilters({...filters, targetType: value})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="All Types" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Types</SelectItem>
-                      <SelectItem value="user">User</SelectItem>
-                      <SelectItem value="announcement">Announcement</SelectItem>
-                      <SelectItem value="event">Event</SelectItem>
-                      <SelectItem value="job">Job</SelectItem>
-                      <SelectItem value="post">Post</SelectItem>
-                      <SelectItem value="system">System</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                  <div>
+                    <Label>Target Type</Label>
+                    <Select value={filters.targetType} onValueChange={(value) => setFilters({ ...filters, targetType: value })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All Types" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Types</SelectItem>
+                        <SelectItem value="user">User</SelectItem>
+                        <SelectItem value="announcement">Announcement</SelectItem>
+                        <SelectItem value="event">Event</SelectItem>
+                        <SelectItem value="job">Job</SelectItem>
+                        <SelectItem value="post">Post</SelectItem>
+                        <SelectItem value="system">System</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                <div>
-                  <Label>Start Date</Label>
-                  <Input
-                    type="date"
-                    value={filters.startDate}
-                    onChange={(e) => setFilters({...filters, startDate: e.target.value})}
-                  />
-                </div>
+                  <div>
+                    <Label>Start Date</Label>
+                    <Input
+                      type="date"
+                      value={filters.startDate}
+                      onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+                    />
+                  </div>
 
-                <div>
-                  <Label>End Date</Label>
-                  <Input
-                    type="date"
-                    value={filters.endDate}
-                    onChange={(e) => setFilters({...filters, endDate: e.target.value})}
-                  />
-                </div>
+                  <div>
+                    <Label>End Date</Label>
+                    <Input
+                      type="date"
+                      value={filters.endDate}
+                      onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
+                    />
+                  </div>
 
-                <div className="flex items-end">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => setFilters({ action: 'all', targetType: 'all', adminId: '', startDate: '', endDate: '' })}
-                    className="w-full"
-                  >
-                    Clear Filters
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Logs List */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Activity className="w-5 h-5" />
-                  <span>Activity Logs ({pagination.totalLogs || 0})</span>
-                </div>
-                {loading && <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {logs.length > 0 ? (
-                <div className="space-y-3">
-                  {logs.map((log) => (
-                    <div key={log._id} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <div className="flex-shrink-0 mt-1">
-                        {getActionIcon(log.action)}
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center space-x-3 mb-1">
-                          <Badge className={`${getActionColor(log.action)} border-0 text-xs`}>
-                            {log.action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            <div className="flex items-center space-x-1">
-                              {getTargetTypeIcon(log.targetType)}
-                              <span className="capitalize">{log.targetType}</span>
-                            </div>
-                          </Badge>
-                        </div>
-                        
-                        <p className="text-sm text-gray-900 mb-2">{log.details}</p>
-                        
-                        <div className="flex items-center space-x-4 text-xs text-gray-500">
-                          <div className="flex items-center space-x-2">
-                            <Avatar className="h-5 w-5">
-                              <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
-                                {log.admin?.name?.split(' ').map(n => n[0]).join('') || 'A'}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span>{log.admin?.name || 'Unknown Admin'}</span>
-                          </div>
-                          <span>•</span>
-                          <span>{formatDate(log.createdAt)}</span>
-                          {log.ipAddress && (
-                            <>
-                              <span>•</span>
-                              <span>IP: {log.ipAddress}</span>
-                            </>
-                          )}
-                        </div>
-                        
-                        {/* Metadata */}
-                        {log.metadata && Object.keys(log.metadata).length > 0 && (
-                          <div className="mt-2 p-2 bg-white rounded border">
-                            <p className="text-xs text-gray-600 mb-1">Additional Details:</p>
-                            <div className="text-xs text-gray-700">
-                              {Object.entries(log.metadata).map(([key, value]) => (
-                                <div key={key} className="flex justify-between">
-                                  <span className="font-medium">{key}:</span>
-                                  <span>{typeof value === 'object' ? JSON.stringify(value) : String(value)}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <Activity className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-500">No activity logs found</p>
-                  <p className="text-sm text-gray-400 mt-1">Try adjusting your filters</p>
-                </div>
-              )}
-
-              {/* Pagination */}
-              {pagination.totalPages > 1 && (
-                <div className="flex items-center justify-between mt-6 pt-6 border-t">
-                  <p className="text-sm text-gray-600">
-                    Showing {((currentPage - 1) * 50) + 1} to {Math.min(currentPage * 50, pagination.totalLogs)} of {pagination.totalLogs} logs
-                  </p>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-end">
                     <Button
                       variant="outline"
-                      size="sm"
-                      disabled={!pagination.hasPrev}
-                      onClick={() => setCurrentPage(currentPage - 1)}
+                      onClick={() => setFilters({ action: 'all', targetType: 'all', adminId: '', startDate: '', endDate: '' })}
+                      className="w-full"
                     >
-                      Previous
-                    </Button>
-                    <span className="text-sm text-gray-600">
-                      Page {currentPage} of {pagination.totalPages}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={!pagination.hasNext}
-                      onClick={() => setCurrentPage(currentPage + 1)}
-                    >
-                      Next
+                      Clear Filters
                     </Button>
                   </div>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            {/* Logs List */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Activity className="w-5 h-5" />
+                    <span>Activity Logs ({pagination.totalLogs || 0})</span>
+                  </div>
+                  {loading && <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {logs.length > 0 ? (
+                  <div className="space-y-3">
+                    {logs.map((log) => (
+                      <div key={log._id} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <div className="flex-shrink-0 mt-1">
+                          {getActionIcon(log.action)}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-3 mb-1">
+                            <Badge className={`${getActionColor(log.action)} border-0 text-xs`}>
+                              {log.action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              <div className="flex items-center space-x-1">
+                                {getTargetTypeIcon(log.targetType)}
+                                <span className="capitalize">{log.targetType}</span>
+                              </div>
+                            </Badge>
+                          </div>
+
+                          <p className="text-sm text-gray-900 mb-2">{log.details}</p>
+
+                          <div className="flex items-center space-x-4 text-xs text-gray-500">
+                            <div className="flex items-center space-x-2">
+                              <Avatar className="h-5 w-5">
+                                <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
+                                  {log.admin?.name?.split(' ').map(n => n[0]).join('') || 'A'}
+                                </AvatarFallback>
+                              </Avatar>
+                              <span>{log.admin?.name || 'Unknown Admin'}</span>
+                            </div>
+                            <span>•</span>
+                            <span>{formatDate(log.createdAt)}</span>
+                            {log.ipAddress && (
+                              <>
+                                <span>•</span>
+                                <span>IP: {log.ipAddress}</span>
+                              </>
+                            )}
+                          </div>
+
+                          {/* Metadata */}
+                          {log.metadata && Object.keys(log.metadata).length > 0 && (
+                            <div className="mt-2 p-2 bg-white rounded border">
+                              <p className="text-xs text-gray-600 mb-1">Additional Details:</p>
+                              <div className="text-xs text-gray-700">
+                                {Object.entries(log.metadata).map(([key, value]) => (
+                                  <div key={key} className="flex justify-between">
+                                    <span className="font-medium">{key}:</span>
+                                    <span>{typeof value === 'object' ? JSON.stringify(value) : String(value)}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Activity className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500">No activity logs found</p>
+                    <p className="text-sm text-gray-400 mt-1">Try adjusting your filters</p>
+                  </div>
+                )}
+
+                {/* Pagination */}
+                {pagination.totalPages > 1 && (
+                  <div className="flex items-center justify-between mt-6 pt-6 border-t">
+                    <p className="text-sm text-gray-600">
+                      Showing {((currentPage - 1) * 50) + 1} to {Math.min(currentPage * 50, pagination.totalLogs)} of {pagination.totalLogs} logs
+                    </p>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={!pagination.hasPrev}
+                        onClick={() => setCurrentPage(currentPage - 1)}
+                      >
+                        Previous
+                      </Button>
+                      <span className="text-sm text-gray-600">
+                        Page {currentPage} of {pagination.totalPages}
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={!pagination.hasNext}
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
 

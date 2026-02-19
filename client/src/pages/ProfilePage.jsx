@@ -7,16 +7,16 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { 
-  MapPin, 
-  Mail, 
-  Phone, 
-  Linkedin, 
-  Github, 
-  Globe, 
-  Edit, 
-  Award, 
-  Briefcase, 
+import {
+  MapPin,
+  Mail,
+  Phone,
+  Linkedin,
+  Github,
+  Globe,
+  Edit,
+  Award,
+  Briefcase,
   GraduationCap,
   Camera,
   Building,
@@ -33,7 +33,7 @@ const ProfilePage = () => {
   const [userProfile, setUserProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const navigate = useNavigate();
   const currentUser = useSelector(selectCurrentUser);
   const token = useSelector(selectToken);
@@ -45,7 +45,8 @@ const ProfilePage = () => {
         setIsLoading(true);
         setError(null);
 
-        const response = await fetch('http://localhost:3000/api/profile/me', {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+        const response = await fetch(`${backendUrl}/api/profile/me`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -89,10 +90,10 @@ const ProfilePage = () => {
     // Clear all auth data
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    
+
     // Show success message
     toast.success('Logged out successfully');
-    
+
     // Redirect to landing page
     navigate('/');
   };
@@ -141,19 +142,19 @@ const ProfilePage = () => {
     <div className="min-h-screen bg-gray-50 poppins-regular">
       {/* Sidebar */}
       <Sidebar />
-      
+
       {/* Bottom Bar for Mobile */}
       <BottomBar />
 
       {/* Main Content */}
       <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
         <div className="p-4 md:p-8 max-w-6xl mx-auto">
-          
+
           {/* Profile Header Card */}
           <Card className="mb-6 md:mb-8 shadow-sm border-0 bg-white">
             <CardContent className="p-4 md:p-8">
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6">
-                
+
                 {/* Profile Info Section */}
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 md:gap-6 flex-1 w-full">
                   {/* Avatar */}
@@ -177,38 +178,37 @@ const ProfilePage = () => {
                       <h1 className="text-xl md:text-3xl font-bold text-gray-900">
                         {userProfile.name}
                       </h1>
-                      <Badge 
-                        variant="secondary" 
-                        className={`px-2 md:px-3 py-1 text-xs font-medium self-center sm:self-auto ${
-                          userProfile.role === 'alumni' 
-                            ? 'bg-blue-100 text-blue-700' 
+                      <Badge
+                        variant="secondary"
+                        className={`px-2 md:px-3 py-1 text-xs font-medium self-center sm:self-auto ${userProfile.role === 'alumni'
+                            ? 'bg-blue-100 text-blue-700'
                             : 'bg-green-100 text-green-700'
-                        }`}
+                          }`}
                       >
                         {userProfile.role.charAt(0).toUpperCase() + userProfile.role.slice(1)}
                       </Badge>
                     </div>
-                    
+
                     {/* Position/Role */}
                     {userProfile.profile?.currentPosition && (
                       <p className="text-base md:text-lg text-gray-700 font-medium mb-1">
                         {userProfile.profile.currentPosition}
                       </p>
                     )}
-                    
+
                     {/* Company */}
                     {userProfile.profile?.currentCompany && (
                       <p className="text-sm md:text-base text-gray-600 mb-2">
                         at {userProfile.profile.currentCompany}
                       </p>
                     )}
-                    
+
                     {/* Batch/Year */}
                     <div className="flex items-center justify-center sm:justify-start gap-2 text-xs md:text-sm text-gray-500 mb-3 flex-wrap">
                       <GraduationCap className="h-3 w-3 md:h-4 md:w-4" />
                       <span>
-                        {userProfile.role === 'alumni' 
-                          ? `Class of ${userProfile.batch}` 
+                        {userProfile.role === 'alumni'
+                          ? `Class of ${userProfile.batch}`
                           : `Batch ${userProfile.batch}`
                         }
                       </span>
@@ -231,15 +231,15 @@ const ProfilePage = () => {
 
                 {/* Action Buttons */}
                 <div className="flex flex-col gap-2 w-full sm:w-auto">
-                  <Button 
-                    onClick={handleEditProfile} 
+                  <Button
+                    onClick={handleEditProfile}
                     className="bg-blue-600 hover:bg-blue-700 shadow-sm w-full sm:w-auto"
                   >
                     <Edit className="h-4 w-4 mr-2" />
                     Edit Profile
                   </Button>
-                  <Button 
-                    onClick={handleLogout} 
+                  <Button
+                    onClick={handleLogout}
                     variant="outline"
                     className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 shadow-sm w-full sm:w-auto"
                   >
@@ -253,10 +253,10 @@ const ProfilePage = () => {
 
           {/* Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
+
             {/* Left Column - Contact & Links */}
             <div className="lg:col-span-1 space-y-6">
-              
+
               {/* Contact Information */}
               <Card className="shadow-sm border-0">
                 <CardHeader className="pb-4">
@@ -270,14 +270,14 @@ const ProfilePage = () => {
                     <Mail className="h-4 w-4 text-gray-500 flex-shrink-0" />
                     <span className="text-sm text-gray-700 break-all">{userProfile.email}</span>
                   </div>
-                  
+
                   {userProfile.profile?.phone && (
                     <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                       <Phone className="h-4 w-4 text-gray-500 flex-shrink-0" />
                       <span className="text-sm text-gray-700">{userProfile.profile.phone}</span>
                     </div>
                   )}
-                  
+
                   {userProfile.profile?.location && (
                     <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                       <MapPin className="h-4 w-4 text-gray-500 flex-shrink-0" />
@@ -298,10 +298,10 @@ const ProfilePage = () => {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     {userProfile.profile?.linkedin && (
-                      <a 
-                        href={`https://${userProfile.profile.linkedin}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <a
+                        href={`https://${userProfile.profile.linkedin}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
                       >
                         <Linkedin className="h-4 w-4 text-blue-600 flex-shrink-0" />
@@ -310,12 +310,12 @@ const ProfilePage = () => {
                         </span>
                       </a>
                     )}
-                    
+
                     {userProfile.profile?.github && (
-                      <a 
-                        href={`https://${userProfile.profile.github}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <a
+                        href={`https://${userProfile.profile.github}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                       >
                         <Github className="h-4 w-4 text-gray-600 flex-shrink-0" />
@@ -324,12 +324,12 @@ const ProfilePage = () => {
                         </span>
                       </a>
                     )}
-                    
+
                     {userProfile.profile?.website && (
-                      <a 
-                        href={`https://${userProfile.profile.website}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <a
+                        href={`https://${userProfile.profile.website}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
                       >
                         <Globe className="h-4 w-4 text-green-600 flex-shrink-0" />
@@ -345,7 +345,7 @@ const ProfilePage = () => {
 
             {/* Right Column - Professional & Academic Info */}
             <div className="lg:col-span-2 space-y-6">
-              
+
               {/* Professional Information - Alumni Only */}
               {userProfile.role === 'alumni' && (userProfile.profile?.currentCompany || userProfile.profile?.currentPosition) && (
                 <Card className="shadow-sm border-0">
@@ -366,7 +366,7 @@ const ProfilePage = () => {
                           <p className="text-gray-800 font-medium">{userProfile.profile.currentPosition}</p>
                         </div>
                       )}
-                      
+
                       {userProfile.profile?.currentCompany && (
                         <div className="p-4 bg-green-50 rounded-lg">
                           <div className="flex items-center space-x-2 mb-2">
@@ -400,7 +400,7 @@ const ProfilePage = () => {
                         <p className="text-gray-800 font-medium">{userProfile.profile.branch}</p>
                       </div>
                     )}
-                    
+
                     {userProfile.batch && (
                       <div className="p-4 bg-orange-50 rounded-lg">
                         <div className="flex items-center space-x-2 mb-2">
@@ -412,7 +412,7 @@ const ProfilePage = () => {
                         <p className="text-gray-800 font-medium">{userProfile.batch}</p>
                       </div>
                     )}
-                    
+
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <div className="flex items-center space-x-2 mb-2">
                         <Mail className="h-4 w-4 text-gray-600" />

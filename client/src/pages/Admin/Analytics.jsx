@@ -5,10 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  BarChart3, 
-  Users, 
-  TrendingUp, 
+import {
+  BarChart3,
+  Users,
+  TrendingUp,
   Calendar,
   GraduationCap,
   Briefcase,
@@ -35,8 +35,8 @@ const Analytics = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const response = await fetch(`${backendUrl}/api/admin/analytics?timeRange=${timeRange}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -135,7 +135,7 @@ const Analytics = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 md:ml-64 flex flex-col">
         {/* Mobile Header */}
         <div className="md:hidden sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3">
@@ -150,207 +150,207 @@ const Analytics = () => {
 
         <div className="flex-1 overflow-y-auto pb-20 md:pb-6">
           <div className="p-4 md:p-8">
-          {/* Header */}
-          <div className="hidden md:flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics Dashboard</h1>
-              <p className="text-gray-600">Platform insights and performance metrics</p>
+            {/* Header */}
+            <div className="hidden md:flex items-center justify-between mb-8">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics Dashboard</h1>
+                <p className="text-gray-600">Platform insights and performance metrics</p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <Select value={timeRange} onValueChange={setTimeRange}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="7d">Last 7 days</SelectItem>
+                    <SelectItem value="30d">Last 30 days</SelectItem>
+                    <SelectItem value="90d">Last 90 days</SelectItem>
+                    <SelectItem value="1y">Last year</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button onClick={fetchAnalytics} variant="outline">
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Refresh
+                </Button>
+                <Button>
+                  <Download className="w-4 h-4 mr-2" />
+                  Export
+                </Button>
+              </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <Select value={timeRange} onValueChange={setTimeRange}>
-                <SelectTrigger className="w-40">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="7d">Last 7 days</SelectItem>
-                  <SelectItem value="30d">Last 30 days</SelectItem>
-                  <SelectItem value="90d">Last 90 days</SelectItem>
-                  <SelectItem value="1y">Last year</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button onClick={fetchAnalytics} variant="outline">
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Refresh
-              </Button>
-              <Button>
-                <Download className="w-4 h-4 mr-2" />
-                Export
-              </Button>
+
+            {/* Overview Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <StatCard
+                title="Total Users"
+                value={overview?.totalUsers || 0}
+                icon={Users}
+                color="bg-blue-600"
+                description="Registered users"
+                trend={growthMetrics?.userGrowth}
+              />
+              <StatCard
+                title="Active Users"
+                value={overview?.activeUsers || 0}
+                icon={Activity}
+                color="bg-green-600"
+                description="Active this month"
+                trend={growthMetrics?.activityGrowth}
+              />
+              <StatCard
+                title="Job Posts"
+                value={overview?.totalJobs || 0}
+                icon={Briefcase}
+                color="bg-purple-600"
+                description="Total job postings"
+                trend={growthMetrics?.jobGrowth}
+              />
+              <StatCard
+                title="Connections"
+                value={overview?.totalConnections || 0}
+                icon={MessageSquare}
+                color="bg-orange-600"
+                description="Alumni connections"
+                trend={growthMetrics?.connectionGrowth}
+              />
             </div>
-          </div>
 
-          {/* Overview Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatCard
-              title="Total Users"
-              value={overview?.totalUsers || 0}
-              icon={Users}
-              color="bg-blue-600"
-              description="Registered users"
-              trend={growthMetrics?.userGrowth}
-            />
-            <StatCard
-              title="Active Users"
-              value={overview?.activeUsers || 0}
-              icon={Activity}
-              color="bg-green-600"
-              description="Active this month"
-              trend={growthMetrics?.activityGrowth}
-            />
-            <StatCard
-              title="Job Posts"
-              value={overview?.totalJobs || 0}
-              icon={Briefcase}
-              color="bg-purple-600"
-              description="Total job postings"
-              trend={growthMetrics?.jobGrowth}
-            />
-            <StatCard
-              title="Connections"
-              value={overview?.totalConnections || 0}
-              icon={MessageSquare}
-              color="bg-orange-600"
-              description="Alumni connections"
-              trend={growthMetrics?.connectionGrowth}
-            />
-          </div>
+            {/* Engagement Metrics */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+              <Card className="lg:col-span-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <BarChart3 className="w-5 h-5 text-blue-600" />
+                    <span>Platform Engagement</span>
+                  </CardTitle>
+                  <CardDescription>User activity and engagement metrics</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <Eye className="w-5 h-5 text-blue-600" />
+                          <span className="font-medium">Profile Views</span>
+                        </div>
+                        <span className="text-xl font-bold text-blue-600">
+                          {overview?.profileViews || 0}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <MessageSquare className="w-5 h-5 text-green-600" />
+                          <span className="font-medium">Messages Sent</span>
+                        </div>
+                        <span className="text-xl font-bold text-green-600">
+                          {overview?.messagesSent || 0}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <UserCheck className="w-5 h-5 text-purple-600" />
+                          <span className="font-medium">New Registrations</span>
+                        </div>
+                        <span className="text-xl font-bold text-purple-600">
+                          {overview?.newRegistrations || 0}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <FileText className="w-5 h-5 text-orange-600" />
+                          <span className="font-medium">Posts Created</span>
+                        </div>
+                        <span className="text-xl font-bold text-orange-600">
+                          {overview?.postsCreated || 0}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          {/* Engagement Metrics */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <Card className="lg:col-span-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <TrendingUp className="w-5 h-5 text-green-600" />
+                    <span>Growth Trends</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg">
+                      <p className="text-sm text-blue-600 font-medium">User Growth Rate</p>
+                      <p className="text-2xl font-bold text-blue-700">
+                        {growthMetrics?.userGrowth > 0 ? '+' : ''}{growthMetrics?.userGrowth || 0}%
+                      </p>
+                    </div>
+                    <div className="text-center p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg">
+                      <p className="text-sm text-green-600 font-medium">Engagement Rate</p>
+                      <p className="text-2xl font-bold text-green-700">
+                        {growthMetrics?.engagementRate || 0}%
+                      </p>
+                    </div>
+                    <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg">
+                      <p className="text-sm text-purple-600 font-medium">Retention Rate</p>
+                      <p className="text-2xl font-bold text-purple-700">
+                        {growthMetrics?.retentionRate || 0}%
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Department Statistics */}
+            <Card className="mb-8">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <BarChart3 className="w-5 h-5 text-blue-600" />
-                  <span>Platform Engagement</span>
+                  <GraduationCap className="w-5 h-5 text-blue-600" />
+                  <span>Department-wise Statistics</span>
                 </CardTitle>
-                <CardDescription>User activity and engagement metrics</CardDescription>
+                <CardDescription>User distribution across different departments</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <Eye className="w-5 h-5 text-blue-600" />
-                        <span className="font-medium">Profile Views</span>
-                      </div>
-                      <span className="text-xl font-bold text-blue-600">
-                        {overview?.profileViews || 0}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <MessageSquare className="w-5 h-5 text-green-600" />
-                        <span className="font-medium">Messages Sent</span>
-                      </div>
-                      <span className="text-xl font-bold text-green-600">
-                        {overview?.messagesSent || 0}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <UserCheck className="w-5 h-5 text-purple-600" />
-                        <span className="font-medium">New Registrations</span>
-                      </div>
-                      <span className="text-xl font-bold text-purple-600">
-                        {overview?.newRegistrations || 0}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <FileText className="w-5 h-5 text-orange-600" />
-                        <span className="font-medium">Posts Created</span>
-                      </div>
-                      <span className="text-xl font-bold text-orange-600">
-                        {overview?.postsCreated || 0}
-                      </span>
-                    </div>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {departmentStats && Object.entries(departmentStats).map(([department, stats]) => (
+                    <DepartmentCard key={department} department={department} stats={stats} />
+                  ))}
                 </div>
               </CardContent>
             </Card>
 
+            {/* Recent Activity */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <TrendingUp className="w-5 h-5 text-green-600" />
-                  <span>Growth Trends</span>
+                  <Activity className="w-5 h-5 text-blue-600" />
+                  <span>Recent Platform Activity</span>
                 </CardTitle>
+                <CardDescription>Latest user activities and system events</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg">
-                    <p className="text-sm text-blue-600 font-medium">User Growth Rate</p>
-                    <p className="text-2xl font-bold text-blue-700">
-                      {growthMetrics?.userGrowth > 0 ? '+' : ''}{growthMetrics?.userGrowth || 0}%
-                    </p>
+                {recentActivity && recentActivity.length > 0 ? (
+                  <div className="space-y-3">
+                    {recentActivity.map((activity, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                          <span className="text-sm text-gray-900">{activity.description}</span>
+                        </div>
+                        <span className="text-xs text-gray-500">{activity.timestamp}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="text-center p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg">
-                    <p className="text-sm text-green-600 font-medium">Engagement Rate</p>
-                    <p className="text-2xl font-bold text-green-700">
-                      {growthMetrics?.engagementRate || 0}%
-                    </p>
+                ) : (
+                  <div className="text-center py-8">
+                    <Activity className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500">No recent activity data available</p>
                   </div>
-                  <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg">
-                    <p className="text-sm text-purple-600 font-medium">Retention Rate</p>
-                    <p className="text-2xl font-bold text-purple-700">
-                      {growthMetrics?.retentionRate || 0}%
-                    </p>
-                  </div>
-                </div>
+                )}
               </CardContent>
             </Card>
-          </div>
-
-          {/* Department Statistics */}
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <GraduationCap className="w-5 h-5 text-blue-600" />
-                <span>Department-wise Statistics</span>
-              </CardTitle>
-              <CardDescription>User distribution across different departments</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {departmentStats && Object.entries(departmentStats).map(([department, stats]) => (
-                  <DepartmentCard key={department} department={department} stats={stats} />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Recent Activity */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Activity className="w-5 h-5 text-blue-600" />
-                <span>Recent Platform Activity</span>
-              </CardTitle>
-              <CardDescription>Latest user activities and system events</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {recentActivity && recentActivity.length > 0 ? (
-                <div className="space-y-3">
-                  {recentActivity.map((activity, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                        <span className="text-sm text-gray-900">{activity.description}</span>
-                      </div>
-                      <span className="text-xs text-gray-500">{activity.timestamp}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <Activity className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-500">No recent activity data available</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
           </div>
         </div>
 

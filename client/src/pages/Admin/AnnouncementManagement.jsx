@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { 
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -22,11 +22,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { 
-  Megaphone, 
-  Plus, 
-  Edit, 
-  Trash2, 
+import {
+  Megaphone,
+  Plus,
+  Edit,
+  Trash2,
   Eye,
   AlertCircle,
   Calendar,
@@ -78,8 +78,8 @@ const AnnouncementManagement = () => {
     try {
       setLoading(true);
       const adminToken = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const params = new URLSearchParams({
         page: currentPage,
         limit: 20,
@@ -96,7 +96,7 @@ const AnnouncementManagement = () => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         setAnnouncements(data.data.announcements);
         setPagination(data.data.pagination);
@@ -114,8 +114,8 @@ const AnnouncementManagement = () => {
   const handleCreateAnnouncement = async () => {
     try {
       const adminToken = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const response = await fetch(`${backendUrl}/api/admin/announcements`, {
         method: 'POST',
         headers: {
@@ -126,7 +126,7 @@ const AnnouncementManagement = () => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         toast.success('Announcement created successfully');
         setCreateDialog(false);
@@ -144,8 +144,8 @@ const AnnouncementManagement = () => {
   const handleUpdateAnnouncement = async () => {
     try {
       const adminToken = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const response = await fetch(`${backendUrl}/api/admin/announcements/${selectedAnnouncement._id}`, {
         method: 'PUT',
         headers: {
@@ -156,7 +156,7 @@ const AnnouncementManagement = () => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         toast.success('Announcement updated successfully');
         setEditDialog(false);
@@ -174,8 +174,8 @@ const AnnouncementManagement = () => {
   const handleDeleteAnnouncement = async () => {
     try {
       const adminToken = localStorage.getItem('adminToken');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+
       const response = await fetch(`${backendUrl}/api/admin/announcements/${selectedAnnouncement._id}`, {
         method: 'DELETE',
         headers: {
@@ -185,7 +185,7 @@ const AnnouncementManagement = () => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         toast.success('Announcement deleted successfully');
         setDeleteDialog(false);
@@ -281,7 +281,7 @@ const AnnouncementManagement = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 ml-64 overflow-auto">
         {/* Header */}
         <div className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
@@ -291,7 +291,7 @@ const AnnouncementManagement = () => {
               <p className="text-gray-600">Create and manage college announcements</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button 
+              <Button
                 onClick={() => setCreateDialog(true)}
                 className="bg-blue-600 hover:bg-blue-700"
               >
@@ -312,7 +312,7 @@ const AnnouncementManagement = () => {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                   <Label>Type</Label>
-                  <Select value={filters.type} onValueChange={(value) => setFilters({...filters, type: value})}>
+                  <Select value={filters.type} onValueChange={(value) => setFilters({ ...filters, type: value })}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -328,7 +328,7 @@ const AnnouncementManagement = () => {
 
                 <div>
                   <Label>Visibility</Label>
-                  <Select value={filters.visibility} onValueChange={(value) => setFilters({...filters, visibility: value})}>
+                  <Select value={filters.visibility} onValueChange={(value) => setFilters({ ...filters, visibility: value })}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -342,7 +342,7 @@ const AnnouncementManagement = () => {
 
                 <div>
                   <Label>Status</Label>
-                  <Select value={filters.isActive} onValueChange={(value) => setFilters({...filters, isActive: value})}>
+                  <Select value={filters.isActive} onValueChange={(value) => setFilters({ ...filters, isActive: value })}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -355,8 +355,8 @@ const AnnouncementManagement = () => {
                 </div>
 
                 <div className="flex items-end">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={() => setFilters({ type: 'all', visibility: 'all', isActive: 'all' })}
                     className="w-full"
                   >
@@ -405,9 +405,9 @@ const AnnouncementManagement = () => {
                               </Badge>
                             )}
                           </div>
-                          
+
                           <p className="text-gray-700 mb-3 line-clamp-2">{announcement.content}</p>
-                          
+
                           <div className="flex items-center space-x-4 text-sm text-gray-500">
                             <div className="flex items-center space-x-1">
                               <Users className="w-4 h-4" />
@@ -428,7 +428,7 @@ const AnnouncementManagement = () => {
                             </div>
                           </div>
                         </div>
-                        
+
                         <div className="flex items-center space-x-2 ml-4">
                           <Button
                             size="sm"
@@ -437,7 +437,7 @@ const AnnouncementManagement = () => {
                           >
                             <Edit className="w-4 h-4" />
                           </Button>
-                          
+
                           <Button
                             size="sm"
                             variant="outline"
@@ -509,35 +509,35 @@ const AnnouncementManagement = () => {
               {createDialog ? 'Create a new announcement for the platform users.' : 'Update the announcement details.'}
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="title" className="text-right">Title</Label>
               <Input
                 id="title"
                 value={formData.title}
-                onChange={(e) => setFormData({...formData, title: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 className="col-span-3"
                 placeholder="Enter announcement title"
               />
             </div>
-            
+
             <div className="grid grid-cols-4 items-start gap-4">
               <Label htmlFor="content" className="text-right mt-2">Content</Label>
               <Textarea
                 id="content"
                 value={formData.content}
-                onChange={(e) => setFormData({...formData, content: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                 className="col-span-3"
                 rows={4}
                 placeholder="Enter announcement content"
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="type">Type</Label>
-                <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
+                <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -549,10 +549,10 @@ const AnnouncementManagement = () => {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="priority">Priority</Label>
-                <Select value={formData.priority} onValueChange={(value) => setFormData({...formData, priority: value})}>
+                <Select value={formData.priority} onValueChange={(value) => setFormData({ ...formData, priority: value })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -565,11 +565,11 @@ const AnnouncementManagement = () => {
                 </Select>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="visibility">Visibility</Label>
-                <Select value={formData.visibility} onValueChange={(value) => setFormData({...formData, visibility: value})}>
+                <Select value={formData.visibility} onValueChange={(value) => setFormData({ ...formData, visibility: value })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -580,30 +580,30 @@ const AnnouncementManagement = () => {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="expiresAt">Expires At (Optional)</Label>
                 <Input
                   id="expiresAt"
                   type="datetime-local"
                   value={formData.expiresAt}
-                  onChange={(e) => setFormData({...formData, expiresAt: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, expiresAt: e.target.value })}
                 />
               </div>
             </div>
-            
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="imageUrl" className="text-right">Image URL</Label>
               <Input
                 id="imageUrl"
                 value={formData.imageUrl}
-                onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                 className="col-span-3"
                 placeholder="Enter image URL (optional)"
               />
             </div>
           </div>
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => {
               setCreateDialog(false);
@@ -631,7 +631,7 @@ const AnnouncementManagement = () => {
               Are you sure you want to delete "{selectedAnnouncement?.title}"? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialog(false)}>
               Cancel

@@ -15,11 +15,11 @@ function AuthTest() {
     setTestResult('')
 
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
-      
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? ''
+
       console.log('Testing auth with token:', token ? 'Token exists' : 'No token')
       console.log('Current user:', currentUser)
-      
+
       const response = await fetch(`${backendUrl}/api/profile/me`, {
         method: 'GET',
         headers: {
@@ -29,7 +29,7 @@ function AuthTest() {
       })
 
       console.log('Response status:', response.status)
-      
+
       const data = await response.json()
       console.log('Response data:', data)
 
@@ -58,11 +58,11 @@ function AuthTest() {
           <p><strong>User ID:</strong> {currentUser?._id || '❌ No ID'}</p>
           <p><strong>Profile Complete:</strong> {currentUser?.isProfileComplete ? '✅ Yes' : '❌ No'}</p>
         </div>
-        
+
         <Button onClick={testAuth} disabled={isLoading}>
           {isLoading ? 'Testing...' : 'Test API Authentication'}
         </Button>
-        
+
         {testResult && (
           <pre className="bg-gray-100 p-4 rounded text-sm overflow-auto max-h-96">
             {testResult}
