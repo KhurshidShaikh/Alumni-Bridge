@@ -8,15 +8,15 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Briefcase, 
-  Search, 
-  Filter, 
-  MapPin, 
-  Building, 
-  Clock, 
-  DollarSign, 
-  Bookmark, 
+import {
+  Briefcase,
+  Search,
+  Filter,
+  MapPin,
+  Building,
+  Clock,
+  DollarSign,
+  Bookmark,
   BookmarkPlus,
   ExternalLink,
   Plus,
@@ -38,10 +38,10 @@ const JobsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { currentUser: user } = useSelector((state) => state.user);
-  
+
   // Tab management
   const activeTab = searchParams.get('tab') || 'browse';
-  
+
   // Common states
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedJobType, setSelectedJobType] = useState('All');
@@ -49,14 +49,14 @@ const JobsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedExperienceLevel, setSelectedExperienceLevel] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  
+
   // Data states
   const [jobs, setJobs] = useState([]);
   const [myJobs, setMyJobs] = useState([]);
   const [myApplications, setMyApplications] = useState([]);
   const [jobApplications, setJobApplications] = useState([]);
   const [selectedJobForApplications, setSelectedJobForApplications] = useState(null);
-  
+
   // Loading states
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -66,17 +66,17 @@ const JobsPage = () => {
   // Define tabs based on user role
   const getTabs = () => {
     const baseTabs = [
-      { id: 'browse', label: 'Browse Jobs', icon: Search },
-      { id: 'applications', label: 'My Applications', icon: FileText }
+      { id: 'browse', label: 'Browse Jobs', mobileLabel: 'Browse', icon: Search },
+      { id: 'applications', label: 'My Applications', mobileLabel: 'Applications', icon: FileText }
     ];
-    
+
     if (user?.role === 'alumni') {
       baseTabs.push(
-        { id: 'posted', label: 'My Posted Jobs', icon: Briefcase },
-        { id: 'manage', label: 'Manage Applications', icon: Users }
+        { id: 'posted', label: 'My Posted Jobs', mobileLabel: 'Posted', icon: Briefcase },
+        { id: 'manage', label: 'Manage Applications', mobileLabel: 'Manage', icon: Users }
       );
     }
-    
+
     return baseTabs;
   };
 
@@ -92,7 +92,7 @@ const JobsPage = () => {
     try {
       setLoading(true);
       setError('');
-      
+
       const filters = {
         search: searchTerm,
         jobType: selectedJobType,
@@ -102,7 +102,7 @@ const JobsPage = () => {
         page: 1,
         limit: 20
       };
-      
+
       const response = await jobService.getAllJobs(filters);
       setJobs(response.jobs || []);
       setPagination(response.pagination || {});
@@ -119,13 +119,13 @@ const JobsPage = () => {
     try {
       setLoading(true);
       setError('');
-      
+
       const filters = {
         status: selectedStatus,
         page: 1,
         limit: 20
       };
-      
+
       const response = await jobService.getMyJobs(filters);
       setMyJobs(response.jobs || []);
     } catch (err) {
@@ -141,13 +141,13 @@ const JobsPage = () => {
     try {
       setLoading(true);
       setError('');
-      
+
       const filters = {
         status: selectedStatus,
         page: 1,
         limit: 50
       };
-      
+
       const response = await jobService.getMyApplications(filters);
       setMyApplications(response.applications || []);
     } catch (err) {
@@ -163,13 +163,13 @@ const JobsPage = () => {
     try {
       setLoading(true);
       setError('');
-      
+
       const filters = {
         status: selectedStatus,
         page: 1,
         limit: 50
       };
-      
+
       const response = await jobService.getJobApplications(jobId, filters);
       setJobApplications(response.applications || []);
       setSelectedJobForApplications(response.job || null);
@@ -226,12 +226,12 @@ const JobsPage = () => {
   const jobTypes = ["All", "Full-time", "Part-time", "Contract", "Internship", "Remote"];
   const locations = ["All", "Remote", "San Francisco, CA", "Seattle, WA", "New York, NY", "Austin, TX", "Bangalore, India", "Mumbai, India", "Delhi, India"];
   const categories = [
-    "All", "Software Development", "Data Science", "Product Management", 
-    "Design", "Marketing", "Sales", "Finance", "Operations", 
+    "All", "Software Development", "Data Science", "Product Management",
+    "Design", "Marketing", "Sales", "Finance", "Operations",
     "Human Resources", "Engineering", "Other"
   ];
   const experienceLevels = ["All", "Entry Level", "Mid Level", "Senior Level", "Executive"];
-  
+
   const statusOptions = [
     { value: 'all', label: 'All' },
     { value: 'pending', label: 'Pending' },
@@ -254,10 +254,10 @@ const JobsPage = () => {
     try {
       setDeletingJobId(jobId);
       await jobService.deleteJob(jobId);
-      
+
       // Remove job from local state
       setMyJobs(prev => prev.filter(job => job._id !== jobId));
-      
+
     } catch (err) {
       alert(err.message || 'Failed to delete job. Please try again.');
       console.error('Error deleting job:', err);
@@ -287,26 +287,26 @@ const JobsPage = () => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
-    
+
     const diffInDays = Math.floor(diffInHours / 24);
     if (diffInDays < 7) return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
-    
+
     const diffInWeeks = Math.floor(diffInDays / 7);
     if (diffInWeeks < 4) return `${diffInWeeks} week${diffInWeeks > 1 ? 's' : ''} ago`;
-    
+
     return date.toLocaleDateString();
   };
 
   // Format salary range
   const formatSalary = (salaryRange) => {
     if (!salaryRange || (!salaryRange.min && !salaryRange.max)) return 'Salary not disclosed';
-    
+
     const currency = salaryRange.currency || 'USD';
     const symbol = currency === 'USD' ? '$' : currency === 'INR' ? '₹' : currency;
-    
+
     if (salaryRange.min && salaryRange.max) {
       return `${symbol}${salaryRange.min.toLocaleString()} - ${symbol}${salaryRange.max.toLocaleString()}`;
     } else if (salaryRange.min) {
@@ -314,7 +314,7 @@ const JobsPage = () => {
     } else if (salaryRange.max) {
       return `Up to ${symbol}${salaryRange.max.toLocaleString()}`;
     }
-    
+
     return 'Salary not disclosed';
   };
 
@@ -335,7 +335,7 @@ const JobsPage = () => {
     <div className="min-h-screen bg-gray-50 poppins-regular">
       {/* Sidebar */}
       <Sidebar />
-      
+
       {/* Bottom Bar for Mobile */}
       <BottomBar />
 
@@ -350,7 +350,7 @@ const JobsPage = () => {
                 <p className="text-sm md:text-base text-gray-600">Manage all your job-related activities in one place</p>
               </div>
               {user?.role === 'alumni' && (
-                <Button 
+                <Button
                   onClick={() => navigate('/jobs/post')}
                   className="flex items-center gap-2"
                 >
@@ -364,7 +364,7 @@ const JobsPage = () => {
           {/* Tabs */}
           <div className="mb-6">
             <div className="border-b border-gray-200">
-              <nav className="-mb-px flex space-x-8 overflow-x-auto">
+              <nav className="-mb-px flex space-x-1 md:space-x-8 overflow-x-auto scrollbar-hide">
                 {getTabs().map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -372,14 +372,14 @@ const JobsPage = () => {
                     <button
                       key={tab.id}
                       onClick={() => handleTabChange(tab.id)}
-                      className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
-                        isActive
+                      className={`flex items-center gap-1 md:gap-2 py-2 px-2 md:px-1 border-b-2 font-medium text-xs md:text-sm whitespace-nowrap ${isActive
                           ? 'border-blue-500 text-blue-600'
                           : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                      }`}
+                        }`}
                     >
-                      <Icon className="h-4 w-4" />
-                      {tab.label}
+                      <Icon className="h-4 w-4 hidden md:block" />
+                      <span className="md:hidden">{tab.mobileLabel}</span>
+                      <span className="hidden md:inline">{tab.label}</span>
                     </button>
                   );
                 })}
@@ -524,10 +524,10 @@ const JobsPage = () => {
                             <DollarSign className="h-3 w-3 md:h-4 md:w-4 mr-1" />
                             {formatSalary(job.salaryRange)}
                           </div>
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             className="text-xs md:text-sm"
-                            onClick={(e) => {e.stopPropagation(); navigate(`/jobs/${job._id}`)}}
+                            onClick={(e) => { e.stopPropagation(); navigate(`/jobs/${job._id}`) }}
                           >
                             View Details
                           </Button>
@@ -535,7 +535,7 @@ const JobsPage = () => {
                       </CardContent>
                     </Card>
                   ))}
-                  
+
                   {jobs.length === 0 && (
                     <Card className="text-center py-12">
                       <CardContent>
@@ -565,7 +565,7 @@ const JobsPage = () => {
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     {myApplications.map((application) => (
                       <Card key={application._id} className="hover:shadow-lg transition-shadow">
@@ -604,7 +604,7 @@ const JobsPage = () => {
                         </CardContent>
                       </Card>
                     ))}
-                    
+
                     {myApplications.length === 0 && (
                       <Card className="text-center py-12">
                         <CardContent>
@@ -638,7 +638,7 @@ const JobsPage = () => {
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     {myJobs.map((job) => (
                       <Card key={job._id} className="hover:shadow-lg transition-shadow">
@@ -694,7 +694,7 @@ const JobsPage = () => {
                         </CardContent>
                       </Card>
                     ))}
-                    
+
                     {myJobs.length === 0 && (
                       <Card className="text-center py-12">
                         <CardContent>
@@ -734,8 +734,8 @@ const JobsPage = () => {
                           </Button>
                         </div>
                       </div>
-                      
-                      
+
+
                       <div className="space-y-4">
                         {jobApplications.map((application) => (
                           <Card key={application._id} className="hover:shadow-lg transition-shadow">
@@ -779,7 +779,7 @@ const JobsPage = () => {
                             </CardContent>
                           </Card>
                         ))}
-                        
+
                         {jobApplications.length === 0 && (
                           <Card className="text-center py-12">
                             <CardContent>

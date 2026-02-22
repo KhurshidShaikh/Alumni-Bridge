@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  MessageCircle, 
-  X, 
-  Send, 
-  Bot, 
-  User, 
-  Loader2, 
+import {
+  MessageCircle,
+  X,
+  Send,
+  Bot,
+  User,
+  Loader2,
   RotateCcw
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -79,7 +79,7 @@ const Chatbot = () => {
 
     try {
       const result = await chatbotService.sendMessage(messageText.trim(), sessionId);
-      
+
       const botMessage = {
         id: Date.now() + 1,
         text: result.success ? result.response : (result.fallbackResponse || result.error),
@@ -154,7 +154,7 @@ const Chatbot = () => {
 
   const getChatbotPosition = () => {
     if (isMobile) {
-      return 'bottom-24'; // Above the bottom bar (h-20 + some margin)
+      return 'bottom-20'; // Above the bottom bar
     }
     return 'bottom-6';
   };
@@ -165,16 +165,16 @@ const Chatbot = () => {
       {!isOpen && (
         <Button
           onClick={() => setIsOpen(true)}
-          className={`fixed ${getChatbotPosition()} right-4 md:right-6 z-50 h-14 w-14 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg transition-all duration-300 hover:scale-110`}
+          className={`fixed ${getChatbotPosition()} right-3 md:right-6 z-50 h-12 w-12 md:h-14 md:w-14 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg transition-all duration-300 hover:scale-110`}
           size="icon"
         >
-          <MessageCircle className="h-6 w-6 text-white" />
+          <MessageCircle className="h-5 w-5 md:h-6 md:w-6 text-white" />
         </Button>
       )}
 
       {/* Chatbot Window */}
       {isOpen && (
-        <Card className={`fixed ${getChatbotPosition()} right-4 md:right-6 z-50 w-80 md:w-96 h-92 md:h-[500px] shadow-2xl transition-all duration-300 flex flex-col overflow-hidden p-0`}>
+        <Card className={`fixed ${isMobile ? 'bottom-20 right-2 left-2 w-auto' : 'bottom-6 right-6 w-96'} z-50 h-[70vh] md:h-[500px] shadow-2xl transition-all duration-300 flex flex-col overflow-hidden p-0`}>
           {/* Header */}
           <CardHeader className="p-4 bg-blue-600 text-white flex-shrink-0 m-0 rounded-t-lg">
             <div className="flex items-center justify-between">
@@ -197,134 +197,130 @@ const Chatbot = () => {
           <CardContent className="p-0 flex flex-col flex-1 min-h-0">
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {/* Welcome Message */}
-                {messages.length === 0 && (
-                  <div className="flex items-start space-x-2">
-                    <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <Bot className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="bg-gray-100 rounded-lg p-3 text-sm">
-                        <p>Hi! I'm your AlumniBridge assistant. I can help you navigate the platform, find features, and answer questions about connecting with alumni.</p>
-                      </div>
-                      <span className="text-xs text-gray-500 mt-1 block">{formatTime(new Date())}</span>
-                    </div>
+              {/* Welcome Message */}
+              {messages.length === 0 && (
+                <div className="flex items-start space-x-2">
+                  <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <Bot className="h-4 w-4 text-blue-600" />
                   </div>
-                )}
-
-                {/* Messages */}
-                {messages.map((message) => (
-                  <div key={message.id} className={`flex items-start space-x-2 ${
-                    message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
-                  }`}>
-                    <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                      message.sender === 'user' 
-                        ? 'bg-blue-600' 
-                        : message.isError 
-                          ? 'bg-red-100' 
-                          : 'bg-blue-100'
-                    }`}>
-                      {message.sender === 'user' ? (
-                        <User className="h-4 w-4 text-white" />
-                      ) : (
-                        <Bot className={`h-4 w-4 ${message.isError ? 'text-red-600' : 'text-blue-600'}`} />
-                      )}
+                  <div className="flex-1">
+                    <div className="bg-gray-100 rounded-lg p-3 text-sm">
+                      <p>Hi! I'm your AlumniBridge assistant. I can help you navigate the platform, find features, and answer questions about connecting with alumni.</p>
                     </div>
-                    <div className="flex-1">
-                      <div className={`rounded-lg p-3 text-sm ${
-                        message.sender === 'user'
-                          ? 'bg-blue-600 text-white ml-auto max-w-xs'
-                          : message.isError
-                            ? 'bg-red-50 border border-red-200'
-                            : 'bg-gray-100'
-                      }`}>
-                        <p className="whitespace-pre-wrap">{message.text}</p>
-                      </div>
-                      <span className={`text-xs text-gray-500 mt-1 block ${
-                        message.sender === 'user' ? 'text-right' : ''
-                      }`}>
-                        {formatTime(message.timestamp)}
-                      </span>
-                    </div>
+                    <span className="text-xs text-gray-500 mt-1 block">{formatTime(new Date())}</span>
                   </div>
-                ))}
-
-                {/* Loading Indicator */}
-                {isLoading && (
-                  <div className="flex items-start space-x-2">
-                    <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <Bot className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="bg-gray-100 rounded-lg p-3 text-sm">
-                        <div className="flex items-center space-x-2">
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          <span>Thinking...</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Suggested Questions */}
-                {showSuggestions && messages.length === 0 && suggestedQuestions.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-gray-500 font-medium">Suggested questions:</p>
-                    <div className="space-y-2">
-                      {suggestedQuestions.slice(0, 3).map((question, index) => (
-                        <Button
-                          key={index}
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleSuggestedQuestion(question)}
-                          className="w-full text-left justify-start text-xs h-auto py-2 px-3 whitespace-normal"
-                        >
-                          {question}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div ref={messagesEndRef} />
-              </div>
-
-              {/* Input Area */}
-              <div className="border-t p-4 flex-shrink-0 bg-white">
-                <div className="flex items-center space-x-2">
-                  <div className="flex-1 relative">
-                    <Input
-                      ref={inputRef}
-                      value={inputMessage}
-                      onChange={(e) => setInputMessage(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      placeholder="Ask me anything about AlumniBridge..."
-                      className="pr-12 text-sm"
-                      disabled={isLoading}
-                    />
-                    <Button
-                      onClick={() => sendMessage()}
-                      disabled={!inputMessage.trim() || isLoading}
-                      size="sm"
-                      className="absolute right-1 top-1 h-8 w-8 p-0"
-                    >
-                      <Send className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  {messages.length > 0 && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={clearConversation}
-                      className="h-10 w-10 p-0"
-                      title="Clear conversation"
-                    >
-                      <RotateCcw className="h-4 w-4" />
-                    </Button>
-                  )}
                 </div>
+              )}
+
+              {/* Messages */}
+              {messages.map((message) => (
+                <div key={message.id} className={`flex items-start space-x-2 ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
+                  }`}>
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${message.sender === 'user'
+                      ? 'bg-blue-600'
+                      : message.isError
+                        ? 'bg-red-100'
+                        : 'bg-blue-100'
+                    }`}>
+                    {message.sender === 'user' ? (
+                      <User className="h-4 w-4 text-white" />
+                    ) : (
+                      <Bot className={`h-4 w-4 ${message.isError ? 'text-red-600' : 'text-blue-600'}`} />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <div className={`rounded-lg p-3 text-sm ${message.sender === 'user'
+                        ? 'bg-blue-600 text-white ml-auto max-w-xs'
+                        : message.isError
+                          ? 'bg-red-50 border border-red-200'
+                          : 'bg-gray-100'
+                      }`}>
+                      <p className="whitespace-pre-wrap">{message.text}</p>
+                    </div>
+                    <span className={`text-xs text-gray-500 mt-1 block ${message.sender === 'user' ? 'text-right' : ''
+                      }`}>
+                      {formatTime(message.timestamp)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+
+              {/* Loading Indicator */}
+              {isLoading && (
+                <div className="flex items-start space-x-2">
+                  <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <Bot className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="bg-gray-100 rounded-lg p-3 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Thinking...</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Suggested Questions */}
+              {showSuggestions && messages.length === 0 && suggestedQuestions.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs text-gray-500 font-medium">Suggested questions:</p>
+                  <div className="space-y-2">
+                    {suggestedQuestions.slice(0, 3).map((question, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleSuggestedQuestion(question)}
+                        className="w-full text-left justify-start text-xs h-auto py-2 px-3 whitespace-normal"
+                      >
+                        {question}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input Area */}
+            <div className="border-t p-4 flex-shrink-0 bg-white">
+              <div className="flex items-center space-x-2">
+                <div className="flex-1 relative">
+                  <Input
+                    ref={inputRef}
+                    value={inputMessage}
+                    onChange={(e) => setInputMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Ask me anything about AlumniBridge..."
+                    className="pr-12 text-sm"
+                    disabled={isLoading}
+                  />
+                  <Button
+                    onClick={() => sendMessage()}
+                    disabled={!inputMessage.trim() || isLoading}
+                    size="sm"
+                    className="absolute right-1 top-1 h-8 w-8 p-0"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+                {messages.length > 0 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={clearConversation}
+                    className="h-10 w-10 p-0"
+                    title="Clear conversation"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
-            </CardContent>
+            </div>
+          </CardContent>
         </Card>
       )}
     </>
