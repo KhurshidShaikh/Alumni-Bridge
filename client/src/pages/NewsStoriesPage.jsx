@@ -258,8 +258,8 @@ const NewsStoriesPage = () => {
       <Sidebar />
       <BottomBar />
 
-      <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
-        <div className="p-3 md:p-8 max-w-6xl mx-auto">
+      <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-x-hidden overflow-y-auto bg-gray-50">
+        <div className="p-3 md:p-8 max-w-6xl mx-auto w-full">
           {/* Header */}
           <div className="mb-6 md:mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">News & Stories</h1>
@@ -295,7 +295,7 @@ const NewsStoriesPage = () => {
                     </div>
                     <div className="flex gap-2">
                       <Select value={selectedPostType} onValueChange={setSelectedPostType}>
-                        <SelectTrigger className="w-48">
+                        <SelectTrigger className="w-full md:w-48 min-w-0">
                           <SelectValue placeholder="Filter by type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -309,6 +309,7 @@ const NewsStoriesPage = () => {
                       <Button
                         onClick={() => fetchPosts(selectedPostType, searchTerm)}
                         variant="outline"
+                        className="shrink-0"
                       >
                         <Filter className="h-4 w-4" />
                       </Button>
@@ -389,36 +390,36 @@ const PostCard = ({ post, currentUser, onLike, onComment, getPostTypeBadge, form
   };
 
   return (
-    <Card className="hover:shadow-lg transition-shadow">
+    <Card className="hover:shadow-lg transition-shadow overflow-hidden">
       <CardHeader className="pb-4">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-10 w-10">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center space-x-3 min-w-0 flex-1">
+            <Avatar className="h-10 w-10 shrink-0">
               <AvatarImage src={post.author?.profile?.profileImage} />
               <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
                 {post.author?.name?.split(' ').map(n => n[0]).join('')}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <h4 className="font-semibold text-gray-900">{post.author?.name}</h4>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span>{post.author?.profile?.currentPosition}</span>
+            <div className="min-w-0 flex-1">
+              <h4 className="font-semibold text-gray-900 truncate">{post.author?.name}</h4>
+              <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5 text-sm text-gray-500">
+                <span className="truncate max-w-[120px] md:max-w-none">{post.author?.profile?.currentPosition}</span>
                 {post.author?.profile?.currentCompany && (
                   <>
                     <span>•</span>
-                    <span>{post.author?.profile?.currentCompany}</span>
+                    <span className="truncate max-w-[100px] md:max-w-none">{post.author?.profile?.currentCompany}</span>
                   </>
                 )}
                 <span>•</span>
-                <span>{formatTime(post.createdAt)}</span>
+                <span className="shrink-0">{formatTime(post.createdAt)}</span>
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge className={getPostTypeBadge(post.postType)}>
+          <div className="flex items-center gap-1 shrink-0">
+            <Badge className={`${getPostTypeBadge(post.postType)} text-xs whitespace-nowrap`}>
               {post.postType}
             </Badge>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </div>
@@ -427,7 +428,7 @@ const PostCard = ({ post, currentUser, onLike, onComment, getPostTypeBadge, form
 
       <CardContent>
         <div className="space-y-4">
-          <p className="text-gray-900 whitespace-pre-wrap">{post.content}</p>
+          <p className="text-gray-900 whitespace-pre-wrap break-words">{post.content}</p>
 
           {post.images && post.images.length > 0 && (
             <div className="grid grid-cols-2 gap-2">
@@ -591,12 +592,12 @@ const CreatePostForm = ({ newPost, setNewPost, onSubmit, postTypes }) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
           <Select
             value={newPost.postType}
             onValueChange={(value) => setNewPost({ ...newPost, postType: value })}
           >
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full sm:w-48">
               <SelectValue placeholder="Post type" />
             </SelectTrigger>
             <SelectContent>
@@ -612,7 +613,7 @@ const CreatePostForm = ({ newPost, setNewPost, onSubmit, postTypes }) => {
             value={newPost.visibility}
             onValueChange={(value) => setNewPost({ ...newPost, visibility: value })}
           >
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full sm:w-40">
               <SelectValue placeholder="Visibility" />
             </SelectTrigger>
             <SelectContent>
@@ -667,7 +668,7 @@ const CreatePostForm = ({ newPost, setNewPost, onSubmit, postTypes }) => {
           </div>
         )}
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <div className="flex items-center space-x-2">
             <input
               type="file"
@@ -857,7 +858,7 @@ const MyPostsTab = ({ userId, token }) => {
                     {editingPost === post._id ? (
                       // Edit Mode
                       <div className="space-y-4">
-                        <div className="flex items-center space-x-4">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                           <Select
                             value={editForm.postType}
                             onValueChange={(value) => setEditForm({ ...editForm, postType: value })}

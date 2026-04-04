@@ -310,7 +310,7 @@ const ConnectionsPage = () => {
     return (
       <Card key={requestId} className="hover:shadow-lg transition-shadow">
         <CardContent className="p-4 md:p-6">
-          <div className="flex items-start space-x-4">
+          <div className="flex items-start space-x-3 md:space-x-4">
             <Avatar className="h-12 w-12 md:h-16 md:w-16">
               <AvatarImage src={otherUser.profile?.profileUrl} />
               <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold text-sm md:text-lg">
@@ -319,8 +319,8 @@ const ConnectionsPage = () => {
             </Avatar>
 
             <div className="flex-1">
-              <div className="flex items-start justify-between">
-                <div>
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                <div className="min-w-0 flex-1">
                   <h3 className="text-base md:text-lg font-semibold text-gray-900">
                     {otherUser.name}
                   </h3>
@@ -328,7 +328,7 @@ const ConnectionsPage = () => {
                     {otherUser.profile?.currentPosition || otherUser.role}
                     {otherUser.profile?.currentCompany && ` at ${otherUser.profile.currentCompany}`}
                   </p>
-                  <div className="flex items-center space-x-2 mt-1">
+                  <div className="flex items-center flex-wrap gap-1.5 mt-1">
                     <Badge variant="outline" className="text-xs">
                       {otherUser.batch} Graduate
                     </Badge>
@@ -338,7 +338,7 @@ const ConnectionsPage = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2 shrink-0">
                   {isReceived ? (
                     <>
                       <Button
@@ -415,8 +415,8 @@ const ConnectionsPage = () => {
       <Sidebar />
       <BottomBar />
 
-      <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
-        <div className="p-3 md:p-8 max-w-7xl mx-auto">
+      <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-x-hidden overflow-y-auto bg-gray-50">
+        <div className="p-3 md:p-8 max-w-7xl mx-auto w-full">
           <div className="mb-6 md:mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">My Connections</h1>
             <p className="text-sm md:text-base text-gray-600">
@@ -426,17 +426,17 @@ const ConnectionsPage = () => {
 
           <Tabs defaultValue="connections" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="connections" className="flex items-center space-x-2">
-                <Users className="h-4 w-4" />
-                <span>Connections ({pagination.totalCount || 0})</span>
+              <TabsTrigger value="connections" className="flex items-center justify-center gap-1.5 text-xs sm:text-sm px-1 sm:px-3">
+                <Users className="h-3.5 w-3.5 hidden sm:block shrink-0" />
+                <span className="truncate">Connections ({pagination.totalCount || 0})</span>
               </TabsTrigger>
-              <TabsTrigger value="received" className="flex items-center space-x-2">
-                <UserCheck className="h-4 w-4" />
-                <span>Received ({requests.received.length})</span>
+              <TabsTrigger value="received" className="flex items-center justify-center gap-1.5 text-xs sm:text-sm px-1 sm:px-3">
+                <UserCheck className="h-3.5 w-3.5 hidden sm:block shrink-0" />
+                <span className="truncate">Received ({requests.received.length})</span>
               </TabsTrigger>
-              <TabsTrigger value="sent" className="flex items-center space-x-2">
-                <Send className="h-4 w-4" />
-                <span>Sent ({requests.sent.length})</span>
+              <TabsTrigger value="sent" className="flex items-center justify-center gap-1.5 text-xs sm:text-sm px-1 sm:px-3">
+                <Send className="h-3.5 w-3.5 hidden sm:block shrink-0" />
+                <span className="truncate">Sent ({requests.sent.length})</span>
               </TabsTrigger>
             </TabsList>
 
