@@ -6,13 +6,9 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Remove tap highlights */
+/* Remove tap highlights and improve touch interactions */
 * {
   -webkit-tap-highlight-color: transparent;
-}
-
-/* Disable text selection only on interactive elements, not globally */
-button, a, [role="button"], label, .no-select {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -21,8 +17,8 @@ button, a, [role="button"], label, .no-select {
   user-select: none;
 }
 
-/* Allow text selection for inputs, content areas, and general text */
-input, textarea, [contenteditable], p, span, div, h1, h2, h3, h4, h5, h6, li, td, th {
+/* Allow text selection for inputs and content areas */
+input, textarea, [contenteditable] {
   -webkit-user-select: text;
   -khtml-user-select: text;
   -moz-user-select: text;
@@ -81,11 +77,10 @@ input, textarea, [contenteditable], p, span, div, h1, h2, h3, h4, h5, h6, li, td
     opacity: 0.8;
   }
 
-  /* Improved touch targets - only for standalone nav/action elements */
-  .mobile-button,
-  nav button,
-  nav a {
+  /* Improved touch targets */
+  button, a, [role="button"] {
     min-height: 44px;
+    min-width: 44px;
   }
 
   /* Custom scrollbar for mobile */
