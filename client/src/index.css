@@ -121,29 +121,15 @@
   }
 }
 
-/* Global scroll fix - ensure scrolling never gets blocked */
-html, body {
+/* Ensure vertical scrolling is never blocked globally */
+html {
   overflow-x: hidden;
-  overflow-y: auto !important;
-  height: auto !important;
-  min-height: 100%;
   -webkit-overflow-scrolling: touch;
-}
-
-/* Ensure the App container doesn't block scrolling */
-.App {
-  min-height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 /* Fix touch scrolling on mobile */
 @media (max-width: 768px) {
-  * {
-    touch-action: manipulation;
-  }
-  
-  /* Ensure scrollable containers work properly */
+  /* Ensure scrollable containers work properly on iOS */
   [class*="overflow-auto"],
   [class*="overflow-y-auto"],
   [class*="overflow-y-scroll"] {
