@@ -154,12 +154,9 @@ function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white font-sans">
-      {/* Background with subtle pattern */}
-      <div className="fixed inset-0 bg-gradient-to-br from-blue-50 to-white pointer-events-none"></div>
-
+    <div className="bg-gradient-to-br from-blue-50 to-white font-sans">
       {/* Header */}
-      <header className="relative z-10 p-6">
+      <header className="relative z-10 p-4 md:p-6">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-sm">AB</span>
@@ -169,7 +166,7 @@ function RegisterPage() {
       </header>
 
       {/* Main Content */}
-      <div className="relative z-10 flex justify-center px-4 py-6 pb-12">
+      <div className="relative z-10 flex justify-center px-4 pt-4 pb-16">
         <div className="w-full max-w-md">
           {/* Glass morphism card */}
           <Card className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl">
