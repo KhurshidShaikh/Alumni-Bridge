@@ -154,7 +154,7 @@ function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white font-sans overflow-y-auto">
+    <div className="min-h-screen bg-white font-sans">
       {/* Background with subtle pattern */}
       <div className="fixed inset-0 bg-gradient-to-br from-blue-50 to-white pointer-events-none"></div>
 
