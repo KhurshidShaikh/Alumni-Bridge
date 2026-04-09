@@ -48,7 +48,7 @@ const JobApplicationsPage = () => {
       <div className="min-h-screen bg-gray-50 poppins-regular">
         <Sidebar />
         <BottomBar />
-        <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
+        <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
           <div className="p-3 md:p-8 max-w-6xl mx-auto">
             <Card className="text-center py-12">
               <CardContent>
@@ -189,7 +189,7 @@ const JobApplicationsPage = () => {
       <div className="min-h-screen bg-gray-50 poppins-regular">
         <Sidebar />
         <BottomBar />
-        <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
+        <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
           <div className="flex justify-center items-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
             <span className="ml-2 text-gray-600">Loading applications...</span>
@@ -204,7 +204,7 @@ const JobApplicationsPage = () => {
       <div className="min-h-screen bg-gray-50 poppins-regular">
         <Sidebar />
         <BottomBar />
-        <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
+        <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
           <div className="p-3 md:p-8 max-w-6xl mx-auto">
             <Card className="text-center py-12">
               <CardContent>
@@ -232,7 +232,7 @@ const JobApplicationsPage = () => {
       <Sidebar />
       <BottomBar />
 
-      <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
+      <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
         <div className="p-3 md:p-8 max-w-6xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-4 mb-6">

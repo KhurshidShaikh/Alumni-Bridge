@@ -110,7 +110,7 @@ const MyApplicationsPage = () => {
       <Sidebar />
       <BottomBar />
 
-      <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
+      <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
         <div className="p-3 md:p-8 max-w-6xl mx-auto">
           {/* Header */}
           <div className="mb-6 md:mb-8">

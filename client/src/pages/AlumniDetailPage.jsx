@@ -116,7 +116,7 @@ const AlumniDetailPage = () => {
       <div className="min-h-screen bg-gray-50 poppins-regular">
         <Sidebar />
         <BottomBar />
-        <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
+        <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
           <div className="flex justify-center items-center min-h-screen">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             <span className="ml-2 text-gray-600">Loading alumni profile...</span>
@@ -131,7 +131,7 @@ const AlumniDetailPage = () => {
       <div className="min-h-screen bg-gray-50 poppins-regular">
         <Sidebar />
         <BottomBar />
-        <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
+        <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
           <div className="flex justify-center items-center min-h-screen">
             <div className="text-center">
               <h2 className="text-xl font-semibold text-gray-900 mb-2">Alumni not found</h2>
@@ -149,7 +149,7 @@ const AlumniDetailPage = () => {
       <Sidebar />
       <BottomBar />
 
-      <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
+      <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
         <div className="p-3 md:p-8 max-w-6xl mx-auto">
           {/* Back Button */}
           <Button

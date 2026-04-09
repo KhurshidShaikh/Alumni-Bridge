@@ -6,9 +6,13 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Remove tap highlights and improve touch interactions */
+/* Remove tap highlights */
 * {
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Disable text selection only on interactive elements, not globally */
+button, a, [role="button"], label, .no-select {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -17,8 +21,8 @@ html {
   user-select: none;
 }
 
-/* Allow text selection for inputs and content areas */
-input, textarea, [contenteditable] {
+/* Allow text selection for inputs, content areas, and general text */
+input, textarea, [contenteditable], p, span, div, h1, h2, h3, h4, h5, h6, li, td, th {
   -webkit-user-select: text;
   -khtml-user-select: text;
   -moz-user-select: text;
@@ -34,10 +38,13 @@ input, textarea, [contenteditable] {
     font-size: 16px; /* Prevent zoom on iOS */
   }
 
-  /* Prevent horizontal scroll */
+  /* Prevent horizontal scroll but ensure vertical scroll works */
   html, body {
     overflow-x: hidden;
+    overflow-y: auto !important;
     width: 100%;
+    height: auto !important;
+    min-height: 100%;
   }
 
   /* Safe area support for devices with notches */
@@ -77,10 +84,11 @@ input, textarea, [contenteditable] {
     opacity: 0.8;
   }
 
-  /* Improved touch targets */
-  button, a, [role="button"] {
+  /* Improved touch targets - only for standalone nav/action elements */
+  .mobile-button,
+  nav button,
+  nav a {
     min-height: 44px;
-    min-width: 44px;
   }
 
   /* Custom scrollbar for mobile */

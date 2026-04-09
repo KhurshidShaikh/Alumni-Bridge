@@ -159,7 +159,7 @@ const HomePage = () => {
       <BottomBar />
 
       {/* Main Content */}
-      <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
+      <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
         {/* Top Header */}
         <header className="bg-white shadow-sm border-b">
           <div className="flex items-center justify-between px-4 md:px-6 py-4">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import Sidebar from '../components/Sidebar';
 import BottomBar from '../components/BottomBar';
 import { selectCurrentUser, selectToken } from '../store/selectors/userSelectors';
+import { logout } from '../store/slices/userSlice';
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -35,6 +36,7 @@ const ProfilePage = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const currentUser = useSelector(selectCurrentUser);
   const token = useSelector(selectToken);
 
@@ -87,15 +89,14 @@ const ProfilePage = () => {
   };
 
   const handleLogout = () => {
-    // Clear all auth data
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    // Dispatch Redux logout action (clears both Redux state and localStorage)
+    dispatch(logout());
 
     // Show success message
     toast.success('Logged out successfully');
 
-    // Redirect to landing page
-    navigate('/');
+    // Redirect to login page
+    navigate('/login', { replace: true });
   };
 
   const handleEditProfile = () => {
@@ -110,7 +111,7 @@ const ProfilePage = () => {
       <div className="min-h-screen bg-gray-50 poppins-regular">
         <Sidebar />
         <BottomBar />
-        <div className="md:ml-64 pb-20 md:pb-0 min-h-screen flex items-center justify-center">
+        <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen flex items-center justify-center">
           <div className="flex items-center space-x-2">
             <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
             <span className="text-gray-600">Loading profile...</span>
@@ -126,7 +127,7 @@ const ProfilePage = () => {
       <div className="min-h-screen bg-gray-50 poppins-regular">
         <Sidebar />
         <BottomBar />
-        <div className="md:ml-64 pb-20 md:pb-0 min-h-screen flex items-center justify-center">
+        <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen flex items-center justify-center">
           <div className="text-center">
             <p className="text-red-600 mb-4">Failed to load profile: {error}</p>
             <Button onClick={() => window.location.reload()}>
@@ -147,7 +148,7 @@ const ProfilePage = () => {
       <BottomBar />
 
       {/* Main Content */}
-      <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
+      <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50">
         <div className="p-4 md:p-8 max-w-6xl mx-auto">
 
           {/* Profile Header Card */}

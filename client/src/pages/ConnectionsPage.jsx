@@ -415,7 +415,7 @@ const ConnectionsPage = () => {
       <Sidebar />
       <BottomBar />
 
-      <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-x-hidden overflow-y-auto bg-gray-50">
+      <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-x-hidden overflow-y-auto bg-gray-50">
         <div className="p-3 md:p-8 max-w-7xl mx-auto w-full">
           <div className="mb-6 md:mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">My Connections</h1>

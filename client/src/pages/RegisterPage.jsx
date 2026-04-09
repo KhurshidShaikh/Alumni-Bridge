@@ -154,9 +154,9 @@ function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-white font-sans overflow-y-auto">
       {/* Background with subtle pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-white"></div>
+      <div className="fixed inset-0 bg-gradient-to-br from-blue-50 to-white pointer-events-none"></div>
 
       {/* Header */}
       <header className="relative z-10 p-6">
@@ -169,7 +169,7 @@ function RegisterPage() {
       </header>
 
       {/* Main Content */}
-      <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-120px)] px-4">
+      <div className="relative z-10 flex justify-center px-4 py-6 pb-12">
         <div className="w-full max-w-md">
           {/* Glass morphism card */}
           <Card className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl">
@@ -196,7 +196,7 @@ function RegisterPage() {
                     placeholder="Enter your full name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-500"
+                    className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-400 text-base h-11"
                     minLength={2}
                     maxLength={100}
                     required
@@ -244,10 +244,10 @@ function RegisterPage() {
                   <Input
                     id="grNo"
                     type="text"
-                    placeholder="Enter your GR number"
+                    placeholder="Enter GR number"
                     value={grNo}
                     onChange={(e) => setGrNo(e.target.value.trim())}
-                    className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-500"
+                    className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-400 text-base h-11"
                     required
                   />
                 </div>
@@ -260,10 +260,10 @@ function RegisterPage() {
                   <Input
                     id="batch"
                     type="number"
-                    placeholder="Enter your graduation year (e.g., 2024)"
+                    placeholder="e.g. 2024"
                     value={batch}
                     onChange={(e) => setBatch(e.target.value)}
-                    className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-500"
+                    className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-400 text-base h-11"
                     min="1900"
                     max="2050"
                     required
@@ -281,7 +281,7 @@ function RegisterPage() {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value.toLowerCase())}
-                    className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-500"
+                    className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-400 text-base h-11"
                     required
                   />
                 </div>
@@ -295,10 +295,10 @@ function RegisterPage() {
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Create a password (min 6 characters)"
+                      placeholder="Min 6 characters"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-500 pr-10"
+                      className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-400 pr-10 text-base h-11"
                       required
                     />
                     <button

@@ -143,9 +143,9 @@ function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-white font-sans overflow-y-auto">
       {/* Background with subtle pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-white"></div>
+      <div className="fixed inset-0 bg-gradient-to-br from-blue-50 to-white pointer-events-none"></div>
 
       {/* Header */}
       <header className="relative z-10 p-6">
@@ -158,7 +158,7 @@ function LoginPage() {
       </header>
 
       {/* Main Content */}
-      <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-120px)] px-4">
+      <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-120px)] px-4 py-6 pb-12 overflow-y-auto">
         <div className="w-full max-w-md">
           {/* Glass morphism card */}
           <Card className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl">
@@ -186,7 +186,7 @@ function LoginPage() {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value.toLowerCase())}
-                    className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-500"
+                    className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-400 text-base h-11"
                     required
                   />
                 </div>
@@ -203,7 +203,7 @@ function LoginPage() {
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-500 pr-10"
+                      className="bg-white/50 border-white/30 focus:border-blue-500 focus:ring-blue-500 placeholder:text-gray-400 pr-10 text-base h-11"
                       required
                     />
                     <button

@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectIsAuthenticated } from '../store/selectors/userSelectors';
+import { loadUserFromStorage } from '../store/slices/userSlice';
 import { 
   GraduationCap, 
   Users, 
@@ -19,25 +22,23 @@ const LandingPage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
-  // Check for existing token and redirect to home if authenticated
+  // Try to load user from storage on mount
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Verify token is not expired or invalid by checking if it exists and is not empty
-      try {
-        // Basic token validation - check if it's not empty and looks like a JWT
-        if (token.trim() && token.split('.').length === 3) {
-          navigate('/home');
-          return;
-        }
-      } catch (error) {
-        // If token is invalid, remove it
-        localStorage.removeItem('token');
-      }
+    if (!isAuthenticated) {
+      dispatch(loadUserFromStorage());
     }
-  }, [navigate]);
+  }, [dispatch, isAuthenticated]);
+
+  // Redirect to home if authenticated (via Redux state, not raw localStorage)
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/home', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -442,8 +443,7 @@ const LandingPage = () => {
           <div className="text-center mt-12">
             <button 
               onClick={() => {
-                const token = localStorage.getItem('token');
-                if (token) {
+                if (isAuthenticated) {
                   navigate('/alumni');
                 } else {
                   navigate('/login');
@@ -673,8 +673,7 @@ const LandingPage = () => {
               </button>
               <button 
                 onClick={() => {
-                  const token = localStorage.getItem('token');
-                  if (token) {
+                  if (isAuthenticated) {
                     navigate('/alumni');
                   } else {
                     navigate('/login');
@@ -739,8 +738,7 @@ const LandingPage = () => {
                   </button>
                   <button 
                     onClick={() => {
-                      const token = localStorage.getItem('token');
-                      if (token) {
+                      if (isAuthenticated) {
                         navigate('/alumni');
                       } else {
                         navigate('/login');
@@ -752,8 +750,7 @@ const LandingPage = () => {
                   </button>
                   <button 
                     onClick={() => {
-                      const token = localStorage.getItem('token');
-                      if (token) {
+                      if (isAuthenticated) {
                         navigate('/jobs');
                       } else {
                         navigate('/login');
@@ -815,8 +812,7 @@ const LandingPage = () => {
                 <li>
                   <button 
                     onClick={() => {
-                      const token = localStorage.getItem('token');
-                      if (token) {
+                      if (isAuthenticated) {
                         navigate('/alumni');
                       } else {
                         navigate('/login');
@@ -830,8 +826,7 @@ const LandingPage = () => {
                 <li>
                   <button 
                     onClick={() => {
-                      const token = localStorage.getItem('token');
-                      if (token) {
+                      if (isAuthenticated) {
                         navigate('/news-stories');
                       } else {
                         navigate('/login');
@@ -845,8 +840,7 @@ const LandingPage = () => {
                 <li>
                   <button 
                     onClick={() => {
-                      const token = localStorage.getItem('token');
-                      if (token) {
+                      if (isAuthenticated) {
                         navigate('/jobs');
                       } else {
                         navigate('/login');

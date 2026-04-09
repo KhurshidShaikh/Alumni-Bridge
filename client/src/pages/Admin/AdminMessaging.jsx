@@ -109,8 +109,9 @@ Best regards,
     try {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
       
-      const response = await fetch('/api/admin/alumni', {
+      const response = await fetch(`${backendUrl}/api/admin/alumni`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -137,7 +138,8 @@ Best regards,
   const fetchAdminConversations = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/messages/admin/conversations', {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+      const response = await fetch(`${backendUrl}/api/messages/admin/conversations`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -165,7 +167,8 @@ Best regards,
     try {
       setLoadingMessages(true);
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`/api/messages/conversation/${conversationId}/messages`, {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+      const response = await fetch(`${backendUrl}/api/messages/conversation/${conversationId}/messages`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -191,7 +194,8 @@ Best regards,
     try {
       setSendingNewMessage(true);
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`/api/messages/admin/conversation/${selectedConversation._id}/send`, {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
+      const response = await fetch(`${backendUrl}/api/messages/admin/conversation/${selectedConversation._id}/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -266,8 +270,9 @@ Best regards,
     try {
       setSendingMessage(true);
       const token = localStorage.getItem('adminToken');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL ?? '';
       
-      const response = await fetch('/api/messages/admin/send-bulk', {
+      const response = await fetch(`${backendUrl}/api/messages/admin/send-bulk`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

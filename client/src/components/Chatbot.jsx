@@ -302,9 +302,9 @@ const Chatbot = () => {
                     onClick={() => sendMessage()}
                     disabled={!inputMessage.trim() || isLoading}
                     size="sm"
-                    className="absolute right-1 top-1 h-8 w-8 p-0"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-7 w-7 p-0 rounded-md"
                   >
-                    <Send className="h-4 w-4" />
+                    <Send className="h-3.5 w-3.5" />
                   </Button>
                 </div>
                 {messages.length > 0 && (

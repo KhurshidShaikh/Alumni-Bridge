@@ -243,7 +243,7 @@ const NewsStoriesPage = () => {
       <div className="min-h-screen bg-gray-50 poppins-regular">
         <Sidebar />
         <BottomBar />
-        <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50 flex items-center justify-center">
+        <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <p className="text-gray-500">Loading...</p>
@@ -258,7 +258,7 @@ const NewsStoriesPage = () => {
       <Sidebar />
       <BottomBar />
 
-      <div className="md:ml-64 pb-20 md:pb-0 min-h-screen overflow-x-hidden overflow-y-auto bg-gray-50">
+      <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-x-hidden overflow-y-auto bg-gray-50">
         <div className="p-3 md:p-8 max-w-6xl mx-auto w-full">
           {/* Header */}
           <div className="mb-6 md:mb-8">

@@ -18,8 +18,8 @@ const LogoutButton = ({ variant = "ghost", size = "sm", className = "" }) => {
       // Show success message
       toast.success('Logged out successfully!')
       
-      // Redirect to landing page
-      navigate('/')
+      // Redirect to login page
+      navigate('/login', { replace: true })
     } catch (error) {
       console.error('Logout error:', error)
       toast.error('Error during logout')
