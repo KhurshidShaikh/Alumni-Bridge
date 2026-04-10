@@ -299,24 +299,24 @@ const AlumniPage = () => {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 md:flex gap-2 md:gap-4">
-                <div className="flex items-center gap-2">
-                  <Filter className="h-4 w-4 text-gray-500" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:flex gap-3 md:gap-4">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Filter className="h-4 w-4 text-gray-500 flex-shrink-0" />
                   <select
                     value={selectedBatch}
                     onChange={(e) => setSelectedBatch(e.target.value)}
-                    className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                    className="border border-gray-300 rounded-md px-3 py-2 text-sm w-full lg:w-auto"
                   >
                     {batches.map(batch => (
                       <option key={batch} value={batch}>Batch {batch}</option>
                     ))}
                   </select>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <select
                     value={selectedDepartment}
                     onChange={(e) => setSelectedDepartment(e.target.value)}
-                    className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                    className="border border-gray-300 rounded-md px-3 py-2 text-sm w-full lg:w-auto"
                   >
                     {departments.map(dept => (
                       <option key={dept} value={dept}>{dept}</option>

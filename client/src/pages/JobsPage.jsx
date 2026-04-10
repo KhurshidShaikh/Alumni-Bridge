@@ -643,22 +643,22 @@ const JobsPage = () => {
                     {myJobs.map((job) => (
                       <Card key={job._id} className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-4 md:p-6">
-                          <div className="flex items-start justify-between mb-4">
+                          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
                             <div>
-                              <div className="flex items-center gap-2 mb-2">
+                              <div className="flex flex-wrap items-center gap-2 mb-2">
                                 <h3 className="text-lg font-semibold text-gray-900">{job.title}</h3>
                                 <Badge variant={getStatusBadgeVariant(job.status)} className="text-xs">
                                   {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
                                 </Badge>
                               </div>
                               <p className="text-gray-600">{job.company} • {job.location}</p>
-                              <div className="flex items-center gap-4 text-sm text-gray-500 mt-2">
+                              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500 mt-2">
                                 <span>Posted {formatTimeAgo(job.createdAt)}</span>
                                 <span>{job.applicationsCount || 0} applications</span>
                                 <span>{job.viewsCount || 0} views</span>
                               </div>
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-2">
                               <Button
                                 variant="outline"
                                 size="sm"
