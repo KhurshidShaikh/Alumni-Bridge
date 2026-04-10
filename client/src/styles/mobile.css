@@ -29,7 +29,6 @@ input, textarea, [contenteditable] {
 /* Mobile-specific body styles */
 @media (max-width: 768px) {
   body {
-    overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
     font-size: 16px; /* Prevent zoom on iOS */
   }

@@ -154,7 +154,7 @@ function RegisterPage() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-white font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white font-sans">
       {/* Header */}
       <header className="relative z-10 p-4 md:p-6">
         <div className="flex items-center space-x-3">
