@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Sidebar from '../components/Sidebar';
 import BottomBar from '../components/BottomBar';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const MessagesListPage = () => {
   const [conversations, setConversations] = useState([]);
@@ -97,9 +98,24 @@ const MessagesListPage = () => {
           {/* Conversations List */}
           <div className="bg-white rounded-lg shadow-sm">
             {loading ? (
-              <div className="p-8 text-center text-gray-500">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                Loading conversations...
+              <div className="divide-y divide-gray-100">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="p-4">
+                    <div className="flex items-center space-x-4">
+                      <Skeleton className="h-12 w-12 rounded-full shrink-0" />
+                      <div className="flex-1 min-w-0 space-y-2">
+                        <div className="flex items-center justify-between mb-1">
+                          <Skeleton className="h-4 w-32" />
+                          <Skeleton className="h-3 w-12" />
+                        </div>
+                        <Skeleton className="h-4 w-3/4" />
+                        <div className="flex items-center justify-between mt-2">
+                          <Skeleton className="h-3 w-24" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : filteredConversations.length === 0 ? (
               <div className="p-8 text-center text-gray-500">

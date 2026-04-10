@@ -302,9 +302,9 @@ const Chatbot = () => {
                     onClick={() => sendMessage()}
                     disabled={!inputMessage.trim() || isLoading}
                     size="sm"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-7 w-7 p-0 rounded-md"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 !min-h-0 !min-w-0 p-0 rounded-md flex items-center justify-center"
                   >
-                    <Send className="h-3.5 w-3.5" />
+                    <Send className="h-4 w-4 ml-0.5" />
                   </Button>
                 </div>
                 {messages.length > 0 && (
@@ -312,7 +312,7 @@ const Chatbot = () => {
                     variant="outline"
                     size="sm"
                     onClick={clearConversation}
-                    className="h-10 w-10 p-0"
+                    className="h-10 w-10 !min-h-0 !min-w-0 p-0 flex items-center justify-center"
                     title="Clear conversation"
                   >
                     <RotateCcw className="h-4 w-4" />

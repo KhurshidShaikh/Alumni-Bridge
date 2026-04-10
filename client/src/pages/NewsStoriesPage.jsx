@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import BottomBar from '../components/BottomBar';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const NewsStoriesPage = () => {
   const [activeTab, setActiveTab] = useState('feed');
@@ -243,10 +244,55 @@ const NewsStoriesPage = () => {
       <div className="min-h-screen bg-gray-50 poppins-regular">
         <Sidebar />
         <BottomBar />
-        <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-auto bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-500">Loading...</p>
+        <div className="md:ml-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen overflow-x-hidden overflow-y-auto bg-gray-50">
+          <div className="p-3 md:p-8 max-w-6xl mx-auto w-full space-y-6">
+            <div className="mb-6 md:mb-8">
+              <Skeleton className="h-8 w-48 mb-2" />
+              <Skeleton className="h-4 w-64" />
+            </div>
+            <div className="flex space-x-4 mb-6">
+              <Skeleton className="h-10 w-24" />
+              <Skeleton className="h-10 w-32" />
+              <Skeleton className="h-10 w-24" />
+            </div>
+            
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex gap-4">
+                  <Skeleton className="h-10 flex-1" />
+                  <Skeleton className="h-10 w-48" />
+                  <Skeleton className="h-10 w-10" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="space-y-6 mt-6">
+              {[...Array(3)].map((_, i) => (
+                <Card key={i} className="overflow-hidden">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center space-x-3 w-full">
+                        <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
+                        <div className="flex-1 space-y-2">
+                          <Skeleton className="h-5 w-32" />
+                          <Skeleton className="h-4 w-48" />
+                        </div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                    <Skeleton className="h-4 w-3/4" />
+                    <Separator />
+                    <div className="flex space-x-4">
+                      <Skeleton className="h-8 w-16" />
+                      <Skeleton className="h-8 w-16" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -321,9 +367,32 @@ const NewsStoriesPage = () => {
               {/* Posts Feed */}
               <div className="space-y-6">
                 {loading ? (
-                  <div className="text-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                    <p className="text-gray-500 mt-2">Loading posts...</p>
+                  <div className="space-y-6">
+                    {[...Array(3)].map((_, i) => (
+                      <Card key={i} className="overflow-hidden">
+                        <CardHeader className="pb-4">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-center space-x-3 w-full">
+                              <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
+                              <div className="flex-1 space-y-2">
+                                <Skeleton className="h-5 w-32" />
+                                <Skeleton className="h-4 w-48" />
+                              </div>
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <Skeleton className="h-4 w-full" />
+                          <Skeleton className="h-4 w-5/6" />
+                          <Skeleton className="h-4 w-3/4" />
+                          <Separator />
+                          <div className="flex space-x-4">
+                            <Skeleton className="h-8 w-16" />
+                            <Skeleton className="h-8 w-16" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
                 ) : posts.length === 0 ? (
                   <Card className="text-center py-12">

@@ -33,6 +33,7 @@ import {
 import Sidebar from '../components/Sidebar';
 import BottomBar from '../components/BottomBar';
 import { jobService } from '../services/jobService';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const JobsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -458,9 +459,38 @@ const JobsPage = () => {
 
           {/* Loading State */}
           {loading && (
-            <div className="flex justify-center items-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-              <span className="ml-2 text-gray-600">Loading...</span>
+            <div className="space-y-4 md:space-y-6">
+              {[...Array(4)].map((_, i) => (
+                <Card key={i}>
+                  <CardContent className="p-4 md:p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3 md:space-x-4">
+                        <Skeleton className="h-10 w-10 md:h-12 md:w-12 rounded-full" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-5 w-40 md:w-64" />
+                          <Skeleton className="h-4 w-32" />
+                          <div className="flex items-center space-x-2 mt-1">
+                            <Skeleton className="h-3 w-20" />
+                            <Skeleton className="h-3 w-16" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex space-x-2">
+                        <Skeleton className="h-5 w-16 rounded-full hidden sm:block" />
+                        <Skeleton className="h-5 w-20 rounded-full hidden sm:block" />
+                      </div>
+                    </div>
+                    <div className="space-y-2 mb-4">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-5/6" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-8 w-24 rounded-md" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           )}
 

@@ -25,6 +25,7 @@ import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Sidebar from '../components/Sidebar';
 import BottomBar from '../components/BottomBar';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const AlumniPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -329,9 +330,38 @@ const AlumniPage = () => {
 
           {/* Alumni Grid */}
           {loading ? (
-            <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-              <span className="ml-2 text-gray-600">Loading alumni...</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {[...Array(6)].map((_, i) => (
+                <Card key={i}>
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-3 md:space-x-4 mb-4">
+                        <Skeleton className="h-12 w-12 md:h-16 md:w-16 rounded-full" />
+                        <div className="flex-1 space-y-2">
+                          <Skeleton className="h-5 w-32" />
+                          <Skeleton className="h-4 w-24" />
+                          <Skeleton className="h-5 w-20 rounded-full" />
+                        </div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <Skeleton className="h-4 w-3/4" />
+                      <div className="space-y-3 mb-4 mt-2">
+                        <Skeleton className="h-4 w-2/3" />
+                        <Skeleton className="h-4 w-1/2" />
+                        <Skeleton className="h-4 w-3/4" />
+                      </div>
+                      <Separator className="my-3" />
+                      <div className="flex justify-between items-center">
+                        <Skeleton className="h-8 w-8 rounded-md" />
+                        <Skeleton className="h-8 w-24 rounded-md" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">

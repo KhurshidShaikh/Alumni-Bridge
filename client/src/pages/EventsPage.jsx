@@ -12,7 +12,6 @@ import {
   ExternalLink,
   BookmarkPlus,
   UserPlus,
-  Share2,
   RefreshCw
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,6 +23,7 @@ import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Sidebar from '../components/Sidebar';
 import BottomBar from '../components/BottomBar';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const EventsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -300,11 +300,35 @@ const EventsPage = () => {
 
           {/* Loading State */}
           {loading && (
-            <div className="flex items-center justify-center py-12">
-              <div className="text-center">
-                <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading events...</p>
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6">
+              {[...Array(8)].map((_, i) => (
+                <Card key={i} className="overflow-hidden">
+                  <CardContent className="p-0">
+                    <Skeleton className="w-full aspect-video rounded-none" />
+                    <div className="p-4 md:p-6 space-y-4">
+                      <div>
+                        <Skeleton className="h-6 w-3/4 mb-2" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-5/6 mt-1" />
+                      </div>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-1/2" />
+                        <Skeleton className="h-4 w-1/3" />
+                        <Skeleton className="h-4 w-2/3" />
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Skeleton className="h-6 w-6 rounded-full" />
+                        <Skeleton className="h-4 w-32" />
+                      </div>
+                      <Separator />
+                      <div className="flex space-x-2">
+                        <Skeleton className="h-9 flex-1 rounded-md" />
+                        <Skeleton className="h-9 w-10 rounded-md" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           )}
 
@@ -427,9 +451,6 @@ const EventsPage = () => {
                                 Register
                               </>
                             )}
-                          </Button>
-                          <Button variant="outline" size="sm" className="px-3">
-                            <Share2 className="h-3 w-3 md:h-4 md:w-4" />
                           </Button>
                         </div>
 

@@ -28,6 +28,7 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Sidebar from '../components/Sidebar';
 import BottomBar from '../components/BottomBar';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ConnectionsPage = () => {
   const [connections, setConnections] = useState([]);
@@ -456,9 +457,39 @@ const ConnectionsPage = () => {
 
               {/* Connections Grid */}
               {loading ? (
-                <div className="flex justify-center items-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                  <span className="ml-2 text-gray-600">Loading connections...</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                  {[...Array(6)].map((_, i) => (
+                    <Card key={i}>
+                      <CardHeader className="pb-4">
+                        <div className="flex items-center space-x-3 md:space-x-4">
+                          <Skeleton className="h-12 w-12 md:h-16 md:w-16 rounded-full" />
+                          <div className="flex-1 space-y-2">
+                            <Skeleton className="h-5 w-32" />
+                            <Skeleton className="h-4 w-24" />
+                            <Skeleton className="h-5 w-20 rounded-full" />
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="space-y-2">
+                            <Skeleton className="h-4 w-2/3" />
+                            <Skeleton className="h-4 w-1/2" />
+                            <Skeleton className="h-4 w-3/4" />
+                          </div>
+                          <Skeleton className="h-4 w-32 mt-2" />
+                          <Separator className="my-3" />
+                          <div className="flex justify-between items-center">
+                            <Skeleton className="h-8 w-24" />
+                            <div className="flex space-x-2">
+                              <Skeleton className="h-8 w-8 rounded-md" />
+                              <Skeleton className="h-8 w-8 rounded-md" />
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -575,9 +606,37 @@ const ConnectionsPage = () => {
 
             <TabsContent value="received" className="mt-6">
               {requestsLoading ? (
-                <div className="flex justify-center items-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                  <span className="ml-2 text-gray-600">Loading requests...</span>
+                <div className="space-y-4">
+                  {[...Array(3)].map((_, i) => (
+                    <Card key={i}>
+                      <CardContent className="p-4 md:p-6">
+                        <div className="flex items-start space-x-3 md:space-x-4">
+                          <Skeleton className="h-12 w-12 md:h-16 md:w-16 rounded-full shrink-0" />
+                          <div className="flex-1">
+                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                              <div className="space-y-2 w-full max-w-sm">
+                                <Skeleton className="h-5 w-48" />
+                                <Skeleton className="h-4 w-3/4" />
+                                <div className="flex items-center gap-2 mt-2">
+                                  <Skeleton className="h-5 w-24 rounded-full" />
+                                  <Skeleton className="h-5 w-20 rounded-full" />
+                                </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <Skeleton className="h-8 w-8 rounded-md" />
+                                <Skeleton className="h-8 w-8 rounded-md" />
+                              </div>
+                            </div>
+                            <Skeleton className="h-16 w-full mt-3 rounded-lg" />
+                            <div className="mt-3 flex items-center justify-between">
+                              <Skeleton className="h-4 w-24" />
+                              <Skeleton className="h-8 w-24" />
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
               ) : requests.received.length > 0 ? (
                 <div className="space-y-4">
@@ -596,9 +655,36 @@ const ConnectionsPage = () => {
 
             <TabsContent value="sent" className="mt-6">
               {requestsLoading ? (
-                <div className="flex justify-center items-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                  <span className="ml-2 text-gray-600">Loading requests...</span>
+                <div className="space-y-4">
+                  {[...Array(3)].map((_, i) => (
+                    <Card key={i}>
+                      <CardContent className="p-4 md:p-6">
+                        <div className="flex items-start space-x-3 md:space-x-4">
+                          <Skeleton className="h-12 w-12 md:h-16 md:w-16 rounded-full shrink-0" />
+                          <div className="flex-1">
+                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                              <div className="space-y-2 w-full max-w-sm">
+                                <Skeleton className="h-5 w-48" />
+                                <Skeleton className="h-4 w-3/4" />
+                                <div className="flex items-center gap-2 mt-2">
+                                  <Skeleton className="h-5 w-24 rounded-full" />
+                                  <Skeleton className="h-5 w-20 rounded-full" />
+                                </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <Skeleton className="h-8 w-24 rounded-md" />
+                              </div>
+                            </div>
+                            <Skeleton className="h-16 w-full mt-3 rounded-lg" />
+                            <div className="mt-3 flex items-center justify-between">
+                              <Skeleton className="h-4 w-24" />
+                              <Skeleton className="h-8 w-24" />
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
               ) : requests.sent.length > 0 ? (
                 <div className="space-y-4">
