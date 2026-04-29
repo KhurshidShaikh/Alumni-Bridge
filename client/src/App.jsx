@@ -40,10 +40,8 @@ import ContentManagement from './pages/Admin/ContentManagement';
 const ChatbotWrapper = () => {
   const location = useLocation();
   
-  // Don't show chatbot on public routes, admin routes, or landing page
-  const hideChatbotRoutes = ['/', '/login', '/register'];
-  const isAdminRoute = location.pathname.startsWith('/admin');
-  const shouldShowChatbot = !hideChatbotRoutes.includes(location.pathname) && !isAdminRoute;
+  // Only show chatbot on the dashboard/home page
+  const shouldShowChatbot = location.pathname === '/home';
   
   return shouldShowChatbot ? <Chatbot /> : null;
 };

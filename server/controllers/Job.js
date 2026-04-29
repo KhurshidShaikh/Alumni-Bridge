@@ -346,6 +346,14 @@ export const applyToJob = async (req, res) => {
             });
         }
 
+        // Prevent job poster from applying to their own job
+        if (job.postedBy.toString() === userId) {
+            return res.status(400).json({
+                success: false,
+                error: "You cannot apply to your own job posting"
+            });
+        }
+
         // Check if application deadline has passed
         if (job.applicationDeadline && new Date() > job.applicationDeadline) {
             return res.status(400).json({
@@ -375,15 +383,14 @@ export const applyToJob = async (req, res) => {
             });
         }
 
-        // Upload resume to Cloudinary as image (this works better for viewing)
+        // Upload resume to Cloudinary as raw file (correct type for PDFs)
         const result = await new Promise((resolve, reject) => {
             cloudinary.uploader.upload_stream(
                 {
                     folder: 'alumni-bridge/resumes',
-                    resource_type: 'image',
+                    resource_type: 'raw',
                     public_id: `resume_${userId}_${Date.now()}`,
                     format: 'pdf',
-                    type: 'upload',
                     access_mode: 'public'
                 },
                 (error, result) => {
@@ -393,7 +400,7 @@ export const applyToJob = async (req, res) => {
             ).end(req.file.buffer);
         });
 
-        // Use the secure URL - this should work for PDF viewing
+        // Use the secure URL for PDF viewing/downloading
         const pdfUrl = result.secure_url;
 
         // Create job application

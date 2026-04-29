@@ -308,7 +308,12 @@ const JobDetailPage = () => {
                   </div>
                   
                   
-                  {!job.hasApplied ? (
+                  {/* Hide apply button if current user is the job poster */}
+                  {user?.id === (job.postedBy?._id || job.postedBy) ? (
+                    <Badge variant="outline" className="w-full justify-center py-2 text-sm">
+                      Your Job Posting
+                    </Badge>
+                  ) : !job.hasApplied ? (
                     <Button 
                       onClick={() => setShowApplicationForm(true)}
                       className="w-full"

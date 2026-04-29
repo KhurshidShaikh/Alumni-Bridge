@@ -692,7 +692,7 @@ const JobsPage = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => fetchJobApplications(job._id)}
+                                onClick={() => navigate(`/jobs/${job._id}/applications`)}
                               >
                                 <Users className="h-4 w-4 mr-2" />
                                 Applications ({job.applicationsCount || 0})

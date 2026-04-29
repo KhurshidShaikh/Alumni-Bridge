@@ -3,15 +3,10 @@ import nodemailer from 'nodemailer';
 // Initialize Nodemailer transporter
 const createTransporter = () => {
     return nodemailer.createTransport({
-        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-        port: parseInt(process.env.EMAIL_PORT) || 587,
-        secure: false, // true for 465, false for other ports
+        service: 'gmail',
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
-        },
-        tls: {
-            rejectUnauthorized: false
         }
     });
 };
@@ -58,6 +53,8 @@ export const sendBulkWelcomeEmails = async (users) => {
         failed: []
     };
 
+    console.log(`Sending welcome emails to ${users.length} users...`);
+
     // Process emails in batches to avoid rate limiting
     const batchSize = 10;
     for (let i = 0; i < users.length; i += batchSize) {
@@ -94,6 +91,7 @@ export const sendBulkWelcomeEmails = async (users) => {
         }
     }
 
+    console.log(`Email results: ${results.successful.length} successful, ${results.failed.length} failed`);
     return results;
 };
 
